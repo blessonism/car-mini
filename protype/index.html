@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智车养护 - 原型展示</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* 全局滚动条隐藏 */
+    ::-webkit-scrollbar {
+      display: none !important;
+    }
+    
+    * {
+      -ms-overflow-style: none !important;  /* IE and Edge */
+      scrollbar-width: none !important;  /* Firefox */
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8f9ff;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    
+    .prototype-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(375px, 1fr));
+      gap: 3rem;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    
+    .screen-label {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: 600;
+      color: #374151;
+    }
+    
+    .iphone-frame {
+      width: 375px;
+      height: 812px;
+      background-color: white;
+      border-radius: 55px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+      margin: 0 auto;
+      border: 14px solid #000;
+      box-sizing: content-box;
+    }
+    
+    .dynamic-island {
+      position: absolute;
+      top: 12px;
+      width: 125px;
+      height: 35px;
+      background-color: #000;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 20px;
+      z-index: 200;
+    }
+    
+    .status-bar {
+      height: 47px;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: transparent;
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 25px;
+      color: #1f2937;
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+    
+    .status-bar-time {
+      position: absolute;
+      left: 30px;
+      font-weight: 700;
+      font-size: 14px;
+      pointer-events: none;
+    }
+    
+    .status-bar-right {
+      position: absolute;
+      right: 25px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      pointer-events: none;
+    }
+    
+    .battery {
+      width: 22px;
+      height: 10px;
+      border: 1px solid currentColor;
+      border-radius: 2px;
+      padding: 1px;
+      position: relative;
+    }
+    
+    .battery::after {
+      content: '';
+      position: absolute;
+      width: 2px;
+      height: 4px;
+      background: currentColor;
+      top: 2px;
+      right: -3px;
+      border-radius: 0 2px 2px 0;
+    }
+    
+    .battery-level {
+      height: 100%;
+      width: 60%;
+      background: currentColor;
+      border-radius: 1px;
+    }
+    
+    .screen {
+      width: 100%;
+      height: 100%;
+      padding-top: 0;
+      box-sizing: border-box;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .app-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      overflow: hidden;
+    }
+    
+    .home-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 135px;
+      height: 5px;
+      background-color: #000;
+      border-radius: 100px;
+      opacity: 0.3;
+      z-index: 100;
+    }
+    
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: #1f2937;
+      text-align: center;
+    }
+    
+    .prototype-description {
+      max-width: 800px;
+      margin: 0 auto 3rem auto;
+      text-align: center;
+      color: #4b5563;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="page-title">智车养护应用原型</h1>
+  <p class="prototype-description">
+    以下是智车养护应用的主要界面展示，包括首页、服务选择、预约时间和支付确认等流程。
+    每个界面都在模拟iPhone 15 Pro环境中展示，以呈现真实的用户体验效果。
+  </p>
+  
+  <div class="prototype-grid">
+    <!-- 首页 -->
+    <div>
+      <div class="iphone-frame">
+        <div class="dynamic-island"></div>
+        <div class="status-bar">
+          <div class="status-bar-time">15:41</div>
+          <div class="status-bar-right">
+            <div class="signal">
+              <i class="fas fa-signal"></i>
+            </div>
+            <div class="wifi">
+              <i class="fas fa-wifi"></i>
+            </div>
+            <div class="battery">
+              <div class="battery-level"></div>
+            </div>
+          </div>
+        </div>
+        <div class="screen">
+          <iframe src="home.html" class="app-frame"></iframe>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="screen-label">首页</div>
+    </div>
+    
+    <!-- 服务选择页 -->
+    <div>
+      <div class="iphone-frame">
+        <div class="dynamic-island"></div>
+        <div class="status-bar">
+          <div class="status-bar-time">15:42</div>
+          <div class="status-bar-right">
+            <div class="signal">
+              <i class="fas fa-signal"></i>
+            </div>
+            <div class="wifi">
+              <i class="fas fa-wifi"></i>
+            </div>
+            <div class="battery">
+              <div class="battery-level"></div>
+            </div>
+          </div>
+        </div>
+        <div class="screen">
+          <iframe src="appointment-service.html" class="app-frame"></iframe>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="screen-label">服务选择</div>
+    </div>
+    
+    <!-- 预约时间页 -->
+    <div>
+      <div class="iphone-frame">
+        <div class="dynamic-island"></div>
+        <div class="status-bar">
+          <div class="status-bar-time">15:43</div>
+          <div class="status-bar-right">
+            <div class="signal">
+              <i class="fas fa-signal"></i>
+            </div>
+            <div class="wifi">
+              <i class="fas fa-wifi"></i>
+            </div>
+            <div class="battery">
+              <div class="battery-level"></div>
+            </div>
+          </div>
+        </div>
+        <div class="screen">
+          <iframe src="appointment-time.html" class="app-frame"></iframe>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="screen-label">预约时间</div>
+    </div>
+
+    
+    <!-- 支付确认页 -->
+    <div>
+      <div class="iphone-frame">
+        <div class="dynamic-island"></div>
+        <div class="status-bar">
+          <div class="status-bar-time">15:45</div>
+          <div class="status-bar-right">
+            <div class="signal">
+              <i class="fas fa-signal"></i>
+            </div>
+            <div class="wifi">
+              <i class="fas fa-wifi"></i>
+            </div>
+            <div class="battery">
+              <div class="battery-level"></div>
+            </div>
+          </div>
+        </div>
+        <div class="screen">
+          <iframe src="appointment-payment.html" class="app-frame"></iframe>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="screen-label">支付确认</div>
+    </div>
+    
+    <!-- 订单详情页 -->
+    <div>
+      <div class="iphone-frame">
+        <div class="dynamic-island"></div>
+        <div class="status-bar">
+          <div class="status-bar-time">15:45</div>
+          <div class="status-bar-right">
+            <div class="signal">
+              <i class="fas fa-signal"></i>
+            </div>
+            <div class="wifi">
+              <i class="fas fa-wifi"></i>
+            </div>
+            <div class="battery">
+              <div class="battery-level"></div>
+            </div>
+          </div>
+        </div>
+        <div class="screen">
+          <iframe src="store-order-detail.html" class="app-frame"></iframe>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="screen-label">订单详情</div>
+    </div>
+    
+    <!-- 个人中心页 -->
+    <div>
+      <div class="iphone-frame">
+        <div class="dynamic-island"></div>
+        <div class="status-bar">
+          <div class="status-bar-time">15:46</div>
+          <div class="status-bar-right">
+            <div class="signal">
+              <i class="fas fa-signal"></i>
+            </div>
+            <div class="wifi">
+              <i class="fas fa-wifi"></i>
+            </div>
+            <div class="battery">
+              <div class="battery-level"></div>
+            </div>
+          </div>
+        </div>
+        <div class="screen">
+          <iframe src="my-profile.html" class="app-frame"></iframe>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="screen-label">个人中心</div>
+    </div>
+
+     <!-- 我的钱包页 -->
+     <div>
+        <div class="iphone-frame">
+          <div class="dynamic-island"></div>
+          <div class="status-bar">
+            <div class="status-bar-time">15:44</div>
+            <div class="status-bar-right">
+              <div class="signal">
+                <i class="fas fa-signal"></i>
+              </div>
+              <div class="wifi">
+                <i class="fas fa-wifi"></i>
+              </div>
+              <div class="battery">
+                <div class="battery-level"></div>
+              </div>
+            </div>
+          </div>
+          <div class="screen">
+            <iframe src="wallet.html" class="app-frame"></iframe>
+          </div>
+          <div class="home-indicator"></div>
+        </div>
+        <div class="screen-label">我的钱包</div>
+      </div>
+
+    <!-- 会员充值页 -->
+    <div>
+      <div class="iphone-frame">
+        <div class="dynamic-island"></div>
+        <div class="status-bar">
+          <div class="status-bar-time">15:47</div>
+          <div class="status-bar-right">
+            <div class="signal">
+              <i class="fas fa-signal"></i>
+            </div>
+            <div class="wifi">
+              <i class="fas fa-wifi"></i>
+            </div>
+            <div class="battery">
+              <div class="battery-level"></div>
+            </div>
+          </div>
+        </div>
+        <div class="screen">
+          <iframe src="membership-topup.html" class="app-frame"></iframe>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="screen-label">会员充值</div>
+    </div>
+
+    <!-- 礼品卡页 -->
+    <div>
+      <div class="iphone-frame">
+        <div class="dynamic-island"></div>
+        <div class="status-bar">
+          <div class="status-bar-time">15:48</div>
+          <div class="status-bar-right">
+            <div class="signal">
+              <i class="fas fa-signal"></i>
+            </div>
+            <div class="wifi">
+              <i class="fas fa-wifi"></i>
+            </div>
+            <div class="battery">
+              <div class="battery-level"></div>
+            </div>
+          </div>
+        </div>
+        <div class="screen">
+          <iframe src="gift-card.html" class="app-frame"></iframe>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="screen-label">礼品卡</div>
+    </div>
+
+  </div>
+  
+  <script>
+    // 修复iframe中的返回按钮
+    function fixIframeBackButtons() {
+      const frames = document.querySelectorAll('iframe.app-frame');
+      frames.forEach(frame => {
+        try {
+          // 确保iframe内容已加载
+          if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
+            // 访问iframe内容
+            const doc = frame.contentDocument || frame.contentWindow.document;
+            
+            // 找到所有返回按钮
+            const backButtons = doc.querySelectorAll('.back-button');
+            
+            backButtons.forEach(button => {
+              // 保存原始onclick值
+              const originalOnclick = button.getAttribute('onclick');
+              let targetUrl = '';
+              
+              // 提取目标URL
+              if (originalOnclick) {
+                const match = originalOnclick.match(/window\.location\.href\s*=\s*['"]([^'"]+)['"]/);
+                if (match && match[1]) {
+                  targetUrl = match[1];
+                }
+              }
+              
+              // 移除原始onclick属性以避免冲突
+              button.removeAttribute('onclick');
+              
+              // 添加新的事件处理程序
+              button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log(`返回到: ${targetUrl}`);
+                
+                if (targetUrl) {
+                  frame.src = targetUrl;
+                } else {
+                  frame.src = 'home.html';
+                }
+                return false;
+              });
+            });
+            
+            // 处理内部链接，确保它们在iframe内正确导航
+            const links = doc.querySelectorAll('a[href]:not([href^="#"]):not([href^="javascript"]):not([href^="http"])');
+            links.forEach(link => {
+              link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  frame.src = href;
+                  return false;
+                }
+              });
+            });
+          }
+        } catch (e) {
+          console.error('处理iframe出错:', e);
+        }
+      });
+    }
+    
+    // 监控iframe加载和内容变化
+    function setupIframeListeners() {
+      const frames = document.querySelectorAll('iframe.app-frame');
+      
+      frames.forEach(frame => {
+        // 当iframe加载完成时修复返回按钮
+        frame.addEventListener('load', function() {
+          // 给内容一点时间完全加载
+          setTimeout(fixIframeBackButtons, 200);
+          
+          try {
+            // 监听iframe内部文档点击事件，确保导航后的返回按钮也能正常工作
+            const iframeDoc = frame.contentDocument || frame.contentWindow.document;
+            iframeDoc.addEventListener('click', function() {
+              // 延迟检查，因为点击可能会导致导航
+              setTimeout(fixIframeBackButtons, 300);
+            });
+          } catch (e) {
+            console.error('无法添加iframe内部事件监听:', e);
+          }
+        });
+      });
+    }
+    
+    // 初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      setupIframeListeners();
+      
+      // 定期检查以确保返回按钮始终可用
+      setInterval(fixIframeBackButtons, 1000);
+      
+      // 监听来自iframe的消息
+      window.addEventListener('message', function(event) {
+        console.log('收到消息:', event.data);
+        
+        // 处理导航消息
+        if (event.data && event.data.type === 'navigation') {
+          const targetUrl = event.data.url;
+          const frames = document.querySelectorAll('iframe.app-frame');
+          
+          // 查找发送消息的iframe
+          frames.forEach(frame => {
+            try {
+              if (frame.contentWindow === event.source) {
+                console.log(`将iframe导航到: ${targetUrl}`);
+                frame.src = targetUrl;
+              }
+            } catch (e) {
+              console.error('处理iframe消息时出错:', e);
+            }
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

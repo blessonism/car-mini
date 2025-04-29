@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智车养护 - 会员充值</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* 全局滚动条隐藏 */
+    ::-webkit-scrollbar {
+      display: none !important;
+    }
+    
+    * {
+      -ms-overflow-style: none !important;  /* IE and Edge */
+      scrollbar-width: none !important;  /* Firefox */
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8f9ff;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .header {
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 50;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .back-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f3f4f6;
+      color: #1f2937;
+      transition: all 0.2s ease;
+    }
+    
+    .back-button:active {
+      background: #e5e7eb;
+      transform: scale(0.95);
+    }
+    
+    .main-content {
+      padding: 20px;
+      flex-grow: 1;
+      padding-bottom: 100px; /* Space for bottom bar */
+    }
+    
+    .section-heading {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #4b5563;
+    }
+    
+    .membership-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      margin-bottom: 20px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .membership-card.active {
+      border-color: #3b82f6;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    }
+
+    .membership-card-header {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f9fafb;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .membership-card.active .membership-card-header {
+        background: rgba(59, 130, 246, 0.05);
+    }
+
+    .membership-name {
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+    }
+
+    .membership-name i {
+      margin-right: 8px;
+      color: #fbbf24; /* Amber color for crown */
+    }
+
+    .membership-price {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ef4444; /* Red price */
+    }
+
+    .membership-price span {
+      font-size: 14px;
+      font-weight: 500;
+      color: #6b7280;
+      margin-left: 4px;
+    }
+
+    .membership-benefits {
+      padding: 16px 20px;
+      font-size: 14px;
+      color: #4b5563;
+    }
+
+    .membership-benefits ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .membership-benefits li {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+
+     .membership-benefits li:last-child {
+        margin-bottom: 0;
+     }
+
+    .membership-benefits i {
+      margin-right: 8px;
+      color: #10b981; /* Green checkmark */
+      width: 16px; /* Align icons */
+      text-align: center;
+    }
+
+    .discount-tag {
+        background: #fee2e2; /* Light red */
+        color: #dc2626; /* Red */
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-left: 8px;
+    }
+            
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      padding: 16px 20px;
+      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: flex-end; /* Align button to the right */
+      align-items: center;
+      z-index: 50;
+    }
+    
+    .confirm-button {
+      display: block;
+      padding: 12px 30px;
+      background: #3b82f6;
+      color: white;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    
+    .confirm-button:active {
+      transform: scale(0.98);
+      background: #2563eb;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <button id="backButton" class="back-button">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <h1 class="text-lg font-semibold">开通会员</h1>
+    <div class="w-9"></div>
+  </div>
+  
+  <div class="main-content">
+    <div class="section-heading">选择会员套餐</div>
+
+    <!-- Monthly Membership -->
+    <div class="membership-card active" data-price="68" data-name="月度会员">
+      <div class="membership-card-header">
+        <div class="membership-name">
+          <i class="fas fa-crown"></i>月度会员
+        </div>
+        <div class="membership-price">¥168<span>/月</span></div>
+      </div>
+      <div class="membership-benefits">
+        <ul>
+          <li><i class="fas fa-check-circle"></i>每月免费洗车 1 次</li>
+          <li><i class="fas fa-check-circle"></i>标准洗车 9 折优惠</li>
+          <li><i class="fas fa-check-circle"></i>美容服务 9.5 折</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Quarterly Membership -->
+    <div class="membership-card" data-price="188" data-name="季度会员">
+      <div class="membership-card-header">
+        <div class="membership-name">
+          <i class="fas fa-crown"></i>季度会员
+          <span class="discount-tag">省¥168</span>
+        </div>
+        <div class="membership-price">¥888<span>/季</span></div>
+      </div>
+      <div class="membership-benefits">
+        <ul>
+          <li><i class="fas fa-check-circle"></i>每月免费洗车 1 次</li>
+          <li><i class="fas fa-check-circle"></i>标准洗车 8.5 折优惠</li>
+          <li><i class="fas fa-check-circle"></i>美容服务 9 折</li>
+          <li><i class="fas fa-check-circle"></i>赠送 ¥10 优惠券</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Annual Membership -->
+    <div class="membership-card" data-price="688" data-name="年度会员">
+      <div class="membership-card-header">
+        <div class="membership-name">
+          <i class="fas fa-crown"></i>年度会员
+          <span class="discount-tag">推荐 · 省¥1128</span>
+        </div>
+        <div class="membership-price">¥1688<span>/年</span></div>
+      </div>
+      <div class="membership-benefits">
+        <ul>
+          <li><i class="fas fa-check-circle"></i>每月免费洗车 2 次</li>
+          <li><i class="fas fa-check-circle"></i>标准洗车 8 折优惠</li>
+          <li><i class="fas fa-check-circle"></i>美容服务 8.5 折</li>
+          <li><i class="fas fa-check-circle"></i>赠送 ¥50 优惠券包</li>
+          <li><i class="fas fa-check-circle"></i>生日专属礼遇</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  
+  <!-- Bottom action bar -->
+  <div class="bottom-bar">
+    <a href="#" id="confirmPaymentButton" class="confirm-button">立即支付 ¥68</a>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('会员充值页面初始化');
+      
+      const backButton = document.getElementById('backButton');
+      if (backButton) {
+        backButton.addEventListener('click', function() {
+          window.history.back(); 
+        });
+      }
+
+      const membershipCards = document.querySelectorAll('.membership-card');
+      const confirmButton = document.getElementById('confirmPaymentButton');
+
+      function updatePaymentButton(price) {
+          if (confirmButton) {
+              confirmButton.textContent = `立即支付 ¥${price}`;
+              // confirmButton.href = `/process-membership-payment?plan=...&price=${price}`;
+          }
+      }
+
+      membershipCards.forEach(card => {
+        card.addEventListener('click', function() {
+          // Remove active class from all cards
+          membershipCards.forEach(c => c.classList.remove('active'));
+          // Add active class to clicked card
+          this.classList.add('active');
+          // Update payment button
+          const price = this.dataset.price;
+          updatePaymentButton(price);
+        });
+      });
+
+      // Initial update based on default selection
+      const defaultActiveCard = document.querySelector('.membership-card.active');
+      if (defaultActiveCard) {
+          updatePaymentButton(defaultActiveCard.dataset.price);
+      } else if (membershipCards.length > 0) {
+          // If no default, select the first one
+          membershipCards[0].classList.add('active');
+          updatePaymentButton(membershipCards[0].dataset.price);
+      } else {
+          updatePaymentButton(0); // Should not happen if cards exist
+      }
+
+    });
+  </script>
+</body>
+</html> 

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智车养护 - 首页</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* 全局滚动条隐藏 */
+    ::-webkit-scrollbar {
+      display: none !important;
+    }
+    
+    * {
+      -ms-overflow-style: none !important;  /* IE and Edge */
+      scrollbar-width: none !important;  /* Firefox */
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8f9ff;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+      height: 160px;
+      border-radius: 0 0 16px 16px;
+      position: relative;
+      color: white;
+      padding: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .search-bar {
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      backdrop-filter: blur(5px);
+    }
+    
+    .search-bar i {
+      margin-right: 8px;
+      opacity: 0.8;
+    }
+    
+    .search-bar input {
+      background: transparent;
+      border: none;
+      width: 100%;
+      color: white;
+      outline: none;
+      font-size: 14px;
+    }
+    
+    .search-bar input::placeholder {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      padding: 16px;
+      margin-bottom: 16px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .card:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+    }
+    
+    .service-card {
+      display: flex;
+      align-items: center;
+      border-radius: 12px;
+      background: white;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      margin-bottom: 10px;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .service-card:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+    }
+    
+    .service-image {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+    }
+    
+    .service-content {
+      padding: 10px 15px;
+      flex: 1;
+    }
+    
+    .service-title {
+      font-weight: 600;
+      font-size: 16px;
+      color: #1f2937;
+      margin-bottom: 4px;
+    }
+    
+    .service-desc {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+    
+    .service-price {
+      font-size: 14px;
+      color: #ef4444;
+      font-weight: 600;
+    }
+    
+    .category-tabs {
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      margin: 20px 0 10px;
+      padding-bottom: 5px;
+    }
+    
+    .category-tabs::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .category-tab {
+      padding: 8px 16px;
+      margin-right: 10px;
+      background: #f3f4f6;
+      border-radius: 20px;
+      font-size: 14px;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    
+    .category-tab.active {
+      background: #3b82f6;
+      color: white;
+      font-weight: 500;
+    }
+    
+    .banner {
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 15px 0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    
+    .banner img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+    }
+    
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      display: flex;
+      justify-content: space-evenly;
+      padding: 12px 0 25px;
+      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+      z-index: 100;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 20px;
+      color: #9ca3af;
+    }
+    
+    .nav-item.active {
+      color: #3b82f6;
+    }
+    
+    .nav-text {
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 25px 0 15px;
+      color: #1f2937;
+    }
+    
+    .main-content {
+      padding: 0 20px 100px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header section with search -->
+  <div class="header">
+    <div class="flex items-center justify-between">
+      <h1 class="text-xl font-bold">智车养护</h1>
+      <div class="flex items-center space-x-3">
+        <i class="fas fa-bell text-lg"></i>
+        <i class="fas fa-map-marker-alt text-lg"></i>
+      </div>
+    </div>
+    
+    <div class="search-bar">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="搜索服务或门店...">
+    </div>
+  </div>
+  
+  <div class="main-content">
+    <!-- Banner section -->
+    <div class="banner" style="position: relative; height: 120px; background: linear-gradient(135deg, #4287FF 0%, #2366FF 100%); padding: 15px; display: flex; align-items: center; overflow: hidden; color: white; border-radius: 12px;">
+      <div style="width: 65%; z-index: 2;">
+        <h3 style="font-weight: 700; font-size: 18px; margin-bottom: 6px;">新用户专享特惠</h3>
+        <p style="font-size: 14px; opacity: 0.9; margin-bottom: 12px; line-height: 1.4;">首次下单即享8折优惠</p>
+        <button style="background: white; color: #2366FF; border: none; padding: 7px 16px; border-radius: 30px; font-size: 13px; font-weight: 600;">立即领取 ›</button>
+      </div>
+      <div style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 100px; height: 100px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; z-index: 1;">
+        <i class="fas fa-car-side" style="font-size: 42px; color: rgba(255, 255, 255, 0.8);"></i>
+      </div>
+    </div>
+    
+    <!-- Service categories -->
+    <div class="category-tabs">
+      <div class="category-tab active">全部</div>
+      <div class="category-tab">洗车</div>
+      <div class="category-tab">美容</div>
+      <div class="category-tab">保养</div>
+      <div class="category-tab">维修</div>
+      <div class="category-tab">轮胎</div>
+    </div>
+    
+    <!-- Nearby stores -->
+    <h2 class="section-title">店铺公告</h2>
+    <div class="card">
+      <div class="flex items-center mb-3">
+        <i class="fas fa-bullhorn text-blue-500 mr-2 text-lg"></i>
+        <div class="font-semibold">五一节假日营业公告</div>
+      </div>
+      <div class="text-sm text-gray-600 mb-3">
+        尊敬的顾客，五一期间本店正常营业，营业时间为早9:00至晚8:00。预约爆满，建议提前2-3天预约服务。
+      </div>
+      <div class="text-xs text-gray-400">发布时间: 2025-04-25</div>
+    </div>
+    
+    <div class="card">
+      <div class="flex items-center mb-3">
+        <i class="fas fa-gift text-red-500 mr-2 text-lg"></i>
+        <div class="font-semibold">会员专享优惠活动</div>
+      </div>
+      <div class="text-sm text-gray-600 mb-3">
+        即日起至2025年5月31日，新老会员充值满500元赠送价值100元的精致洗车券一张，充值满1000元可获赠车内除菌消毒服务一次。
+      </div>
+      <div class="text-xs text-gray-400">发布时间: 2025-04-20</div>
+    </div>
+    
+    <!-- Popular services -->
+    <h2 class="section-title">热门服务</h2>
+    <a href="appointment-service.html" class="service-card">
+      <div class="service-image" style="background-color: #e6f2ff; display: flex; align-items: center; justify-content: center;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 17h2V5H3v12h2"></path>
+          <path d="M14 17H8"></path>
+          <path d="M5 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0zm10 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0z"></path>
+        </svg>
+      </div>
+      <div class="service-content">
+        <div class="service-title">标准洗车</div>
+        <div class="service-desc">外观清洗 + 轮毂清洁</div>
+        <div class="service-price">¥39.9</div>
+      </div>
+    </a>
+    
+    <a href="appointment-service.html" class="service-card">
+      <div class="service-image" style="background-color: #e6f7ff; display: flex; align-items: center; justify-content: center;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3v18h18"></path>
+          <rect x="7" y="10" width="4" height="8" rx="1"></rect>
+          <rect x="15" y="5" width="4" height="13" rx="1"></rect>
+        </svg>
+      </div>
+      <div class="service-content">
+        <div class="service-title">精致洗车</div>
+        <div class="service-desc">标准洗车 + 内饰清洁 + 玻璃清洁</div>
+        <div class="service-price">¥69.9</div>
+      </div>
+    </a>
+    
+    <a href="appointment-service.html" class="service-card">
+      <div class="service-image" style="background-color: #fff7e6; display: flex; align-items: center; justify-content: center;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 5H4a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm0 8H4a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1zm8 0h-4a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1z"></path>
+          <path d="M16 3h-4a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"></path>
+        </svg>
+      </div>
+      <div class="service-content">
+        <div class="service-title">常规保养</div>
+        <div class="service-desc">机油更换 + 机滤更换 + 多项检查</div>
+        <div class="service-price">¥299起</div>
+      </div>
+    </a>
+  </div>
+  
+  <!-- Bottom navigation -->
+  <div class="bottom-nav">
+    <a href="home.html" class="nav-item active">
+      <i class="fas fa-home"></i>
+      <div class="nav-text">首页</div>
+    </a>
+    
+    <a href="appointment-service.html" class="nav-item">
+      <i class="fas fa-car"></i>
+      <div class="nav-text">服务</div>
+    </a>
+    
+    <a href="#" class="nav-item">
+      <i class="fas fa-list-alt"></i>
+      <div class="nav-text">订单</div>
+    </a>
+    
+    <a href="my-profile.html" class="nav-item">
+      <i class="fas fa-user"></i>
+      <div class="nav-text">我的</div>
+    </a>
+  </div>
+
+  <script>
+    // 添加点击提示功能
+    document.querySelectorAll('.banner, .category-tab:not(.active)').forEach(item => {
+      item.addEventListener('click', function() {
+        alert('该功能正在开发中');
+      });
+    });
+  </script>
+</body>
+</html> 

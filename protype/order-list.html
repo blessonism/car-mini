@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智车养护 - 我的订单</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* 全局滚动条隐藏 */
+    ::-webkit-scrollbar {
+      display: none !important;
+    }
+    
+    * {
+      -ms-overflow-style: none !important;  /* IE and Edge */
+      scrollbar-width: none !important;  /* Firefox */
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8f9ff;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    
+    .header {
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 50;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .status-filter {
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      padding: 10px 0;
+      margin: 0 20px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    
+    .status-filter::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .status-tag {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 20px;
+      margin-right: 8px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    .status-tag.active {
+      background-color: #3b82f6;
+      color: white;
+    }
+    
+    .status-tag:not(.active) {
+      background-color: #f3f4f6;
+      color: #6b7280;
+    }
+    
+    .order-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      margin-bottom: 16px;
+      padding: 16px;
+    }
+    
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    
+    .order-title {
+      font-weight: 600;
+    }
+    
+    .order-status {
+      font-size: 13px;
+    }
+    
+    .status-waiting {
+      color: #f59e0b;
+    }
+    
+    .status-ready {
+      color: #3b82f6;
+    }
+    
+    .status-washing {
+      color: #10b981;
+    }
+    
+    .status-done {
+      color: #9ca3af;
+    }
+    
+    .order-info {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .order-detail {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    
+    .order-price {
+      font-weight: 600;
+      color: #ef4444;
+    }
+    
+    .order-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    .order-button {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    .primary-button {
+      background: #3b82f6;
+      color: white;
+    }
+    
+    .secondary-button {
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+    
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 64px 24px;
+      text-align: center;
+    }
+    
+    .empty-icon {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 24px;
+      opacity: 0.5;
+    }
+    
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      display: flex;
+      justify-content: space-evenly;
+      padding: 12px 0 25px;
+      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+      z-index: 100;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 20px;
+      color: #9ca3af;
+      text-decoration: none;
+    }
+    
+    .nav-item.active {
+      color: #3b82f6;
+    }
+    
+    .nav-text {
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    
+    .main-content {
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <div class="header">
+    <div class="w-9"></div> <!-- 左侧占位 -->
+    <h1 class="text-lg font-semibold">我的订单</h1>
+    <div class="w-9"></div> <!-- 右侧占位 -->
+  </div>
+
+  <!-- 状态筛选栏 -->
+  <div class="status-filter">
+    <div class="status-tag active">全部</div>
+    <div class="status-tag">待到店</div>
+    <div class="status-tag">等待服务</div>
+    <div class="status-tag">洗车中</div>
+    <div class="status-tag">已完成</div>
+  </div>
+
+  <!-- 订单列表 -->
+  <div class="main-content">
+    <div class="order-card">
+      <div class="order-header">
+        <div class="order-title">标准洗车</div>
+        <div class="order-status status-waiting">服务中</div>
+      </div>
+      
+      <div class="order-info">
+        <div class="order-detail">奔驰 C260L · 粤B12345</div>
+        <div class="order-price">¥39.9</div>
+      </div>
+      
+      <div class="order-actions">
+        <a href="order-detail.html" class="order-button secondary-button">查看详情</a>
+        <a href="store-order-detail.html" class="order-button primary-button">追踪服务</a>
+      </div>
+    </div>
+    
+    <div class="order-card">
+      <div class="order-header">
+        <div class="order-title">精致洗车</div>
+        <div class="order-status status-ready">等待服务</div>
+      </div>
+      
+      <div class="order-info">
+        <div class="order-detail">奥迪A6L · 京A12345</div>
+        <div class="order-price">¥59.9</div>
+      </div>
+      
+      <div class="order-actions">
+        <a href="order-detail.html" class="order-button secondary-button">查看详情</a>
+        <button class="order-button secondary-button">取消预约</button>
+      </div>
+    </div>
+    
+    <div class="order-card">
+      <div class="order-header">
+        <div class="order-title">机油更换</div>
+        <div class="order-status status-done">已完成</div>
+      </div>
+      
+      <div class="order-info">
+        <div class="order-detail">奔驰 C260L · 粤B12345</div>
+        <div class="order-price">¥299</div>
+      </div>
+      
+      <div class="order-actions">
+        <a href="order-detail.html" class="order-button secondary-button">查看详情</a>
+        <button class="order-button secondary-button">再次预约</button>
+      </div>
+    </div>
+
+    <!-- 更多订单 -->
+    <div class="order-card">
+      <div class="order-header">
+        <div class="order-title">轮胎更换</div>
+        <div class="order-status status-washing">洗车中</div>
+      </div>
+      
+      <div class="order-info">
+        <div class="order-detail">奔驰 C260L · 粤B12345</div>
+        <div class="order-price">¥328</div>
+      </div>
+      
+      <div class="order-actions">
+        <a href="order-detail.html" class="order-button secondary-button">查看详情</a>
+        <a href="store-order-detail.html" class="order-button primary-button">追踪服务</a>
+      </div>
+    </div>
+
+    <div class="order-card">
+      <div class="order-header">
+        <div class="order-title">内饰清洁</div>
+        <div class="order-status status-done">已完成</div>
+      </div>
+      
+      <div class="order-info">
+        <div class="order-detail">奥迪A6L · 京A12345</div>
+        <div class="order-price">¥129</div>
+      </div>
+      
+      <div class="order-actions">
+        <a href="order-detail.html" class="order-button secondary-button">查看详情</a>
+        <button class="order-button secondary-button">再次预约</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部导航 -->
+  <div class="bottom-nav">
+    <a href="home.html" class="nav-item">
+      <i class="fas fa-home"></i>
+      <div class="nav-text">首页</div>
+    </a>
+    
+    <a href="appointment-service.html" class="nav-item">
+      <i class="fas fa-car"></i>
+      <div class="nav-text">服务</div>
+    </a>
+    
+    <a href="order-list.html" class="nav-item active">
+      <i class="fas fa-list-alt"></i>
+      <div class="nav-text">订单</div>
+    </a>
+    
+    <a href="my-profile.html" class="nav-item">
+      <i class="fas fa-user"></i>
+      <div class="nav-text">我的</div>
+    </a>
+  </div>
+  
+  <script>
+    // 添加点击提示功能
+    document.querySelectorAll('.status-tag:not(.active), .order-actions button').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('该功能正在开发中');
+      });
+    });
+  </script>
+</body>
+</html> 

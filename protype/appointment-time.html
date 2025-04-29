@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智车养护 - 选择时间</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* 全局滚动条隐藏 */
+    ::-webkit-scrollbar {
+      display: none !important;
+    }
+    
+    * {
+      -ms-overflow-style: none !important;  /* IE and Edge */
+      scrollbar-width: none !important;  /* Firefox */
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8f9ff;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    
+    .header {
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 50;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .back-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f3f4f6;
+      color: #1f2937;
+      transition: all 0.2s ease;
+    }
+    
+    .back-button:active {
+      background: #e5e7eb;
+      transform: scale(0.95);
+    }
+    
+    .main-content {
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+    
+    .section-heading {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .section-heading i {
+      margin-right: 10px;
+      color: #3b82f6;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    
+    .card-header {
+      background: #f9fafb;
+      padding: 12px 20px;
+      border-bottom: 1px solid #f3f4f6;
+      font-weight: 600;
+      color: #4b5563;
+      font-size: 15px;
+    }
+    
+    .calendar {
+      padding: 15px;
+    }
+    
+    .calendar-row {
+      display: flex;
+      margin-bottom: 12px;
+    }
+    
+    .calendar-day {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 0;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    
+    .calendar-day.active {
+      background: #3b82f6;
+      color: white;
+    }
+    
+    .calendar-day:hover:not(.active, .disabled) {
+      background: #f3f4f6;
+    }
+    
+    .calendar-day.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    
+    .weekday {
+      font-size: 12px;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    
+    .date {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .time-slots-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 15px;
+    }
+    
+    .time-slot {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .time-slot.active {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.05);
+      color: #3b82f6;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    
+    .time-slot:hover:not(.booked, .active) {
+      border-color: #d1d5db;
+      background: #f9fafb;
+    }
+    
+    .time-slot.booked {
+      background: #f3f4f6;
+      border-color: #e5e7eb;
+      color: transparent;
+      cursor: not-allowed;
+      position: relative;
+    }
+    
+    .time-slot.booked::after {
+      content: '已约满';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(243, 244, 246, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 500;
+      border-radius: 8px;
+    }
+    
+    .service-summary {
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .service-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      object-fit: cover;
+      margin-right: 16px;
+    }
+    
+    .service-details h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .service-meta {
+      display: flex;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    
+    .service-meta div {
+      display: flex;
+      align-items: center;
+      margin-right: 16px;
+    }
+    
+    .service-meta i {
+      margin-right: 4px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #4b5563;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      background: white;
+      font-size: 14px;
+      color: #1f2937;
+      transition: all 0.2s ease;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .license-plate {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .license-province {
+      width: 30%;
+    }
+    
+    .license-number {
+      width: 70%;
+    }
+    
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      padding: 16px 20px;
+      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 50;
+    }
+    
+    .price-display {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ef4444;
+    }
+    
+    .confirm-button {
+      display: block;
+      padding: 12px 30px;
+      background: #3b82f6;
+      color: white;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    
+    .confirm-button:active {
+      transform: scale(0.98);
+      background: #2563eb;
+    }
+    
+    .vehicle-card {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid #f3f4f6;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    
+    .vehicle-card:last-child {
+      border-bottom: none;
+    }
+    
+    .vehicle-card.selected {
+      background-color: rgba(59, 130, 246, 0.05);
+    }
+    
+    .radio-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #d1d5db;
+      margin-right: 14px;
+      position: relative;
+    }
+    
+    .vehicle-card.selected .radio-circle {
+      border-color: #3b82f6;
+    }
+    
+    .vehicle-card.selected .radio-circle:after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #3b82f6;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with back button -->
+  <div class="header">
+    <button id="backButton" class="back-button">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <h1 class="text-lg font-semibold">预约时间</h1>
+    <div class="w-9"></div> <!-- Spacer for centered title -->
+  </div>
+  
+  <div class="main-content">
+    <!-- Selected service info -->
+    <div class="card service-summary">
+      <div class="service-image" style="background-color: #e6f2ff; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 12px; margin-right: 16px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 17h2V5H3v12h2"></path>
+          <path d="M14 17H8"></path>
+          <path d="M5 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0zm10 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0z"></path>
+        </svg>
+      </div>
+      <div class="service-details">
+        <h3>标准洗车</h3>
+        <div class="service-meta">
+          <div><i class="far fa-clock"></i> 30分钟</div>
+          <div><i class="fas fa-tag"></i> ¥39.9</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 服务模式选择卡片 -->
+    <div class="section-heading">
+      <i class="fas fa-hand-pointer"></i>
+      <span>选择服务方式</span>
+    </div>
+    
+    <div class="flex gap-4 mb-1">
+      <div id="immediate-service" class="card cursor-pointer flex-1 p-4 text-center transition-all" style="border: 2px solid #3b82f6;">
+        <div class="flex justify-center mb-2">
+          <i class="fas fa-bolt text-yellow-500 text-2xl"></i>
+        </div>
+        <div class="font-medium">立即服务</div>
+        <div class="text-xs text-gray-500 mt-1">到店即可享受服务</div>
+      </div>
+      
+      <div id="appointment-service" class="card cursor-pointer flex-1 p-4 text-center transition-all" style="border: 2px solid transparent;">
+        <div class="flex justify-center mb-2">
+          <i class="far fa-calendar-check text-blue-500 text-2xl"></i>
+        </div>
+        <div class="font-medium">预约服务</div>
+        <div class="text-xs text-gray-500 mt-1">选择时间提前预约</div>
+      </div>
+    </div>
+    
+    <!-- Date selection -->
+    <div class="section-heading">
+      <i class="far fa-calendar-alt"></i>
+      <span>选择日期</span>
+    </div>
+    
+    <div class="card">
+      <div class="card-header">2023年11月</div>
+      <div class="calendar">
+        <div class="calendar-row">
+          <div class="calendar-day disabled">
+            <div class="weekday">周一</div>
+            <div class="date">20</div>
+          </div>
+          <div class="calendar-day disabled">
+            <div class="weekday">周二</div>
+            <div class="date">21</div>
+          </div>
+          <div class="calendar-day disabled">
+            <div class="weekday">周三</div>
+            <div class="date">22</div>
+          </div>
+          <div class="calendar-day disabled">
+            <div class="weekday">周四</div>
+            <div class="date">23</div>
+          </div>
+          <div class="calendar-day">
+            <div class="weekday">周五</div>
+            <div class="date">24</div>
+          </div>
+          <div class="calendar-day">
+            <div class="weekday">周六</div>
+            <div class="date">25</div>
+          </div>
+          <div class="calendar-day active">
+            <div class="weekday">周日</div>
+            <div class="date">26</div>
+          </div>
+        </div>
+        <div class="calendar-row">
+          <div class="calendar-day">
+            <div class="weekday">周一</div>
+            <div class="date">27</div>
+          </div>
+          <div class="calendar-day">
+            <div class="weekday">周二</div>
+            <div class="date">28</div>
+          </div>
+          <div class="calendar-day">
+            <div class="weekday">周三</div>
+            <div class="date">29</div>
+          </div>
+          <div class="calendar-day">
+            <div class="weekday">周四</div>
+            <div class="date">30</div>
+          </div>
+          <div class="calendar-day">
+            <div class="weekday">周五</div>
+            <div class="date">1</div>
+          </div>
+          <div class="calendar-day">
+            <div class="weekday">周六</div>
+            <div class="date">2</div>
+          </div>
+          <div class="calendar-day">
+            <div class="weekday">周日</div>
+            <div class="date">3</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Time selection -->
+    <div class="section-heading">
+      <i class="far fa-clock"></i>
+      <span>选择时间段</span>
+    </div>
+    
+    <div class="card">
+      <div class="time-slots-grid">
+        <div class="time-slot">09:00</div>
+        <div class="time-slot booked"></div>
+        <div class="time-slot">10:00</div>
+        <div class="time-slot booked"></div>
+        <div class="time-slot active">11:00</div>
+        <div class="time-slot">11:30</div>
+        <div class="time-slot">14:00</div>
+        <div class="time-slot">14:30</div>
+        <div class="time-slot booked"></div>
+        <div class="time-slot">15:30</div>
+        <div class="time-slot">16:00</div>
+        <div class="time-slot">16:30</div>
+      </div>
+    </div>
+    
+    <!-- Vehicle information -->
+    <div class="section-heading">
+      <i class="fas fa-car"></i>
+      <span>车辆信息</span>
+    </div>
+    
+    <div class="card" style="padding: 0;">
+      <!-- 已保存的车辆信息卡片选择 -->
+      <div id="savedVehicles">
+        <div class="flex justify-between items-center p-4 border-b border-gray-100">
+          <div class="font-medium">选择车辆</div>
+          <button id="addNewVehicle" class="text-sm text-blue-500 font-medium">添加新车辆</button>
+        </div>
+        
+        <div class="vehicle-card selected">
+          <div class="radio-circle"></div>
+          <div class="flex-1">
+            <div class="font-medium">奥迪A6L</div>
+            <div class="text-gray-500 text-sm mt-1">京A12345</div>
+          </div>
+          <div class="text-blue-500" onclick="editVehicle(0)">
+            <i class="fas fa-pen text-sm"></i>
+          </div>
+        </div>
+        
+        <div class="vehicle-card">
+          <div class="radio-circle"></div>
+          <div class="flex-1">
+            <div class="font-medium">宝马3系</div>
+            <div class="text-gray-500 text-sm mt-1">京B54321</div>
+          </div>
+          <div class="text-blue-500" onclick="editVehicle(1)">
+            <i class="fas fa-pen text-sm"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 添加/编辑车辆表单 -->
+      <div id="vehicleForm" style="display: none; padding: 16px;">
+        <div class="flex justify-between items-center mb-4">
+          <div class="font-medium">添加车辆</div>
+          <button id="cancelAddVehicle" class="text-sm text-gray-500">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">车牌号</label>
+          <div class="license-plate">
+            <select class="form-input license-province" id="licenseProvince">
+              <option>京</option>
+              <option>沪</option>
+              <option>粤</option>
+              <option>浙</option>
+              <option>苏</option>
+              <option>鲁</option>
+            </select>
+            <input type="text" class="form-input license-number" id="licenseNumber" placeholder="输入车牌号">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">车型</label>
+          <input type="text" class="form-input" id="carModel" placeholder="例如：奥迪A6L">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">车身颜色</label>
+          <input type="text" class="form-input" id="carColor" placeholder="例如：黑色">
+        </div>
+        
+        <button id="saveVehicle" class="w-full py-3 bg-blue-500 text-white font-medium rounded-lg mt-4">
+          保存车辆信息
+        </button>
+      </div>
+    </div>
+    
+    <div class="form-group mt-4">
+      <label class="form-label">备注（选填）</label>
+      <textarea class="form-input" rows="3" placeholder="有特殊需求可以在这里备注"></textarea>
+    </div>
+  </div>
+  
+  <!-- Bottom action bar -->
+  <div class="bottom-bar">
+    <div class="price-display">¥39.9</div>
+    <a href="appointment-payment.html" class="confirm-button">提交订单</a>
+  </div>
+  
+  <script>
+    // 当DOM内容加载完成后初始化页面
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('============= 页面初始化开始 =============');
+      initializePage();
+    });
+    
+    // 页面初始化函数
+    function initializePage() {
+      try {
+        console.log('初始化页面元素和事件');
+        
+        // 初始化按钮和事件
+        initializeButtons();
+        
+        // 初始化日历和时间选择
+        initializeCalendarAndTime();
+        
+        // 初始化车辆选择
+        initializeVehicleSelection();
+        
+        console.log('页面初始化完成');
+      } catch (e) {
+        console.error('页面初始化失败:', e);
+      }
+    }
+    
+    // 初始化按钮和事件处理
+    function initializeButtons() {
+      // 返回按钮
+      const backButton = document.getElementById('backButton');
+      if (backButton) {
+        backButton.addEventListener('click', function() {
+          window.location.href = 'appointment-service.html';
+        });
+        console.log('返回按钮已初始化');
+      }
+      
+      // 服务模式按钮
+      const immediateBtn = document.getElementById('immediate-service');
+      const appointmentBtn = document.getElementById('appointment-service');
+      
+      if (immediateBtn && appointmentBtn) {
+        // 立即服务按钮事件
+        immediateBtn.addEventListener('click', function() {
+          setServiceMode('immediate');
+        });
+        
+        // 预约服务按钮事件
+        appointmentBtn.addEventListener('click', function() {
+          setServiceMode('appointment');
+        });
+        
+        // 默认选择立即服务模式
+        setTimeout(function() {
+          setServiceMode('immediate');
+        }, 100);
+        
+        console.log('服务模式按钮已初始化');
+      } else {
+        console.warn('未找到服务模式按钮');
+      }
+    }
+    
+    // 设置服务模式 (immediate 或 appointment)
+    function setServiceMode(mode) {
+      try {
+        const immediateBtn = document.getElementById('immediate-service');
+        const appointmentBtn = document.getElementById('appointment-service');
+        const confirmBtn = document.querySelector('.confirm-button');
+        
+        if (mode === 'immediate') {
+          console.log('设置为立即服务模式');
+          
+          // 更新按钮样式
+          if (immediateBtn) immediateBtn.style.border = '2px solid #3b82f6';
+          if (appointmentBtn) appointmentBtn.style.border = '2px solid transparent';
+          
+          // 更新确认按钮
+          if (confirmBtn) {
+            confirmBtn.textContent = '立即下单';
+            confirmBtn.href = 'service-confirm.html?mode=immediate';
+          }
+          
+          // 隐藏日期和时间区域
+          toggleDateTimeSection(false);
+        } else {
+          console.log('设置为预约服务模式');
+          
+          // 更新按钮样式
+          if (appointmentBtn) appointmentBtn.style.border = '2px solid #3b82f6';
+          if (immediateBtn) immediateBtn.style.border = '2px solid transparent';
+          
+          // 更新确认按钮
+          if (confirmBtn) {
+            confirmBtn.textContent = '提交订单';
+            confirmBtn.href = 'appointment-payment.html';
+          }
+          
+          // 显示日期和时间区域
+          toggleDateTimeSection(true);
+        }
+      } catch (e) {
+        console.error('设置服务模式失败:', e);
+      }
+    }
+    
+    // 显示或隐藏日期和时间区域
+    function toggleDateTimeSection(show) {
+      try {
+        // 查找日期和时间区域的标题
+        const dateTimeHeadings = Array.from(document.querySelectorAll('.section-heading'))
+          .filter(el => {
+            const icon = el.querySelector('i');
+            return icon && (icon.classList.contains('fa-calendar-alt') || icon.classList.contains('fa-clock'));
+          });
+        
+        dateTimeHeadings.forEach(heading => {
+          // 修复：隐藏/显示标题本身，而不是其父节点
+          const card = heading.nextElementSibling;
+          
+          // 使用 'flex' 因为 .section-heading 使用了 display: flex
+          heading.style.display = show ? 'flex' : 'none'; 
+          
+          // 确保 card 存在且是期望的卡片元素
+          if (card && card.classList.contains('card')) {
+            card.style.display = show ? 'block' : 'none'; // 卡片使用 block
+          }
+        });
+        
+        console.log(`${show ? '显示' : '隐藏'}日期和时间区域`);
+      } catch (e) {
+        console.error('切换日期时间区域显示失败:', e);
+      }
+    }
+    
+    // 初始化日历和时间选择
+    function initializeCalendarAndTime() {
+      try {
+        // 日历天数点击事件
+        const calendarDays = document.querySelectorAll('.calendar-day:not(.disabled)');
+        calendarDays.forEach(day => {
+          day.addEventListener('click', function() {
+            // 移除之前的选中状态
+            document.querySelectorAll('.calendar-day.active').forEach(el => {
+              el.classList.remove('active');
+            });
+            // 添加新的选中状态
+            this.classList.add('active');
+          });
+        });
+        
+        // 时间选择点击事件
+        const timeSlots = document.querySelectorAll('.time-slot:not(.booked)');
+        timeSlots.forEach(slot => {
+          slot.addEventListener('click', function() {
+            // 移除之前的选中状态
+            document.querySelectorAll('.time-slot.active').forEach(el => {
+              el.classList.remove('active');
+            });
+            // 添加新的选中状态
+            this.classList.add('active');
+          });
+        });
+        
+        console.log('日历和时间选择已初始化');
+      } catch (e) {
+        console.error('初始化日历和时间选择失败:', e);
+      }
+    }
+    
+    // 初始化车辆选择
+    function initializeVehicleSelection() {
+      try {
+        // 车辆卡片点击事件
+        const vehicleCards = document.querySelectorAll('.vehicle-card');
+        vehicleCards.forEach(card => {
+          card.addEventListener('click', function() {
+            // 移除之前的选中状态
+            document.querySelectorAll('.vehicle-card.selected').forEach(el => {
+              el.classList.remove('selected');
+            });
+            // 添加新的选中状态
+            this.classList.add('selected');
+          });
+        });
+        
+        // 添加车辆按钮
+        const addVehicleBtn = document.getElementById('addNewVehicle');
+        const cancelAddVehicleBtn = document.getElementById('cancelAddVehicle');
+        const saveVehicleBtn = document.getElementById('saveVehicle');
+        const savedVehiclesSection = document.getElementById('savedVehicles');
+        const vehicleFormSection = document.getElementById('vehicleForm');
+        
+        if (addVehicleBtn) {
+          addVehicleBtn.addEventListener('click', function() {
+            // 显示添加车辆表单，隐藏已保存车辆列表
+            savedVehiclesSection.style.display = 'none';
+            vehicleFormSection.style.display = 'block';
+            // 清空表单字段
+            document.getElementById('licenseNumber').value = '';
+            document.getElementById('carModel').value = '';
+            document.getElementById('carColor').value = '';
+          });
+        }
+        
+        if (cancelAddVehicleBtn) {
+          cancelAddVehicleBtn.addEventListener('click', function() {
+            // 隐藏表单，显示已保存车辆列表
+            vehicleFormSection.style.display = 'none';
+            savedVehiclesSection.style.display = 'block';
+          });
+        }
+        
+        if (saveVehicleBtn) {
+          saveVehicleBtn.addEventListener('click', function() {
+            // 获取表单数据
+            const province = document.getElementById('licenseProvince').value;
+            const number = document.getElementById('licenseNumber').value;
+            const model = document.getElementById('carModel').value;
+            const color = document.getElementById('carColor').value;
+            
+            // 表单验证
+            if (!number || !model || !color) {
+              alert('请填写完整的车辆信息');
+              return;
+            }
+            
+            // 创建新车辆卡片
+            const newVehicleCard = document.createElement('div');
+            newVehicleCard.className = 'vehicle-card';
+            newVehicleCard.innerHTML = `
+              <div class="radio-circle"></div>
+              <div class="flex-1">
+                <div class="font-medium">${model} ${color}</div>
+                <div class="text-gray-500 text-sm mt-1">${province}${number}</div>
+              </div>
+              <div class="text-blue-500" onclick="editVehicle(${document.querySelectorAll('.vehicle-card').length})">
+                <i class="fas fa-pen text-sm"></i>
+              </div>
+            `;
+            
+            // 添加点击事件以选择此车辆
+            newVehicleCard.addEventListener('click', function() {
+              document.querySelectorAll('.vehicle-card.selected').forEach(el => {
+                el.classList.remove('selected');
+              });
+              this.classList.add('selected');
+            });
+            
+            // 将新车辆添加到列表
+            savedVehiclesSection.appendChild(newVehicleCard);
+            
+            // 切换回车辆列表视图
+            vehicleFormSection.style.display = 'none';
+            savedVehiclesSection.style.display = 'block';
+            
+            // 选中新添加的车辆
+            document.querySelectorAll('.vehicle-card.selected').forEach(el => {
+              el.classList.remove('selected');
+            });
+            newVehicleCard.classList.add('selected');
+            
+            // 显示成功消息
+            alert('车辆添加成功');
+          });
+        }
+        
+        console.log('车辆选择已初始化');
+      } catch (e) {
+        console.error('初始化车辆选择失败:', e);
+      }
+    }
+    
+    // 编辑车辆信息
+    function editVehicle(index) {
+      try {
+        // 阻止事件冒泡
+        event.stopPropagation();
+        
+        const vehicleCards = document.querySelectorAll('.vehicle-card');
+        const targetVehicle = vehicleCards[index];
+        
+        if (!targetVehicle) {
+          console.error('未找到指定索引的车辆');
+          return;
+        }
+        
+        // 获取车辆信息
+        const infoElement = targetVehicle.querySelector('.flex-1');
+        const modelColorText = infoElement.querySelector('.font-medium').textContent;
+        const plateText = infoElement.querySelector('.text-gray-500').textContent;
+        
+        // 解析车型和颜色（假设格式为"车型 颜色"）
+        const modelColorParts = modelColorText.split(' ');
+        const model = modelColorParts.slice(0, -1).join(' '); // 最后一个词前的所有词作为车型
+        const color = modelColorParts[modelColorParts.length - 1]; // 最后一个词作为颜色
+        
+        // 解析车牌（假设格式为"省+号码"）
+        const province = plateText.substring(0, 1);
+        const number = plateText.substring(1);
+        
+        // 设置表单字段值
+        const provinceSelect = document.getElementById('licenseProvince');
+        const numberInput = document.getElementById('licenseNumber');
+        const modelInput = document.getElementById('carModel');
+        const colorInput = document.getElementById('carColor');
+        
+        // 设置省份选择框
+        for (let i = 0; i < provinceSelect.options.length; i++) {
+          if (provinceSelect.options[i].text === province) {
+            provinceSelect.selectedIndex = i;
+            break;
+          }
+        }
+        
+        numberInput.value = number;
+        modelInput.value = model;
+        colorInput.value = color;
+        
+        // 显示表单，隐藏车辆列表
+        document.getElementById('savedVehicles').style.display = 'none';
+        document.getElementById('vehicleForm').style.display = 'block';
+        
+        // 更改保存按钮行为
+        const saveButton = document.getElementById('saveVehicle');
+        
+        // 移除之前可能存在的临时事件监听器
+        const newSaveButton = saveButton.cloneNode(true);
+        saveButton.parentNode.replaceChild(newSaveButton, saveButton);
+        
+        // 添加新的事件监听器，用于更新车辆信息
+        newSaveButton.addEventListener('click', function() {
+          // 获取表单新数据
+          const newProvince = document.getElementById('licenseProvince').value;
+          const newNumber = document.getElementById('licenseNumber').value;
+          const newModel = document.getElementById('carModel').value;
+          const newColor = document.getElementById('carColor').value;
+          
+          // 表单验证
+          if (!newNumber || !newModel || !newColor) {
+            alert('请填写完整的车辆信息');
+            return;
+          }
+          
+          // 更新车辆卡片内容
+          infoElement.querySelector('.font-medium').textContent = `${newModel} ${newColor}`;
+          infoElement.querySelector('.text-gray-500').textContent = `${newProvince}${newNumber}`;
+          
+          // 返回车辆列表视图
+          document.getElementById('vehicleForm').style.display = 'none';
+          document.getElementById('savedVehicles').style.display = 'block';
+          
+          // 选中编辑的车辆
+          document.querySelectorAll('.vehicle-card.selected').forEach(el => {
+            el.classList.remove('selected');
+          });
+          targetVehicle.classList.add('selected');
+          
+          // 显示成功消息
+          alert('车辆信息更新成功');
+          
+          // 恢复初始化车辆选择，重新注册事件监听器
+          initializeVehicleSelection();
+        });
+        
+      } catch (e) {
+        console.error('编辑车辆失败:', e);
+        alert('编辑车辆时发生错误');
+      }
+    }
+  </script>
+</body>
+</html> 

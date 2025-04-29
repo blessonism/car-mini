@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智车养护 - 我的钱包</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* 全局滚动条隐藏 */
+    ::-webkit-scrollbar {
+      display: none !important;
+    }
+    
+    * {
+      -ms-overflow-style: none !important;  /* IE and Edge */
+      scrollbar-width: none !important;  /* Firefox */
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8f9ff;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    
+    .header {
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 50;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .back-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f3f4f6;
+      color: #1f2937;
+      transition: all 0.2s ease;
+    }
+    
+    .back-button:active {
+      background: #e5e7eb;
+      transform: scale(0.95);
+    }
+    
+    .main-content {
+      padding: 20px;
+      flex-grow: 1;
+      padding-bottom: 100px; /* Space for bottom bar */
+    }
+    
+    .section-heading {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #4b5563;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .balance-card {
+      padding: 24px;
+      text-align: center;
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+    }
+
+    .balance-label {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 8px;
+    }
+
+    .balance-amount {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+
+    .balance-amount span {
+      font-size: 20px;
+      font-weight: 500;
+      margin-right: 4px;
+    }
+
+    .topup-options-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 16px;
+    }
+    
+    .topup-option {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 16px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: white;
+    }
+
+    .topup-option.active {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.05);
+      color: #3b82f6;
+      box-shadow: 0 1px 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .topup-option:hover:not(.active) {
+      border-color: #d1d5db;
+      background: #f9fafb;
+    }
+
+    .topup-amount {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .topup-bonus {
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    .topup-option.active .topup-bonus {
+      color: #3b82f6;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      background: white;
+      font-size: 14px;
+      color: #1f2937;
+      transition: all 0.2s ease;
+      margin-top: 8px; /* Space above input */
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+        
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      padding: 16px 20px;
+      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: flex-end; /* Align button to the right */
+      align-items: center;
+      z-index: 50;
+    }
+    
+    .confirm-button {
+      display: block;
+      padding: 12px 30px;
+      background: #3b82f6;
+      color: white;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    
+    .confirm-button:active {
+      transform: scale(0.98);
+      background: #2563eb;
+    }
+
+    .membership-banner {
+        background: #fffbeb; /* Light yellow */
+        border: 1px solid #fef3c7; /* Lighter yellow border */
+        color: #b45309; /* Amber text */
+        padding: 12px 16px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .membership-banner i {
+        margin-right: 8px;
+    }
+    .membership-banner a {
+        color: #2563eb; /* Blue link */
+        font-weight: 500;
+        text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with back button -->
+  <div class="header">
+    <button id="backButton" class="back-button">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <h1 class="text-lg font-semibold">我的钱包</h1>
+    <div class="w-9"></div> <!-- Spacer for centered title -->
+  </div>
+  
+  <div class="main-content">
+    <!-- Balance Card -->
+    <div class="card balance-card">
+      <div class="balance-label">账户余额</div>
+      <div class="balance-amount"><span>¥</span>128.50</div>
+    </div>
+
+    <!-- Membership Banner (Optional) -->
+    <div class="membership-banner">
+        <div>
+            <i class="fas fa-crown"></i>
+            <span>开通会员，洗车更优惠！</span>
+        </div>
+        <a href="#">了解详情 ></a>
+    </div>
+
+    <!-- Top-up Options -->
+    <div class="section-heading">选择充值金额</div>
+    <div class="card">
+      <div class="topup-options-grid">
+        <div class="topup-option active">
+          <div class="topup-amount">¥50</div>
+          <div class="topup-bonus">送 ¥5</div>
+        </div>
+        <div class="topup-option">
+          <div class="topup-amount">¥100</div>
+          <div class="topup-bonus">送 ¥12</div>
+        </div>
+        <div class="topup-option">
+          <div class="topup-amount">¥200</div>
+          <div class="topup-bonus">送 ¥30</div>
+        </div>
+        <div class="topup-option">
+          <div class="topup-amount">¥300</div>
+          <div class="topup-bonus">送 ¥50</div>
+        </div>
+        <div class="topup-option">
+          <div class="topup-amount">¥500</div>
+          <div class="topup-bonus">送 ¥100</div>
+        </div>
+        <div class="topup-option">
+          <div class="topup-amount">¥1000</div>
+          <div class="topup-bonus">送 ¥250</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Amount -->
+    <div class="section-heading">其他金额</div>
+     <div class="card" style="padding: 16px;">
+      <input type="number" class="form-input" id="customAmount" placeholder="请输入充值金额 (元)">
+    </div>
+
+  </div>
+  
+  <!-- Bottom action bar -->
+  <div class="bottom-bar">
+    <!-- Optional: Display total amount here if needed -->
+    <a href="#" class="confirm-button">立即充值 ¥50</a> 
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('钱包页面初始化');
+      
+      // Back button functionality (assuming it goes back in history)
+      const backButton = document.getElementById('backButton');
+      if (backButton) {
+        backButton.addEventListener('click', function() {
+          window.history.back(); 
+        });
+      }
+
+      const topupOptions = document.querySelectorAll('.topup-option');
+      const customAmountInput = document.getElementById('customAmount');
+      const confirmButton = document.querySelector('.confirm-button');
+
+      function updateTotal(amount) {
+          if (confirmButton) {
+              confirmButton.textContent = `立即充值 ¥${amount}`;
+              // Update href for payment processing later
+              // confirmButton.href = `/payment?amount=${amount}`; 
+          }
+      }
+
+      topupOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          // Remove active class from all options
+          topupOptions.forEach(opt => opt.classList.remove('active'));
+          // Add active class to the clicked option
+          this.classList.add('active');
+          // Clear custom input
+          if (customAmountInput) {
+              customAmountInput.value = ''; 
+          }
+          // Update total
+          const amountText = this.querySelector('.topup-amount').textContent;
+          const amount = parseFloat(amountText.replace('¥', ''));
+          updateTotal(amount);
+        });
+      });
+
+      if (customAmountInput) {
+          customAmountInput.addEventListener('input', function() {
+              // Remove active class from all predefined options
+              topupOptions.forEach(opt => opt.classList.remove('active'));
+              // Update total based on custom input
+              const amount = parseFloat(this.value) || 0;
+               if (amount > 0) {
+                   updateTotal(amount.toFixed(2));
+               } else {
+                   // Handle case where input is cleared or invalid
+                   const activeOption = document.querySelector('.topup-option.active');
+                   if (activeOption) {
+                       const amountText = activeOption.querySelector('.topup-amount').textContent;
+                       updateTotal(parseFloat(amountText.replace('¥', '')));
+                   } else {
+                       // Default if nothing is selected
+                       updateTotal(0); 
+                   }
+               }
+          });
+
+          // When focusing on custom input, deselect predefined options
+          customAmountInput.addEventListener('focus', function() {
+              topupOptions.forEach(opt => opt.classList.remove('active'));
+               const amount = parseFloat(this.value) || 0;
+               updateTotal(amount > 0 ? amount.toFixed(2) : 0);
+          });
+      }
+
+      // Initial update based on default selection
+      const defaultActiveOption = document.querySelector('.topup-option.active');
+      if (defaultActiveOption) {
+          const amountText = defaultActiveOption.querySelector('.topup-amount').textContent;
+          updateTotal(parseFloat(amountText.replace('¥', '')));
+      } else {
+          updateTotal(0); // Default if nothing is selected initially
+      }
+
+    });
+  </script>
+</body>
+</html> 

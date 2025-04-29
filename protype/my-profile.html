@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智车养护 - 我的</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* 全局滚动条隐藏 */
+    ::-webkit-scrollbar {
+      display: none !important;
+    }
+    
+    * {
+      -ms-overflow-style: none !important;  /* IE and Edge */
+      scrollbar-width: none !important;  /* Firefox */
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8f9ff;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+      padding: 20px;
+      padding-bottom: 75px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    
+    .profile-container {
+      display: flex;
+      align-items: center;
+      color: white;
+    }
+    
+    .avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.5);
+      overflow: hidden;
+      margin-right: 16px;
+      position: relative;
+      background-color: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .user-info h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    
+    .member-tag {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+    
+    .member-tag i {
+      margin-right: 4px;
+      font-size: 10px;
+    }
+    
+    .settings-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: white;
+      font-size: 20px;
+    }
+    
+    .member-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 16px;
+      margin: -50px 20px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card-background {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%);
+      border-radius: 50%;
+      transform: translate(30%, -30%);
+      z-index: 0;
+    }
+    
+    .card-background::after {
+      content: '';
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%);
+      border-radius: 50%;
+      top: 60%;
+      left: -20%;
+    }
+    
+    .card-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .card-title {
+      font-weight: 600;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+    }
+    
+    .card-title i {
+      margin-right: 6px;
+      color: #3b82f6;
+    }
+    
+    .card-action {
+      font-size: 14px;
+      color: #3b82f6;
+    }
+    
+    .points-info {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(0, 0, 0, 0.1);
+    }
+    
+    .points-amount {
+      font-size: 28px;
+      font-weight: 700;
+      color: #f59e0b;
+      margin-bottom: 4px;
+    }
+    
+    .points-label {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    
+    .points-actions {
+      display: flex;
+      align-items: center;
+    }
+    
+    .exchange-button {
+      background: #3b82f6;
+      color: white;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 0 20px 20px;
+    }
+    
+    .feature-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 0;
+    }
+    
+    .feature-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      font-size: 22px;
+      color: #3b82f6;
+      box-shadow: 0 4px 6px rgba(59, 130, 246, 0.1);
+    }
+    
+    .feature-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: #4b5563;
+    }
+    
+    .sections {
+      margin: 0 20px 80px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 24px 0 16px;
+      color: #1f2937;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    
+    .vehicle-card {
+      display: flex;
+      padding: 16px;
+      align-items: center;
+    }
+    
+    .vehicle-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: rgba(59, 130, 246, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 14px;
+      color: #3b82f6;
+      font-size: 20px;
+    }
+    
+    .vehicle-info {
+      flex: 1;
+    }
+    
+    .vehicle-model {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    
+    .vehicle-plate {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    
+    .order-card {
+      padding: 16px;
+    }
+    
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    
+    .order-title {
+      font-weight: 600;
+    }
+    
+    .order-status {
+      font-size: 13px;
+      color: #3b82f6;
+    }
+    
+    .order-info {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .order-detail {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    
+    .order-price {
+      font-weight: 600;
+      color: #ef4444;
+    }
+    
+    .order-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    .order-button {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    .primary-button {
+      background: #3b82f6;
+      color: white;
+    }
+    
+    .secondary-button {
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+    
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      display: flex;
+      justify-content: space-evenly;
+      padding: 12px 0 25px;
+      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+      z-index: 100;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 20px;
+      color: #9ca3af;
+      text-decoration: none;
+    }
+    
+    .nav-item.active {
+      color: #3b82f6;
+    }
+    
+    .nav-text {
+      font-size: 12px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 添加车辆弹窗 -->
+  <div id="vehicleModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+    <div class="bg-white rounded-xl w-11/12 max-w-md overflow-hidden">
+      <div class="flex justify-between items-center p-4 border-b">
+        <h3 class="font-semibold text-lg">添加车辆</h3>
+        <button id="closeVehicleModal" class="text-gray-500">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="p-4">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">车牌号</label>
+          <div class="flex space-x-2">
+            <select id="vehicleProvince" class="w-1/4 border border-gray-300 rounded-md p-2 bg-white">
+              <option>京</option>
+              <option>沪</option>
+              <option>粤</option>
+              <option>浙</option>
+              <option>苏</option>
+              <option>鲁</option>
+              <option>豫</option>
+              <option>渝</option>
+              <option>川</option>
+            </select>
+            <input type="text" id="vehicleNumber" placeholder="输入车牌号" class="flex-1 border border-gray-300 rounded-md p-2">
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">车型</label>
+          <input type="text" id="vehicleModel" placeholder="例如：奔驰C260L" class="w-full border border-gray-300 rounded-md p-2">
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">车身颜色</label>
+          <input type="text" id="vehicleColor" placeholder="例如：黑色" class="w-full border border-gray-300 rounded-md p-2">
+        </div>
+        
+        <button id="saveNewVehicle" class="w-full bg-blue-500 text-white font-medium py-2 rounded-md">
+          保存
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header with user profile -->
+  <div class="header">
+    <a href="#" class="settings-button">
+      <i class="fas fa-cog"></i>
+    </a>
+    
+    <div class="profile-container">
+      <div class="avatar">
+        <i class="fas fa-user" style="font-size: 36px; color: rgba(255, 255, 255, 0.7);"></i>
+      </div>
+      <div class="user-info">
+        <h2>张先生</h2>
+        <div class="text-sm opacity-80">138****5678</div>
+        <div class="member-tag">
+          <i class="fas fa-crown"></i>
+          <span>黄金会员</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Membership card -->
+  <div class="member-card">
+    <div class="card-background"></div>
+    <div class="card-content">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-wallet"></i>
+          <span>钱包余额</span>
+        </div>
+        <a href="#" class="card-action">交易记录 ></a>
+      </div>
+      
+      <div class="points-info">
+        <div>
+          <div class="points-amount">¥235.00</div>
+          <div class="points-label">当前余额</div>
+        </div>
+        <div class="points-actions">
+          <a href="#" class="exchange-button">
+            立即充值
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Quick features -->
+  <div class="feature-grid">
+    <a href="#" class="feature-item">
+      <div class="feature-icon">
+        <i class="fas fa-ticket-alt"></i>
+      </div>
+      <div class="feature-name">优惠券</div>
+    </a>
+    
+    <a href="#" class="feature-item">
+      <div class="feature-icon">
+        <i class="fas fa-wallet"></i>
+      </div>
+      <div class="feature-name">钱包余额</div>
+    </a>
+    
+    <a href="#" class="feature-item">
+      <div class="feature-icon">
+        <i class="fas fa-crown"></i>
+      </div>
+      <div class="feature-name">会员充值</div>
+    </a>
+    
+    <a href="#" class="feature-item">
+      <div class="feature-icon">
+        <i class="fas fa-gift"></i>
+      </div>
+      <div class="feature-name">礼品卡</div>
+    </a>
+  </div>
+  
+  <div class="sections">
+    <!-- My vehicles -->
+    <h2 class="section-title">我的车辆</h2>
+    
+    <div id="vehiclesList">
+      <div class="card vehicle-card">
+        <div class="vehicle-icon">
+          <i class="fas fa-car"></i>
+        </div>
+        <div class="vehicle-info">
+          <div class="vehicle-model">奔驰 C260L</div>
+          <div class="vehicle-plate">粤B12345</div>
+        </div>
+        <a href="#" class="text-blue-500">
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      </div>
+      
+      <div class="card vehicle-card">
+        <div class="vehicle-icon">
+          <i class="fas fa-car"></i>
+        </div>
+        <div class="vehicle-info">
+          <div class="vehicle-model">奥迪A6L</div>
+          <div class="vehicle-plate">京A12345</div>
+        </div>
+        <a href="#" class="text-blue-500">
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      </div>
+    </div>
+    
+    <div class="flex justify-center my-4">
+      <a href="#" id="addVehicleBtn" class="text-blue-500 text-sm flex items-center">
+        <i class="fas fa-plus-circle mr-1"></i>
+        添加车辆
+      </a>
+    </div>
+  </div>
+  
+  <!-- Bottom navigation -->
+  <div class="bottom-nav">
+    <a href="home.html" class="nav-item">
+      <i class="fas fa-home"></i>
+      <div class="nav-text">首页</div>
+    </a>
+    
+    <a href="appointment-service.html" class="nav-item">
+      <i class="fas fa-car"></i>
+      <div class="nav-text">服务</div>
+    </a>
+    
+    <a href="order-list.html" class="nav-item">
+      <i class="fas fa-list-alt"></i>
+      <div class="nav-text">订单</div>
+    </a>
+    
+    <a href="my-profile.html" class="nav-item active">
+      <i class="fas fa-user"></i>
+      <div class="nav-text">我的</div>
+    </a>
+  </div>
+  
+  <script>
+    // 添加点击提示功能
+    document.querySelectorAll('.feature-item, .card-action, .exchange-button, .settings-button, .vehicle-card a, .order-actions button, a[href="#"]').forEach(item => {
+      if (item.id !== 'addVehicleBtn' && 
+          item.id !== 'closeVehicleModal' && 
+          item.id !== 'saveNewVehicle') {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          alert('该功能正在开发中');
+        });
+      }
+    });
+    
+    // 初始化添加车辆模态框功能
+    document.addEventListener('DOMContentLoaded', function() {
+      const addVehicleBtn = document.getElementById('addVehicleBtn');
+      const vehicleModal = document.getElementById('vehicleModal');
+      const closeVehicleModal = document.getElementById('closeVehicleModal');
+      const saveNewVehicle = document.getElementById('saveNewVehicle');
+      
+      // 打开模态框
+      if (addVehicleBtn) {
+        addVehicleBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          vehicleModal.style.display = 'flex';
+          
+          // 清空表单
+          document.getElementById('vehicleNumber').value = '';
+          document.getElementById('vehicleModel').value = '';
+          document.getElementById('vehicleColor').value = '';
+        });
+      }
+      
+      // 关闭模态框
+      if (closeVehicleModal) {
+        closeVehicleModal.addEventListener('click', function() {
+          vehicleModal.style.display = 'none';
+        });
+      }
+      
+      // 点击模态框外部关闭
+      vehicleModal.addEventListener('click', function(e) {
+        if (e.target === vehicleModal) {
+          vehicleModal.style.display = 'none';
+        }
+      });
+      
+      // 保存新车辆
+      if (saveNewVehicle) {
+        saveNewVehicle.addEventListener('click', function() {
+          // 获取表单数据
+          const province = document.getElementById('vehicleProvince').value;
+          const number = document.getElementById('vehicleNumber').value;
+          const model = document.getElementById('vehicleModel').value;
+          const color = document.getElementById('vehicleColor').value;
+          
+          // 表单验证
+          if (!number || !model || !color) {
+            alert('请填写完整的车辆信息');
+            return;
+          }
+          
+          // 创建新车辆卡片
+          const newVehicleCard = document.createElement('div');
+          newVehicleCard.className = 'card vehicle-card';
+          newVehicleCard.innerHTML = `
+            <div class="vehicle-icon">
+              <i class="fas fa-car"></i>
+            </div>
+            <div class="vehicle-info">
+              <div class="vehicle-model">${model} ${color}</div>
+              <div class="vehicle-plate">${province}${number}</div>
+            </div>
+            <a href="#" class="text-blue-500">
+              <i class="fas fa-chevron-right"></i>
+            </a>
+          `;
+          
+          // 获取车辆列表并添加新车辆
+          const vehiclesList = document.getElementById('vehiclesList');
+          if (vehiclesList) {
+            vehiclesList.appendChild(newVehicleCard);
+          }
+          
+          // 添加详情点击事件
+          const detailLink = newVehicleCard.querySelector('a');
+          if (detailLink) {
+            detailLink.addEventListener('click', function(e) {
+              e.preventDefault();
+              alert('车辆详情功能正在开发中');
+            });
+          }
+          
+          // 关闭模态框
+          vehicleModal.style.display = 'none';
+          
+          // 显示成功消息
+          alert('车辆添加成功');
+        });
+      }
+    });
+  </script>
+</body>
+</html> 

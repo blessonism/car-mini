@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>门店订单管理</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* 全局滚动条隐藏 */
+    ::-webkit-scrollbar {
+      display: none !important;
+    }
+    
+    * {
+      -ms-overflow-style: none !important;  /* IE and Edge */
+      scrollbar-width: none !important;  /* Firefox */
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8f9ff;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .main-blue {
+      background-color: #1976D2;
+      color: white;
+    }
+    .main-orange {
+      background-color: #FF9800;
+      color: white;
+    }
+    .status-filter {
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+    }
+    .status-tag {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 16px;
+      margin-right: 8px;
+      font-size: 14px;
+    }
+    .status-tag.active {
+      background-color: #1976D2;
+      color: white;
+      font-weight: 500;
+    }
+    .status-tag:not(.active) {
+      background-color: #f5f5f5;
+      color: #757575;
+    }
+    .order-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .type-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-right: 6px;
+    }
+    .type-appoint {
+      background-color: #E3F2FD;
+      color: #1976D2;
+    }
+    .type-walkin {
+      background-color: #FFF3E0;
+      color: #FF9800;
+    }
+    .status-waiting {
+      background-color: #FFF3E0;
+      color: #FF9800;
+    }
+    .status-ready {
+      background-color: #E3F2FD;
+      color: #1976D2;
+    }
+    .status-washing {
+      background-color: #E8F5E9;
+      color: #4CAF50;
+    }
+    .status-done {
+      background-color: #F5F5F5;
+      color: #9E9E9E;
+    }
+    .action-btn {
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .action-primary {
+      background-color: #1976D2;
+      color: white;
+    }
+    .action-done {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background-color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .search-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body class="pb-4">
+  <!-- 顶部导航 -->
+  <div class="flex items-center bg-white p-4 shadow-sm">
+    <div class="w-6"></div>
+    <h1 class="text-lg font-bold text-center flex-1">门店订单管理</h1>
+    <a href="#" class="text-blue-600">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+      </svg>
+    </a>
+  </div>
+
+  <!-- 状态筛选栏+新增按钮 -->
+  <div class="px-4 py-3">
+    <div class="flex justify-between items-center mb-3">
+      <h2 class="text-lg font-bold">订单列表</h2>
+      <button class="main-orange flex items-center justify-center px-3 py-2 rounded-lg text-sm shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+        新增现场单
+      </button>
+    </div>
+
+    <div class="search-bar">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input type="text" class="search-input" placeholder="搜索订单号/车牌">
+    </div>
+
+    <div class="status-filter mb-4">
+      <div class="status-tag active">全部(5)</div>
+      <div class="status-tag">待到店(1)</div>
+      <div class="status-tag">等待服务(2)</div>
+      <div class="status-tag">洗车中(1)</div>
+      <div class="status-tag">已完成(1)</div>
+    </div>
+  </div>
+
+  <!-- 订单列表 -->
+  <div class="px-4">
+    <div class="order-card">
+      <div class="flex justify-between items-start mb-3">
+        <div class="flex items-center">
+          <div class="type-badge type-appoint">预约</div>
+          <div class="text-sm text-gray-500">订单号：WX20231125001</div>
+        </div>
+        <div class="status-badge status-waiting">待到店</div>
+      </div>
+      <div class="flex items-center mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span class="font-medium">精致洗车</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <div class="text-sm text-gray-600">粤A12345 · 预约时间：09:30</div>
+        <div class="flex items-center">
+          <button class="action-btn action-primary mr-2">确认到店</button>
+          <a href="#" class="text-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="order-card">
+      <div class="flex justify-between items-start mb-3">
+        <div class="flex items-center">
+          <div class="type-badge type-walkin">现场</div>
+          <div class="text-sm text-gray-500">订单号：WX20231124002</div>
+        </div>
+        <div class="status-badge status-ready">等待服务</div>
+      </div>
+      <div class="flex items-center mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        <span class="font-medium">内饰清洁</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <div class="text-sm text-gray-600">粤B67890</div>
+        <div class="flex items-center">
+          <button class="action-btn action-primary mr-2">开始洗车</button>
+          <a href="#" class="text-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="order-card">
+      <div class="flex justify-between items-start mb-3">
+        <div class="flex items-center">
+          <div class="type-badge type-appoint">预约</div>
+          <div class="text-sm text-gray-500">订单号：WX20231124001</div>
+        </div>
+        <div class="status-badge status-ready">等待服务</div>
+      </div>
+      <div class="flex items-center mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span class="font-medium">精致洗车</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <div class="text-sm text-gray-600">粤A12345</div>
+        <div class="flex items-center">
+          <button class="action-btn action-primary mr-2">开始洗车</button>
+          <a href="#" class="text-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="order-card">
+      <div class="flex justify-between items-start mb-3">
+        <div class="flex items-center">
+          <div class="type-badge type-walkin">现场</div>
+          <div class="text-sm text-gray-500">订单号：WX20231123001</div>
+        </div>
+        <div class="status-badge status-washing">洗车中</div>
+      </div>
+      <div class="flex items-center mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+        <span class="font-medium">全车护理</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <div class="text-sm text-gray-600">粤B67890</div>
+        <div class="flex items-center">
+          <button class="action-btn action-done mr-2">洗车完成</button>
+          <a href="#" class="text-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="order-card">
+      <div class="flex justify-between items-start mb-3">
+        <div class="flex items-center">
+          <div class="type-badge type-appoint">预约</div>
+          <div class="text-sm text-gray-500">订单号：WX20231115001</div>
+        </div>
+        <div class="status-badge status-done">已完成</div>
+      </div>
+      <div class="flex items-center mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span class="font-medium">精致洗车</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <div class="text-sm text-gray-600">粤A12345</div>
+        <div class="flex items-center">
+          <a href="#" class="text-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html> 

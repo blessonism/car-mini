@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智车养护 - 支付订单</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* 全局滚动条隐藏 */
+    ::-webkit-scrollbar {
+      display: none !important;
+    }
+    
+    * {
+      -ms-overflow-style: none !important;  /* IE and Edge */
+      scrollbar-width: none !important;  /* Firefox */
+    }
+    
+    :root {
+      --primary-color: #3563E9;
+      --primary-dark: #274BC8;
+      --primary-light: #D6E4FF;
+      --secondary-color: #FF4D4F;
+      --text-dark: #1A202C;
+      --text-medium: #596780;
+      --text-light: #90A3BF;
+      --surface-main: #FFFFFF;
+      --surface-secondary: #F6F7F9;
+      --surface-tertiary: #F1F3F6;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8f9ff;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    
+    .header {
+      position: sticky;
+      top: 0;
+      background: var(--surface-main);
+      z-index: 50;
+      box-shadow: 0 2px 20px rgba(195, 200, 205, 0.15);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .back-button {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-tertiary);
+      color: var(--text-dark);
+      transition: all 0.2s ease;
+      border: none;
+      outline: none;
+    }
+    
+    .back-button:active {
+      background: var(--surface-secondary);
+      transform: scale(0.95);
+    }
+    
+    .main-content {
+      padding: 20px;
+      padding-bottom: 120px;
+    }
+    
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-dark);
+    }
+    
+    .card {
+      background: var(--surface-main);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 5px 16px rgba(195, 200, 205, 0.08);
+      margin-bottom: 20px;
+    }
+    
+    .card-padding {
+      padding: 16px;
+    }
+    
+    .order-item {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid var(--surface-tertiary);
+    }
+    
+    .order-item:last-child {
+      border-bottom: none;
+    }
+    
+    .item-image {
+      width: 70px;
+      height: 70px;
+      border-radius: 12px;
+      object-fit: cover;
+      margin-right: 14px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .item-details {
+      flex: 1;
+    }
+    
+    .item-title {
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-dark);
+    }
+    
+    .item-meta {
+      font-size: 13px;
+      color: var(--text-medium);
+      display: flex;
+      align-items: center;
+    }
+    
+    .item-meta span:first-child::after {
+      content: '•';
+      margin: 0 6px;
+      color: var(--text-light);
+    }
+    
+    .item-price {
+      font-weight: 700;
+      color: var(--secondary-color);
+      font-size: 18px;
+    }
+    
+    .appointment-time {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid var(--surface-tertiary);
+    }
+    
+    .time-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(53, 99, 233, 0.1);
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-right: 14px;
+    }
+    
+    .store-info {
+      display: flex;
+      padding: 16px;
+    }
+    
+    .store-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: var(--surface-tertiary);
+      margin-right: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .store-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .coupon-item {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      transition: all 0.2s ease;
+    }
+    
+    .coupon-item:active {
+      background: var(--surface-tertiary);
+    }
+    
+    .coupon-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(255, 77, 79, 0.1);
+      color: var(--secondary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-right: 14px;
+    }
+    
+    .discount-amount {
+      color: var(--secondary-color);
+      font-weight: 600;
+      font-size: 16px;
+    }
+    
+    .payment-method {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid var(--surface-tertiary);
+    }
+    
+    .payment-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-right: 14px;
+    }
+    
+    .payment-methods {
+      padding: 16px;
+    }
+    
+    .payment-method-item {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--surface-tertiary);
+      margin-bottom: 12px;
+      transition: all 0.2s ease;
+    }
+    
+    .payment-method-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .payment-method-item.selected {
+      border-color: var(--primary-color);
+      background: rgba(53, 99, 233, 0.05);
+    }
+    
+    .payment-method-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 14px;
+      font-size: 22px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .payment-method-icon.wechat {
+      color: #07C160;
+    }
+    
+    .payment-method-icon.alipay {
+      color: #1677FF;
+    }
+    
+    .payment-method-icon.unionpay {
+      color: #D9001B;
+    }
+    
+    .payment-method-details {
+      flex: 1;
+    }
+    
+    .payment-method-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text-dark);
+    }
+    
+    .payment-method-subtitle {
+      font-size: 13px;
+      color: var(--text-medium);
+    }
+    
+    .checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--surface-tertiary);
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    
+    .checkbox.checked {
+      border-color: var(--primary-color);
+      background: var(--primary-color);
+    }
+    
+    .checkbox.checked::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: white;
+    }
+    
+    .price-summary {
+      padding: 16px;
+    }
+    
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+    
+    .price-row:last-child {
+      margin-bottom: 0;
+      padding-top: 14px;
+      border-top: 1px dashed var(--surface-tertiary);
+      font-weight: 600;
+      font-size: 16px;
+    }
+    
+    .price-label {
+      color: var(--text-medium);
+    }
+    
+    .price-value {
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+    
+    .total-price {
+      color: var(--secondary-color);
+      font-weight: 700;
+    }
+    
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface-main);
+      padding: 16px 20px;
+      box-shadow: 0 -5px 20px rgba(195, 200, 205, 0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+    
+    .price-detail {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .price-total {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--secondary-color);
+    }
+    
+    .price-note {
+      font-size: 12px;
+      color: var(--text-medium);
+      margin-top: 2px;
+    }
+    
+    .payment-button {
+      padding: 14px 24px;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      box-shadow: 0 6px 12px rgba(53, 99, 233, 0.2);
+    }
+    
+    .payment-button:active {
+      transform: scale(0.98);
+      background: var(--primary-dark);
+      box-shadow: 0 4px 8px rgba(53, 99, 233, 0.15);
+    }
+    
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      display: flex;
+      justify-content: space-evenly;
+      padding: 12px 0 25px;
+      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+      z-index: 40;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 20px;
+      color: #9ca3af;
+      text-decoration: none;
+    }
+    
+    .nav-item.active {
+      color: #3b82f6;
+    }
+    
+    .nav-text {
+      font-size: 12px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with back button -->
+  <div class="header">
+    <button id="backButton" class="back-button" onclick="window.location.href='appointment-time.html'">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <h1 class="text-lg font-semibold">确认支付</h1>
+    <div class="w-10"></div> <!-- Spacer for centered title -->
+  </div>
+  
+  <div class="main-content">
+    <!-- Order summary -->
+    <div class="card">
+      <div class="order-item">
+        <div class="item-image" style="background-color: #e6f2ff; display: flex; align-items: center; justify-content: center; width: 70px; height: 70px; border-radius: 12px; margin-right: 14px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 17h2V5H3v12h2"></path>
+            <path d="M14 17H8"></path>
+            <path d="M5 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0zm10 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0z"></path>
+          </svg>
+        </div>
+        <div class="item-details">
+          <div class="item-title">标准洗车</div>
+          <div class="item-meta">
+            <span>30分钟</span>
+            <span>适用所有车型</span>
+          </div>
+        </div>
+        <div class="item-price">¥39.9</div>
+      </div>
+      
+      <div class="appointment-time">
+        <div class="time-icon">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <div class="flex-1">
+          <div class="font-medium text-base">预约时间</div>
+          <div class="text-gray-500 text-sm mt-1">2023-08-20 (周四) 11:00</div>
+        </div>
+      </div>
+      
+      <div class="store-info">
+        <div class="store-logo" style="display: flex; align-items: center; justify-content: center; background-color: #F8FAFC;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-semibold text-base">车友养护中心 (城南店)</h3>
+          <div class="text-sm text-gray-500 mt-1">
+            成都市高新区天府大道1234号
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Coupon selection -->
+    <h3 class="section-title">优惠券</h3>
+    <div class="card">
+      <div class="coupon-item" id="selectCoupon">
+        <div class="coupon-icon">
+          <i class="fas fa-ticket-alt"></i>
+        </div>
+        <div class="flex-1">
+          <div class="font-medium">优惠券</div>
+          <div class="text-gray-500 text-sm mt-1">2张可用</div>
+        </div>
+        <div class="discount-amount" id="couponValue">-¥5.0</div>
+        <i class="fas fa-chevron-right text-gray-400 ml-3"></i>
+      </div>
+    </div>
+    
+    <!-- Payment methods -->
+    <h3 class="section-title">支付方式</h3>
+    <div class="card">
+      <div class="payment-methods">
+        <div class="payment-method-item selected" data-method="wechat">
+          <div class="payment-method-icon wechat">
+            <i class="fab fa-weixin"></i>
+          </div>
+          <div class="payment-method-details">
+            <div class="payment-method-title">微信支付</div>
+            <div class="payment-method-subtitle">微信账号直接支付</div>
+          </div>
+          <div class="checkbox checked"></div>
+        </div>
+        
+        <div class="payment-method-item" data-method="alipay">
+          <div class="payment-method-icon alipay">
+            <i class="fab fa-alipay"></i>
+          </div>
+          <div class="payment-method-details">
+            <div class="payment-method-title">支付宝</div>
+            <div class="payment-method-subtitle">支付宝账号直接支付</div>
+          </div>
+          <div class="checkbox"></div>
+        </div>
+        
+        <div class="payment-method-item" data-method="unionpay">
+          <div class="payment-method-icon unionpay">
+            <i class="fas fa-credit-card"></i>
+          </div>
+          <div class="payment-method-details">
+            <div class="payment-method-title">银联支付</div>
+            <div class="payment-method-subtitle">储蓄卡/信用卡支付</div>
+          </div>
+          <div class="checkbox"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Price summary -->
+    <h3 class="section-title">价格明细</h3>
+    <div class="card">
+      <div class="price-summary">
+        <div class="price-row">
+          <div class="price-label">服务费用</div>
+          <div class="price-value">¥39.9</div>
+        </div>
+        <div class="price-row">
+          <div class="price-label">优惠券</div>
+          <div class="price-value text-red-500" id="couponDiscount">-¥5.0</div>
+        </div>
+        <div class="price-row">
+          <div class="price-label">会员折扣</div>
+          <div class="price-value text-red-500" id="memberDiscount">-¥1.9</div>
+        </div>
+        <div class="price-row">
+          <div class="price-label">订单总价</div>
+          <div class="total-price" id="totalPrice">¥33.0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Bottom action bar -->
+  <div class="bottom-bar">
+    <div class="price-detail">
+      <div class="price-total" id="bottomTotalPrice">¥33.0</div>
+      <div class="price-note" id="discountSummary">已优惠¥6.9</div>
+    </div>
+    <a href="#" class="payment-button" id="paymentButton">
+      立即支付
+    </a>
+  </div>
+  
+  <!-- Toast notification -->
+  <div class="toast" id="toast">支付成功！</div>
+  
+  <script>
+    // 更新价格逻辑
+    function updatePriceDisplay() {
+      const originalPrice = 39.9;
+      let finalPrice = originalPrice;
+      let discount = 0;
+      
+      // 判断是否使用了优惠券
+      const selectedCoupon = document.querySelector('.coupon-item.selected');
+      if (selectedCoupon) {
+        const couponValue = parseFloat(selectedCoupon.getAttribute('data-value'));
+        discount = couponValue;
+        finalPrice -= discount;
+      }
+      
+      // 更新显示
+      document.getElementById('originalPrice').textContent = '¥' + originalPrice.toFixed(1);
+      document.getElementById('discountAmount').textContent = '-¥' + discount.toFixed(1);
+      document.getElementById('finalPrice').textContent = '¥' + finalPrice.toFixed(1);
+      document.getElementById('bottomTotalPrice').textContent = '¥' + finalPrice.toFixed(1);
+      
+      if (discount > 0) {
+        document.getElementById('discountSummary').textContent = '已优惠¥' + discount.toFixed(1);
+        document.getElementById('discountSummary').style.display = 'block';
+      } else {
+        document.getElementById('discountSummary').style.display = 'none';
+      }
+    }
+    
+    // 优惠券选择
+    document.querySelectorAll('.coupon-item').forEach(coupon => {
+      coupon.addEventListener('click', function() {
+        document.querySelectorAll('.coupon-item').forEach(c => c.classList.remove('selected'));
+        this.classList.add('selected');
+        updatePriceDisplay();
+      });
+    });
+    
+    // 支付方式选择
+    document.querySelectorAll('.payment-method-item').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.payment-method-item').forEach(i => i.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+    
+    // 初始化价格显示
+    updatePriceDisplay();
+    
+    // Payment button with success toast
+    document.getElementById('paymentButton').addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      const toast = document.getElementById('toast');
+      const selectedMethod = document.querySelector('.payment-method-item.selected').getAttribute('data-method');
+      
+      switch(selectedMethod) {
+        case 'wechat':
+          toast.textContent = '微信支付成功！';
+          break;
+        case 'alipay':
+          toast.textContent = '支付宝支付成功！';
+          break;
+        case 'unionpay':
+          toast.textContent = '银联支付成功！';
+          break;
+        default:
+          toast.textContent = '支付成功！';
+      }
+      
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+        
+        // 跳转到订单详情页
+        setTimeout(() => {
+          window.location.href = 'store-order-detail.html';
+        }, 500);
+      }, 2000);
+    });
+  </script>
+</body>
+</html> 
