@@ -10,11 +10,11 @@
         <view class="service-name">标准洗车</view>
         <view class="service-meta">
           <view class="service-time">
-            <t-icon name="time" size="32rpx" />
+            <image src="../../assets/icons/clock.png" class="sm-icon" mode="aspectFit"></image>
             <text>30分钟</text>
           </view>
           <view class="service-price">
-            <t-icon name="price" size="32rpx" />
+            <image src="../../assets/icons/price.png" class="base-icon" mode="aspectFit"></image>
             <text>¥39.9</text>
           </view>
         </view>
@@ -23,76 +23,157 @@
   </view>
 
   <!-- 服务方式选择 -->
-  <view class="section">
-    <view class="section-title">
-      <t-icon name="hand-point" size="48rpx" class="section-icon" />
-      <text>选择服务方式</text>
+  <view class="section-header">
+    <image src="../../assets/icons/select.png" class="section-icon" mode="aspectFit"></image>
+    <text class="section-text">选择服务方式</text>
+  </view>
+  <view class="service-options">
+    <view class="service-option {{serviceType === 'immediate' ? 'selected' : ''}}" 
+      bindtap="selectServiceType" data-type="immediate">
+      <view class="option-icon">
+        <image src="../../assets/icons/flash.png" class="option-image" mode="aspectFit"></image>
+      </view>
+      <view class="option-name">立即服务</view>
+      <view class="option-desc">到店即可享受服务</view>
     </view>
     
-    <view class="service-type-options">
-      <view class="service-type-option {{serviceType === 'immediate' ? 'selected' : ''}}" 
-        bindtap="selectServiceType" data-type="immediate">
-        <view class="option-icon">
-          <t-icon name="flash" size="64rpx" />
-        </view>
-        <view class="option-name">立即服务</view>
-        <view class="option-desc">到店即可享受服务</view>
+    <view class="service-option {{serviceType === 'appointment' ? 'selected' : ''}}" 
+      bindtap="selectServiceType" data-type="appointment">
+      <view class="option-icon">
+        <image src="../../assets/icons/calendar.png" class="option-image" mode="aspectFit"></image>
       </view>
-      
-      <view class="service-type-option {{serviceType === 'appointment' ? 'selected' : ''}}" 
-        bindtap="selectServiceType" data-type="appointment">
-        <view class="option-icon">
-          <t-icon name="calendar" size="64rpx" />
+      <view class="option-name">预约服务</view>
+      <view class="option-desc">选择时间提前预约</view>
+    </view>
+  </view>
+
+  <!-- 日期选择区域 - 仅在预约服务模式显示 -->
+  <view class="date-section" wx:if="{{serviceType === 'appointment'}}">
+    <view class="section-header">
+      <image src="../../assets/icons/calendar.png" class="section-icon-lg" mode="aspectFit"></image>
+      <text class="section-text">选择日期</text>
+    </view>
+    <view class="calendar-card">
+      <!-- 简化的日期选择：今天、明天、后天 -->
+      <view class="simple-dates">
+        <view class="date-option {{selectedDate === simpleDates[0].date ? 'selected' : ''}}" 
+          bindtap="selectDate" data-date="{{simpleDates[0].date}}" data-available="true">
+          <view class="date-day">今天</view>
+          <view class="date-value">{{simpleDates[0].dayValue}}</view>
         </view>
-        <view class="option-name">预约服务</view>
-        <view class="option-desc">选择时间提前预约</view>
+        
+        <view class="date-option {{selectedDate === simpleDates[1].date ? 'selected' : ''}}" 
+          bindtap="selectDate" data-date="{{simpleDates[1].date}}" data-available="true">
+          <view class="date-day">明天</view>
+          <view class="date-value">{{simpleDates[1].dayValue}}</view>
+        </view>
+        
+        <view class="date-option {{selectedDate === simpleDates[2].date ? 'selected' : ''}}" 
+          bindtap="selectDate" data-date="{{simpleDates[2].date}}" data-available="true">
+          <view class="date-day">后天</view>
+          <view class="date-value">{{simpleDates[2].dayValue}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 时间段选择区域 - 仅在预约服务模式且已选择日期时显示 -->
+  <view class="time-section" wx:if="{{serviceType === 'appointment' && selectedDate}}">
+    <view class="section-header">
+      <image src="../../assets/icons/clock-blue.png" class="section-icon-lg" mode="aspectFit"></image>
+      <text class="section-text">选择时间段</text>
+    </view>
+    <view class="time-slots-card">
+      <view class="time-slots-grid">
+        <view class="time-slot {{timeSlots[0].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[0].time ? 'selected' : ''}}"
+          bindtap="selectTime" data-time="{{timeSlots[0].time}}" data-booked="{{timeSlots[0].isBooked}}">
+          <view class="time-text">{{timeSlots[0].isBooked ? '已约满' : timeSlots[0].time}}</view>
+        </view>
+        
+        <view class="time-slot {{timeSlots[1].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[1].time ? 'selected' : ''}}"
+          bindtap="selectTime" data-time="{{timeSlots[1].time}}" data-booked="{{timeSlots[1].isBooked}}">
+          <view class="time-text">{{timeSlots[1].isBooked ? '已约满' : timeSlots[1].time}}</view>
+        </view>
+        
+        <view class="time-slot {{timeSlots[2].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[2].time ? 'selected' : ''}}"
+          bindtap="selectTime" data-time="{{timeSlots[2].time}}" data-booked="{{timeSlots[2].isBooked}}">
+          <view class="time-text">{{timeSlots[2].isBooked ? '已约满' : timeSlots[2].time}}</view>
+        </view>
+        
+        <view class="time-slot {{timeSlots[3].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[3].time ? 'selected' : ''}}"
+          bindtap="selectTime" data-time="{{timeSlots[3].time}}" data-booked="{{timeSlots[3].isBooked}}">
+          <view class="time-text">{{timeSlots[3].isBooked ? '已约满' : timeSlots[3].time}}</view>
+        </view>
+        
+        <view class="time-slot {{timeSlots[4].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[4].time ? 'selected' : ''}}"
+          bindtap="selectTime" data-time="{{timeSlots[4].time}}" data-booked="{{timeSlots[4].isBooked}}">
+          <view class="time-text">{{timeSlots[4].isBooked ? '已约满' : timeSlots[4].time}}</view>
+        </view>
+        
+        <view class="time-slot {{timeSlots[5].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[5].time ? 'selected' : ''}}"
+          bindtap="selectTime" data-time="{{timeSlots[5].time}}" data-booked="{{timeSlots[5].isBooked}}">
+          <view class="time-text">{{timeSlots[5].isBooked ? '已约满' : timeSlots[5].time}}</view>
+        </view>
+        
+        <view wx:if="{{timeSlots.length > 6}}" class="time-slot {{timeSlots[6].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[6].time ? 'selected' : ''}}"
+          bindtap="selectTime" data-time="{{timeSlots[6].time}}" data-booked="{{timeSlots[6].isBooked}}">
+          <view class="time-text">{{timeSlots[6].isBooked ? '已约满' : timeSlots[6].time}}</view>
+        </view>
+        
+        <view wx:if="{{timeSlots.length > 7}}" class="time-slot {{timeSlots[7].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[7].time ? 'selected' : ''}}"
+          bindtap="selectTime" data-time="{{timeSlots[7].time}}" data-booked="{{timeSlots[7].isBooked}}">
+          <view class="time-text">{{timeSlots[7].isBooked ? '已约满' : timeSlots[7].time}}</view>
+        </view>
+        
+        <view wx:if="{{timeSlots.length > 8}}" class="time-slot {{timeSlots[8].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[8].time ? 'selected' : ''}}"
+          bindtap="selectTime" data-time="{{timeSlots[8].time}}" data-booked="{{timeSlots[8].isBooked}}">
+          <view class="time-text">{{timeSlots[8].isBooked ? '已约满' : timeSlots[8].time}}</view>
+        </view>
       </view>
     </view>
   </view>
 
   <!-- 车辆信息 -->
-  <view class="section">
-    <view class="section-title">
-      <t-icon name="car" size="48rpx" class="section-icon" />
-      <text>车辆信息</text>
+  <view class="section-header">
+    <image src="../../assets/icons/car.png" class="section-icon" mode="aspectFit"></image>
+    <text class="section-text">车辆信息</text>
+  </view>
+  <view class="car-section">
+    <view class="car-header">
+      <view class="car-selection-label">选择车辆</view>
+      <view class="add-car-link" bindtap="addNewCar">添加新车辆</view>
     </view>
     
-    <view class="car-select-area">
-      <view class="car-selection-label">选择车辆</view>
-      
-      <view class="car-list">
-        <view class="car-item {{selectedCar === '1' ? 'selected' : ''}}" bindtap="selectCar" data-id="1">
-          <t-radio value="{{selectedCar === '1'}}" icon="circle" label="" borderless />
-          <view class="car-info">
-            <view class="car-model">奥迪A6L</view>
-            <view class="car-plate">京A12345</view>
-          </view>
-          <view class="edit-icon" catchtap="editCar" data-id="1">
-            <t-icon name="edit" size="44rpx" />
-          </view>
+    <view class="car-list">
+      <view class="car-item {{selectedCar === '1' ? 'selected' : ''}}" bindtap="selectCar" data-id="1">
+        <view class="radio-circle {{selectedCar === '1' ? 'radio-selected' : ''}}"></view>
+        <view class="car-info">
+          <view class="car-model">奥迪A6L</view>
+          <view class="car-plate">京A12345</view>
         </view>
-        
-        <view class="car-item {{selectedCar === '2' ? 'selected' : ''}}" bindtap="selectCar" data-id="2">
-          <t-radio value="{{selectedCar === '2'}}" icon="circle" label="" borderless />
-          <view class="car-info">
-            <view class="car-model">宝马3系</view>
-            <view class="car-plate">京B54321</view>
-          </view>
-          <view class="edit-icon" catchtap="editCar" data-id="2">
-            <t-icon name="edit" size="44rpx" />
-          </view>
+        <view class="edit-icon" catchtap="editCar" data-id="1">
+          <image src="../../assets/icons/edit.png" class="edit-image" mode="aspectFit"></image>
         </view>
       </view>
       
-      <view class="add-car-button" bindtap="addNewCar">
-        <text>添加新车辆</text>
+      <view class="divider"></view>
+      
+      <view class="car-item {{selectedCar === '2' ? 'selected' : ''}}" bindtap="selectCar" data-id="2">
+        <view class="radio-circle {{selectedCar === '2' ? 'radio-selected' : ''}}"></view>
+        <view class="car-info">
+          <view class="car-model">宝马3系</view>
+          <view class="car-plate">京B54321</view>
+        </view>
+        <view class="edit-icon" catchtap="editCar" data-id="2">
+          <image src="../../assets/icons/edit.png" class="edit-image" mode="aspectFit"></image>
+        </view>
       </view>
     </view>
   </view>
 
   <!-- 备注信息 -->
-  <view class="section">
-    <view class="section-title">备注（选填）</view>
+  <view class="remark-section">
+    <view class="remark-title">备注（选填）</view>
     <t-textarea
       placeholder="有特殊需求可以在这里备注"
       maxlength="{{100}}"
