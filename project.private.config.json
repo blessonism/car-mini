@@ -3,5 +3,6 @@
   "projectname": "carshop",
   "setting": {
     "compileHotReLoad": true
-  }
+  },
+  "libVersion": "3.8.3"
 }

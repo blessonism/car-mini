@@ -1,0 +1,115 @@
+/* appointment-info.wxss */
+.container {
+  background-color: #f8f9ff;
+  min-height: 100vh;
+  padding-bottom: 160rpx;
+}
+
+.steps-wrapper {
+  padding: 32rpx 24rpx;
+  background-color: #fff;
+  margin-bottom: 24rpx;
+}
+
+.info-content {
+  padding: 24rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin: 24rpx 0 16rpx;
+  color: #1f2937;
+}
+
+.sub-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  margin: 24rpx 0 16rpx;
+  color: #4b5563;
+}
+
+.car-card {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  border: 1px solid #e5e7eb;
+  border-radius: 16rpx;
+  background-color: white;
+  margin-bottom: 24rpx;
+  transition: all 0.3s;
+}
+
+.car-card.selected {
+  border-color: #3b82f6;
+  background-color: #e3f2fd;
+}
+
+.check-icon {
+  color: #3b82f6;
+  margin-right: 24rpx;
+}
+
+.uncheck-icon {
+  color: #d1d5db;
+  margin-right: 24rpx;
+}
+
+.car-info {
+  flex-grow: 1;
+}
+
+.car-plate {
+  font-weight: bold;
+  font-size: 32rpx;
+  margin-bottom: 4rpx;
+}
+
+.car-model {
+  color: #6b7280;
+  font-size: 28rpx;
+}
+
+.add-car-btn {
+  margin: 24rpx 0;
+  border-style: dashed !important;
+  border-width: 2rpx !important;
+  border-color: #d1d5db !important;
+}
+
+.form-card {
+  background-color: white;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.remark-textarea {
+  width: 100%;
+  background-color: white;
+  border-radius: 16rpx;
+  padding: 16rpx;
+  margin-top: 12rpx;
+}
+
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  padding: 24rpx;
+  background: white;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  gap: 24rpx;
+  z-index: 10;
+}
+
+.btn-prev {
+  flex: 1;
+}
+
+.btn-next {
+  flex: 1;
+} 

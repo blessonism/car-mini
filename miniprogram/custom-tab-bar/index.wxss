@@ -1,0 +1,70 @@
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100rpx;
+  background: white;
+  display: flex;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+}
+
+.tab-bar-border {
+  background-color: rgba(0, 0, 0, 0.1);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 1px;
+  transform: scaleY(0.5);
+}
+
+.tab-bar-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 40rpx; /* 调整图标下移 */
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.tab-bar-item.active .tab-bar-icon {
+  transform: scale(1.05); /* 选中时图标稍微放大 */
+}
+
+.icon-wrapper {
+  position: relative;
+  margin-bottom: 4rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tab-bar-icon {
+  width: 50rpx;
+  height: 50rpx;
+  display: block;
+  transition: transform 0.15s ease;
+}
+
+/* 选中项的图标放大效果 */
+.tab-bar-item:nth-child(n+2) .tab-bar-icon {
+  transform: scale(1);
+}
+
+.tab-bar-item:nth-child(n+2):active .tab-bar-icon {
+  transform: scale(1.1);
+}
+
+.tab-bar-text {
+  font-size: 22rpx;
+  line-height: 1.2;
+  transition: all 0.15s ease;
+  margin-top: 2rpx;
+}
+
+/* 移除了选中指示器样式 */ 

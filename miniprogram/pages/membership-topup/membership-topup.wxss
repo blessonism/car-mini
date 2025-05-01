@@ -1,0 +1,226 @@
+/* membership-topup.wxss */
+.container {
+  padding: 30rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 账户信息样式 */
+.account-info {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 40rpx;
+  text-align: center;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.balance {
+  font-size: 60rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.member-level {
+  display: inline-block;
+  font-size: 24rpx;
+  color: #be9e61;
+  background-color: #f9f3e8;
+  padding: 6rpx 20rpx;
+  border-radius: 20rpx;
+}
+
+/* 通用部分样式 */
+.section {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 30rpx;
+  position: relative;
+  padding-left: 20rpx;
+}
+
+.section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6rpx;
+  height: 32rpx;
+  width: 8rpx;
+  background-color: #07c160;
+  border-radius: 4rpx;
+}
+
+/* 充值金额选择样式 */
+.amount-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+}
+
+.amount-item {
+  background-color: #f9f9f9;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  text-align: center;
+  border: 2rpx solid #eee;
+  transition: all 0.3s;
+}
+
+.amount-item.selected {
+  background-color: #e6f7ec;
+  border-color: #07c160;
+}
+
+.amount-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.amount-desc {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.amount-gift {
+  font-size: 22rpx;
+  color: #ff6b6b;
+}
+
+/* 自定义金额输入框样式 */
+.custom-amount {
+  margin-top: 30rpx;
+  display: flex;
+  align-items: center;
+  border: 2rpx solid #07c160;
+  border-radius: 12rpx;
+  padding: 10rpx 20rpx;
+  background-color: #e6f7ec;
+}
+
+.input-prefix {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-right: 10rpx;
+}
+
+.custom-amount-input {
+  flex: 1;
+  height: 80rpx;
+  font-size: 36rpx;
+}
+
+/* 支付方式样式 */
+.payment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.payment-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #f9f9f9;
+  border-radius: 12rpx;
+  border: 2rpx solid #eee;
+  transition: all 0.3s;
+}
+
+.payment-item.selected {
+  background-color: #e6f7ec;
+  border-color: #07c160;
+}
+
+.payment-icon {
+  width: 60rpx;
+  height: 60rpx;
+  margin-right: 20rpx;
+}
+
+.payment-name {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333;
+}
+
+.payment-selected {
+  margin-left: auto;
+}
+
+/* 会员权益样式 */
+.benefits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.benefit-text {
+  margin-left: 16rpx;
+}
+
+/* 底部按钮样式 */
+.confirm-bar {
+  margin-top: auto;
+  background-color: #ffffff;
+  padding: 30rpx;
+  border-top: 1rpx solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  bottom: 0;
+}
+
+.total-amount {
+  font-size: 30rpx;
+  color: #333;
+}
+
+.total-label {
+  color: #666;
+}
+
+.total-value {
+  font-weight: bold;
+  font-size: 36rpx;
+}
+
+.confirm-btn {
+  background-color: #07c160;
+  color: #ffffff;
+  font-size: 30rpx;
+  padding: 0 60rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  margin: 0;
+} 

@@ -1,0 +1,15 @@
+{
+  "navigationBarTitleText": "填写信息",
+  "usingComponents": {
+    "t-navbar": "../../miniprogram_npm/tdesign-miniprogram/navbar/navbar",
+    "t-steps": "../../miniprogram_npm/tdesign-miniprogram/steps/steps",
+    "t-step-item": "../../miniprogram_npm/tdesign-miniprogram/step-item/step-item",
+    "t-icon": "../../miniprogram_npm/tdesign-miniprogram/icon/icon",
+    "t-button": "../../miniprogram_npm/tdesign-miniprogram/button/button",
+    "t-input": "../../miniprogram_npm/tdesign-miniprogram/input/input",
+    "t-textarea": "../../miniprogram_npm/tdesign-miniprogram/textarea/textarea",
+    "t-radio-group": "../../miniprogram_npm/tdesign-miniprogram/radio-group/radio-group",
+    "t-picker": "../../miniprogram_npm/tdesign-miniprogram/picker/picker",
+    "t-picker-item": "../../miniprogram_npm/tdesign-miniprogram/picker-item/picker-item"
+  }
+} 

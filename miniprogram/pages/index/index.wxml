@@ -1,28 +1,36 @@
 <!--index.wxml-->
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
+<view class="page-container">
+  <!-- 页面标题区域 -->
+  <view class="header">
+    <view class="title">车辆保养服务</view>
+    <view class="subtitle">专业汽车保养、维修和美容服务</view>
+  </view>
+
+  <!-- 主要按钮区域 -->
+  <view class="button-area">
+    <view class="primary-button" bindtap="onAppointmentTap">预约服务</view>
+    <view class="secondary-button" bindtap="onMembershipTap">会员充值</view>
+  </view>
+
+  <!-- 服务类别卡片 -->
+  <view class="card">
+    <view class="card-header">
+      <view class="card-title">服务项目</view>
+      <view class="view-more" bindtap="onViewAllServices">查看全部</view>
+    </view>
+
+    <view class="service-grid">
+      <block wx:for="{{serviceCategories}}" wx:key="title">
+        <view class="service-item" bindtap="onServiceItemTap" data-category="{{item.title}}">
+          <view class="service-title">{{item.title}}</view>
+          <view class="service-desc">{{item.description}}</view>
         </view>
       </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
     </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
     </view>
-    <t-button theme="primary">按钮</t-button>
+
+  <!-- 页脚信息 -->
+  <view class="footer">
+    车辆保养服务平台 © 2024
   </view>
-</scroll-view>
+</view>

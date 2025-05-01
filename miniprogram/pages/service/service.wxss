@@ -1,0 +1,295 @@
+/* service.wxss */
+/* 自定义背景颜色 */
+.bg-custom-light {
+  background-color: rgb(248, 249, 255) !important;
+  padding-bottom: 180rpx;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
+/* 搜索框容器 */
+.search-container {
+  padding: 30rpx 30rpx 20rpx;
+}
+
+/* 搜索框自定义样式 - 缩小 */
+.search-smaller {
+  --td-search-height: 72rpx !important;
+  --td-search-label-font-size: 14px !important;
+}
+
+
+.search-input-smaller {
+  font-size: 26rpx !important;
+}
+
+/* Direct targeting of t-search components */
+.t-search__input-box .t-icon {
+  font-size: 32rpx !important;
+  margin-right: 12rpx;
+}
+
+.t-search__input .t-input__placeholder,
+.t-search__input .t-input__control {
+  font-size: 26rpx !important;
+}
+
+/* 搜索框样式 - 调整圆角和边框 */
+.t-search__input-box {
+  border-radius: 20rpx !important;
+  border: 2rpx solid transparent !important;
+  transition: all 0.2s ease-in-out;
+}
+
+/* 搜索框聚焦状态 - 粗黑边框 */
+.search-focused .t-search__input-box {
+  border: 2rpx solid #333 !important;
+  box-shadow: 0 0 0 2rpx rgba(51, 51, 51, 0.1);
+}
+
+/* 原有样式保留 - 增加边距 */
+.section {
+  margin: 20rpx 48rpx 0;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.see-all {
+  font-size: 28rpx;
+  color: #3370ff;
+}
+
+/* Categories */
+.category-scroll {
+  display: flex;
+  white-space: nowrap;
+  margin: 0 -30rpx;
+  padding: 10rpx 50rpx;
+}
+
+.category-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 70rpx;
+}
+
+.category-icon {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 25%;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.category-name {
+  font-size: 24rpx;
+  color: #333;
+}
+
+/* Promotion Banner - 更新为原型图样式 */
+.promotion-banner {
+  margin: 20rpx 40rpx 0;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-radius: 32rpx;
+  padding: 36rpx;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.promotion-content {
+  flex: 1;
+  z-index: 10;
+}
+
+.promotion-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  margin-bottom: 8rpx;
+}
+
+.promotion-desc {
+  font-size: 26rpx;
+  opacity: 0.9;
+  margin-bottom: 24rpx;
+}
+
+.promotion-btn {
+  display: inline-block;
+  background-color: #fff;
+  color: #2563eb;
+  font-size: 26rpx;
+  padding: 16rpx 32rpx;
+  border-radius: 16rpx;
+  font-weight: 600;
+}
+
+.user-icon-container {
+  width: 200rpx;
+  height: 200rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+}
+
+.user-icon {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 装饰圆形 */
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.circle-1 {
+  top: -40rpx;
+  right: -40rpx;
+  width: 280rpx;
+  height: 280rpx;
+}
+
+.circle-2 {
+  bottom: -60rpx;
+  right: 60rpx;
+  width: 160rpx;
+  height: 160rpx;
+}
+
+/* Hot Services */
+.service-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32rpx;  
+}
+
+.service-card {
+  background-color: #fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 6rpx -2rpx rgba(0, 0, 0, 0.05), 0 2rpx 4rpx -2rpx rgba(0, 0, 0, 0.03);
+}
+
+.service-image {
+  height: 180rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bg-blue {
+  background-color: #e6f0ff;
+}
+
+.bg-lightblue {
+  background-color: #e6f7ff;
+}
+
+.bg-yellow {
+  background-color: #fff7e6;
+}
+
+.bg-red {
+  background-color: #ffebee;
+}
+
+.service-details {
+  padding: 20rpx;
+}
+
+.service-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.service-tag {
+  display: inline-block;
+  background-color: #f0f5ff;
+  color: #3370ff;
+  font-size: 22rpx;
+  padding: 2rpx 10rpx;
+  border-radius: 6rpx;
+}
+
+.service-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15rpx;
+}
+
+.service-time {
+  font-size: 22rpx;
+  color: #999;
+  display: flex;
+  align-items: center;
+}
+
+.service-time text {
+  margin-left: 6rpx;
+}
+
+.service-price {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #ff4d4f;
+}
+
+.category-container {
+  background-color: #fff;
+  margin-bottom: 20rpx;
+}
+
+.service-list {
+  flex: 1;
+  padding-bottom: 140rpx;
+}
+
+.service-item {
+  margin-bottom: 2rpx;
+}
+
+.price {
+  color: #ff4d4f;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.bottom-action {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 30rpx;
+  background-color: #fff;
+  box-shadow: 0 -2px 10px 0 rgba(0, 0, 0, 0.05);
+  z-index: 100;
+  box-sizing: border-box;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+} 

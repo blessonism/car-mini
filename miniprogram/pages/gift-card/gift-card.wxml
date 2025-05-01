@@ -1,0 +1,184 @@
+<!-- pages/gift-card/gift-card.wxml -->
+<view class="gift-card-container">
+  <!-- Tab Bar -->
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-index="0">
+      我的礼品卡
+    </view>
+    <view class="tab-item {{activeTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-index="1">
+      购买礼品卡
+    </view>
+  </view>
+
+  <!-- My Gift Cards Tab -->
+  <view class="tab-content" wx:if="{{activeTab === 0}}">
+    <!-- Balance Section -->
+    <view class="balance-section">
+      <view class="balance-label">礼品卡余额</view>
+      <view class="balance-value">¥ {{totalBalance}}</view>
+      <view class="balance-actions">
+        <button class="action-button" bindtap="navigateToPurchase">充值</button>
+      </view>
+    </view>
+
+    <!-- Gift Card List -->
+    <view class="section-title">我的礼品卡</view>
+    <view class="card-list" wx:if="{{hasGiftCards}}">
+      <view class="card-item {{item.status !== 'active' ? 'card-inactive' : ''}}" 
+            wx:for="{{giftCards}}" 
+            wx:key="id">
+        <view class="card-info">
+          <view class="card-name">{{item.name}}</view>
+          <view class="card-amount">¥ {{item.amount}}</view>
+          <view class="card-expire">有效期至: {{item.expireDate}}</view>
+          <view class="card-status" wx:if="{{item.status === 'used'}}">已使用</view>
+          <view class="card-status" wx:elif="{{item.status === 'expired'}}">已过期</view>
+        </view>
+        <view class="card-actions" wx:if="{{item.status === 'active'}}">
+          <button class="card-button" bindtap="useGiftCard" data-id="{{item.id}}">使用</button>
+          <button class="card-button share" bindtap="shareGiftCard" data-id="{{item.id}}">分享</button>
+        </view>
+      </view>
+    </view>
+    <view class="empty-state" wx:else>
+      <image class="empty-icon" src="/assets/icons/empty-card.png"></image>
+      <view class="empty-text">您还没有礼品卡</view>
+      <button class="primary-button" bindtap="navigateToPurchase">立即购买</button>
+    </view>
+
+    <!-- Usage Records -->
+    <view class="section-title">使用记录</view>
+    <view class="record-list" wx:if="{{hasUsageRecords}}">
+      <view class="record-item" wx:for="{{usageRecords}}" wx:key="id">
+        <view class="record-info">
+          <view class="record-description">{{item.description}}</view>
+          <view class="record-time">{{item.time}}</view>
+        </view>
+        <view class="record-amount {{item.type === 'income' ? 'income' : 'expense'}}">
+          {{item.type === 'income' ? '+' : ''}}{{item.amount}}
+        </view>
+      </view>
+    </view>
+    <view class="empty-state" wx:else>
+      <view class="empty-text">暂无使用记录</view>
+    </view>
+  </view>
+
+  <!-- Purchase Gift Cards Tab -->
+  <view class="tab-content" wx:if="{{activeTab === 1}}">
+    <!-- Card Options -->
+    <view class="section-title">选择面额</view>
+    <view class="card-options">
+      <view class="card-option {{selectedCardOption.id === item.id ? 'selected' : ''}}" 
+            wx:for="{{cardOptions}}" 
+            wx:key="id"
+            bindtap="tapCardOption"
+            data-id="{{item.id}}">
+        <view class="option-amount">¥ {{item.amount}}</view>
+        <view class="option-price">¥ {{item.price}}</view>
+        <view class="option-description">{{item.description}}</view>
+      </view>
+    </view>
+
+    <!-- Quantity Section -->
+    <view class="section-title">购买数量</view>
+    <view class="quantity-section">
+      <view class="quantity-control" bindtap="decreaseQuantity">-</view>
+      <input class="quantity-input" type="number" value="{{quantity}}" bindinput="quantityInput" />
+      <view class="quantity-control" bindtap="increaseQuantity">+</view>
+    </view>
+
+    <!-- Payment Method -->
+    <view class="section-title">支付方式</view>
+    <view class="payment-methods">
+      <view class="payment-method {{selectedPaymentMethod.id === item.id ? 'selected' : ''}}" 
+            wx:for="{{paymentMethods}}" 
+            wx:key="id"
+            bindtap="tapPaymentMethod"
+            data-id="{{item.id}}">
+        <image class="payment-icon" src="{{item.icon}}"></image>
+        <view class="payment-name">{{item.name}}</view>
+      </view>
+    </view>
+
+    <!-- Gift Option -->
+    <view class="gift-section">
+      <view class="section-title">是否赠送好友</view>
+      <view class="gift-toggle">
+        <switch checked="{{isGift}}" bindchange="toggleGiftOption" color="#07c160" />
+        <text>作为礼物赠送好友</text>
+      </view>
+      <view class="friend-phone-input" wx:if="{{isGift}}">
+        <input type="number" placeholder="请输入好友手机号" value="{{friendPhone}}" bindinput="inputFriendPhone" />
+      </view>
+    </view>
+
+    <!-- Order Summary -->
+    <view class="order-summary">
+      <view class="summary-item">
+        <text>礼品卡价值</text>
+        <text>¥ {{cardValue}}</text>
+      </view>
+      <view class="summary-item">
+        <text>优惠</text>
+        <text class="discount">¥ {{discount}}</text>
+      </view>
+      <view class="summary-item total">
+        <text>实付金额</text>
+        <text>¥ {{totalPayment}}</text>
+      </view>
+    </view>
+
+    <!-- Submit Button -->
+    <view class="submit-section">
+      <button class="submit-button" bindtap="submitOrder">确认购买</button>
+    </view>
+  </view>
+</view>
+
+<!-- 礼品卡详情弹窗 -->
+<t-popup visible="{{showCardDetail}}" bind:visible-change="closeCardDetail" placement="bottom">
+  <view class="detail-popup">
+    <view class="detail-header">
+      <view class="detail-title">礼品卡详情</view>
+      <t-icon name="close" size="48rpx" bindtap="closeCardDetail" />
+    </view>
+    
+    <view class="detail-card">
+      <view class="detail-type">{{selectedCard.typeName}}</view>
+      <view class="detail-amount">¥{{selectedCard.amount}}</view>
+      <view class="detail-status">{{selectedCard.status === 'valid' ? '有效' : '已使用'}}</view>
+    </view>
+    
+    <view class="detail-info">
+      <view class="detail-item">
+        <view class="detail-label">礼品卡编号</view>
+        <view class="detail-value">{{selectedCard.cardNo}}</view>
+      </view>
+      <view class="detail-item">
+        <view class="detail-label">购买时间</view>
+        <view class="detail-value">{{selectedCard.purchaseTime}}</view>
+      </view>
+      <view class="detail-item">
+        <view class="detail-label">有效期至</view>
+        <view class="detail-value">{{selectedCard.validUntil}}</view>
+      </view>
+      <view class="detail-item" wx:if="{{selectedCard.status === 'used'}}">
+        <view class="detail-label">使用时间</view>
+        <view class="detail-value">{{selectedCard.usedTime}}</view>
+      </view>
+      <view class="detail-item" wx:if="{{selectedCard.status === 'used'}}">
+        <view class="detail-label">使用门店</view>
+        <view class="detail-value">{{selectedCard.usedStore}}</view>
+      </view>
+    </view>
+    
+    <view class="detail-actions">
+      <block wx:if="{{selectedCard.status === 'valid'}}">
+        <t-button theme="primary" size="large" bindtap="shareCard">赠送好友</t-button>
+        <t-button theme="primary" size="large" bindtap="useSelectedCard">立即使用</t-button>
+      </block>
+      <t-button theme="light" size="large" bindtap="closeCardDetail">关闭</t-button>
+    </view>
+  </view>
+</t-popup> 

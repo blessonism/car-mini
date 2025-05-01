@@ -1,0 +1,226 @@
+/* store-order-detail.wxss */
+.container {
+  background-color: #f8f9ff;
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+
+/* 订单状态卡片 */
+.status-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 40rpx 30rpx;
+  background-color: #3b82f6;
+  color: #fff;
+  margin-bottom: 24rpx;
+}
+
+.status-icon {
+  width: 120rpx;
+  height: 120rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  margin-right: 30rpx;
+}
+
+.status-icon.completed {
+  color: #10b981;
+}
+
+.status-icon.processing {
+  color: #f59e0b;
+}
+
+.status-icon.pending {
+  color: #6b7280;
+}
+
+.status-info {
+  flex: 1;
+}
+
+.status-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.status-desc {
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+
+/* 信息卡片通用样式 */
+.info-card {
+  margin: 24rpx;
+  padding: 30rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 24rpx;
+  color: #1f2937;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 16rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contact-btn {
+  font-size: 26rpx;
+  color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.1);
+  padding: 6rpx 16rpx;
+  border-radius: 30rpx;
+  font-weight: normal;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+  font-size: 28rpx;
+}
+
+.info-label {
+  color: #6b7280;
+  flex: 1;
+}
+
+.info-value {
+  color: #1f2937;
+  flex: 2;
+  text-align: right;
+}
+
+.info-value.phone {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.member-tag {
+  display: inline-block;
+  font-size: 24rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  color: #fff;
+}
+
+.level-1 {
+  background-color: #10b981;
+}
+
+.level-2 {
+  background-color: #3b82f6;
+}
+
+.level-3 {
+  background-color: #f59e0b;
+}
+
+.level-4 {
+  background-color: #ef4444;
+}
+
+/* 服务项目样式 */
+.service-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.service-item:last-child {
+  border-bottom: none;
+}
+
+.service-info {
+  flex: 1;
+}
+
+.service-name {
+  font-size: 30rpx;
+  color: #1f2937;
+  margin-bottom: 6rpx;
+}
+
+.service-desc {
+  font-size: 26rpx;
+  color: #6b7280;
+}
+
+.service-price {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+/* 价格摘要 */
+.price-summary {
+  margin-top: 30rpx;
+  padding-top: 20rpx;
+  border-top: 1px solid #f0f0f0;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+  font-size: 28rpx;
+}
+
+.summary-row.total {
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1px dashed #f0f0f0;
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+}
+
+.summary-label {
+  color: #6b7280;
+}
+
+.summary-value {
+  color: #1f2937;
+}
+
+.summary-value.discount {
+  color: #ef4444;
+}
+
+.summary-value.total {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* 订单备注 */
+.remark-content {
+  font-size: 28rpx;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  padding: 24rpx;
+  margin-top: 30rpx;
+}
+
+.action-btn {
+  flex: 1;
+  margin: 0 12rpx;
+} 

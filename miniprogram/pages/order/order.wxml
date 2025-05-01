@@ -1,0 +1,78 @@
+<!-- order.wxml -->
+<view class="page-container">
+  <!-- 自定义标签导航 -->  
+  <view class="custom-tabs">
+    <view class="tab-item {{activeTab === 'all' ? 'active' : ''}}" bindtap="onTabChange" data-value="all">
+      全部
+    </view>
+    <view class="tab-item {{activeTab === 'waiting_arrival' ? 'active' : ''}}" bindtap="onTabChange" data-value="waiting_arrival">
+      待到店
+    </view>
+    <view class="tab-item {{activeTab === 'waiting' ? 'active' : ''}}" bindtap="onTabChange" data-value="waiting">
+      待服务
+    </view>
+    <view class="tab-item {{activeTab === 'in_service' ? 'active' : ''}}" bindtap="onTabChange" data-value="in_service">
+      服务中
+    </view>
+  </view>
+  
+  <!-- Order list -->
+  <view class="order-list-container">
+    <block wx:if="{{filteredOrders.length > 0 || orders.length > 0}}">
+      <view wx:for="{{filteredOrders.length > 0 ? filteredOrders : orders}}" wx:key="id" class="order-card">
+        <view class="order-header">
+          <view class="service-icon">
+            <image 
+              wx:if="{{item.serviceName === '标准洗车'}}" 
+              src="/assets/icons/car-washing.png" 
+              mode="aspectFit" 
+              class="icon-image"
+            ></image>
+            <image 
+              wx:elif="{{item.serviceName === '精致洗车'}}" 
+              src="/assets/icons/hard-washing.png" 
+              mode="aspectFit" 
+              class="icon-image"
+            ></image>
+            <image 
+              wx:else 
+              src="/assets/icons/维修.png" 
+              mode="aspectFit" 
+              class="icon-image"
+            ></image>
+          </view>
+          <view class="service-name">{{item.serviceName}}</view>
+          <view class="service-status {{item.status}}">
+            <text wx:if="{{item.status === 'in_service' || item.status === 'washing'}}">服务中</text>
+            <text wx:elif="{{item.status === 'waiting'}}">等待服务</text>
+            <text wx:elif="{{item.status === 'completed'}}">已完成</text>
+            <text wx:elif="{{item.status === 'waiting_arrival'}}">待到店</text>
+          </view>
+        </view>
+
+        <view class="order-content">
+          <view class="car-info">
+            {{item.carModel}} · {{item.licensePlate}}
+          </view>
+          <view class="price-info">
+            ¥{{item.totalPrice}}
+          </view>
+        </view>
+
+        <view class="order-time">
+          预约时间: {{item.appointmentTime || '2023-07-15 14:30'}}
+        </view>
+
+        <view class="order-footer">
+          <view class="action-buttons">
+            <button size="small" bindtap="contactStore" data-id="{{item.id}}" class="light">联系店主</button>
+            <button size="small" bindtap="trackService" data-id="{{item.id}}" class="primary">追踪服务</button>
+          </view>
+        </view>
+      </view>
+    </block>
+    
+    <!-- 空状态 -->
+    <t-empty wx:if="{{filteredOrders.length === 0 && orders.length === 0}}" image="info" description="暂无订单" />
+  </view>
+</view> 

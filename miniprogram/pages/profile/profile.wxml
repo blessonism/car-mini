@@ -1,0 +1,142 @@
+<!-- profile.wxml -->
+<view class="bg-custom-light min-h-screen mt-0 page-container">
+  <!-- 顶部渐变背景区域 -->
+ <view class="bg-gradient-to-r from-blue-500 to-blue-700 h-50 rounded-b-2xl relative shadow-md">
+  
+  </view>
+
+  <!-- 用户信息区域 -->
+  <view class="user-profile-container">
+    <view class="user-info-box rounded-lg shadow-md mx-6">
+          <view class="avatar">
+            <image src="/assets/icons/profile.png"></image>
+          </view>
+          <view class="user-info">
+            <view class="username">{{userInfo.name}}</view>
+            <view class="phone">{{userInfo.phone}}</view>
+            <view class="member-tag">
+              <image class="crown-icon" src="/assets/icons/钻石.png"></image>
+                <text>{{userInfo.memberLevel}}</text>                
+            </view>
+          </view>
+    </view>
+  </view>
+
+  <!-- 钱包卡片 -->
+  <view class="member-card">
+    <view class="card-background"></view>
+    <view class="card-content">
+      <view class="card-header">
+        <view class="card-title">
+          <image class="wallet-icon" src="/assets/icons/wallet-sm.png"></image>
+          <text>钱包余额</text>
+        </view>
+        <view class="card-action" bindtap="navigateTo" data-url="/pages/wallet/wallet">交易记录 ></view>
+      </view>
+      
+      <view class="points-info">
+        <view>
+          <view class="points-amount">¥{{userInfo.balance}}</view>
+          <view class="points-label">当前余额</view>
+        </view>
+        <view class="points-actions">
+          <view class="exchange-button" bindtap="navigateTo" data-url="/pages/membership-topup/membership-topup">
+            立即充值
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 快捷功能图标 -->
+  <view class="feature-grid">
+    <view class="feature-item" bindtap="navigateTo" data-url="/pages/gift-card/gift-card">
+      <view class="feature-icon">
+        <image src="/assets/icons/coupon.png"></image>
+      </view>
+      <view class="feature-name">优惠券</view>
+    </view>
+    
+    <view class="feature-item" bindtap="navigateTo" data-url="/pages/wallet/wallet">
+      <view class="feature-icon">
+        <image src="/assets/icons/wallet.png"></image>
+      </view>
+      <view class="feature-name">钱包余额</view>
+    </view>
+    
+    <view class="feature-item" bindtap="navigateTo" data-url="/pages/membership-topup/membership-topup">
+      <view class="feature-icon">
+        <image src="/assets/icons/crown.png"></image>
+      </view>
+      <view class="feature-name">会员充值</view>
+    </view>
+    
+    <view class="feature-item" bindtap="navigateTo" data-url="/pages/gift-card/gift-card">
+      <view class="feature-icon">
+        <image src="/assets/icons/gift.png"></image>
+      </view>
+      <view class="feature-name">礼品卡</view>
+    </view>
+  </view>
+
+  <!-- 我的车辆 -->
+  <view class="sections">
+    <view class="section-title">我的车辆</view>
+    
+    <view class="vehicles-list">
+      <view wx:for="{{vehicles}}" wx:key="index" class="card vehicle-card">
+        <view class="vehicle-icon">
+          <image src="/assets/icons/car.png"></image>
+        </view>
+        <view class="vehicle-info">
+          <view class="vehicle-model">{{item.model}}</view>
+          <view class="vehicle-plate">{{item.plate}}</view>
+        </view>
+        <view class="arrow" bindtap="showToast" data-toast="车辆详情功能开发中">
+          <image src="/assets/icons/arrow-right.png"></image>
+        </view>
+      </view>
+    </view>
+    
+    <view class="add-vehicle-btn" bindtap="showVehicleModal">
+      <image class="add-icon" src="/assets/icons/add.png"></image>
+      <text>添加车辆</text>
+    </view>
+  </view>
+</view>
+
+<!-- 车辆添加弹窗 -->
+<view class="vehicle-modal {{isVehicleModalVisible ? 'visible' : ''}}" bindtap="closeVehicleModal">
+  <view class="modal-content" catchtap="preventBubble">
+    <view class="modal-header">
+      <text class="modal-title">添加车辆</text>
+      <view class="close-btn" bindtap="closeVehicleModal">
+        <image src="/assets/icons/close.png"></image>
+      </view>
+    </view>
+    
+    <view class="modal-body">
+      <view class="form-group">
+        <view class="form-label">车牌号</view>
+        <view class="form-plate-input">
+          <picker mode="selector" range="{{provinces}}" value="{{provinceIndex}}" bindchange="bindProvinceChange">
+            <view class="plate-province">{{provinces[provinceIndex]}}</view>
+          </picker>
+          <input type="text" model:value="{{vehicleNumber}}" placeholder="输入车牌号" class="plate-number" />
+        </view>
+      </view>
+      
+      <view class="form-group">
+        <view class="form-label">车型</view>
+        <input type="text" model:value="{{vehicleModel}}" placeholder="例如：奔驰C260L" class="form-input" />
+      </view>
+      
+      <view class="form-group">
+        <view class="form-label">车身颜色</view>
+        <input type="text" model:value="{{vehicleColor}}" placeholder="例如：黑色" class="form-input" />
+      </view>
+      
+      <button class="save-btn" bindtap="saveNewVehicle">保存</button>
+    </view>
+  </view>
+</view> 

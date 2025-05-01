@@ -1,0 +1,95 @@
+<!-- Home page -->
+<view class="bg-custom-light min-h-screen mt-0 page-container">
+  <!-- 顶部渐变背景区域 -->
+  <view class="bg-gradient-to-r from-blue-500 to-blue-700 h-40 rounded-b-2xl relative shadow-md">
+    <!-- 顶部标题和图标 -->
+    <view class="flex items-center justify-between px-5 mx-5">
+      <text class="text-xl font-bold text-white mt-16">智车养护</text>           
+    </view>
+
+    <!-- 搜索栏 -->
+    <view class="mx-5 mt-12 px-5">
+      <t-search
+        value="{{searchValue}}"
+        placeholder="搜索服务或门店..."
+        shape="round"
+        bind:change="onSearchChange"
+        background="#ffffff0A"
+        t-class="search-custom"
+        t-class-input="text-white placeholder-white"
+        t-class-input="search-input"
+      />
+    </view>
+  </view>
+
+  <!-- 主要内容区域 -->
+  <view class="px-3">
+    <!-- 新用户专享特惠banner -->
+    <view class="mt-8 mx-5 bg-gradient-to-r from-blue-400 to-blue-600 p-8 rounded-2xl flex items-center relative overflow-hidden shadow-md">
+      <view class="w-2/3 z-10 mx-3">
+        <view class="text-xl font-bold text-white mb-1">新用户专享特惠</view>
+        <view class="text-sm text-white opacity-90 mb-4">首次下单即享8折优惠</view>
+        <view class="inline-block">
+          <t-button theme="light" size="medium" class="btn-pure-white rounded-xl">立即领取</t-button>
+        </view>
+      </view>
+      
+      <!-- 装饰圆形元素 -->
+      <view class="absolute right-2 top-1 w-16 h-16 rounded-full bg-whit"></view>
+      <view class="absolute right-16 top-6 w-12 h-12 rounded-full bg-white"></view>
+      <view class="absolute right-4 top-14 w-12 h-12 rounded-full bg-white"></view>
+ 
+      <view class="absolute right-5 w-28 h-28 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
+        <t-icon name="car" size="96rpx" class="text-white opacity-80" />
+      </view>
+    </view>
+
+    <!-- 店铺公告 -->
+    <view class="mt-6 mx-6">
+      <view class="text-lg font-bold ml-1 mb-6 mt-12">店铺公告</view>
+      <view class="bg-white rounded-xl p-5 shadow mb-6 mx-4">
+        <view class="flex mb-2">
+          <view class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <t-icon name="sound" size="40rpx" class="text-blue-500" />
+          </view>
+          <view class="ml-3 font-bold text-lg flex items-center">五一节假日营业公告</view>
+        </view>
+        <view class="ml-13 text-gray-500 text-sm leading-relaxed mb-3 pl-0 mx-5">
+          尊敬的顾客，五一期间本店正常营业，营业时间为早9:00至晚8:00。预约爆满，建议提前2-3天预约服务。
+        </view>
+        <view class="ml-13 text-xs text-gray-400 mx-4 mt-5 mb-3">发布时间: 2025-04-25</view>
+      </view>
+
+      <view class="bg-white rounded-xl p-5 shadow mx-4">
+        <view class="flex mb-2">
+          <view class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <t-icon name="gift" size="40rpx" class="text-red-500" />
+          </view>
+          <view class="ml-3 font-bold text-lg flex items-center">会员专享优惠活动</view>
+        </view>
+        <view class="ml-13 text-gray-500 text-sm leading-relaxed mb-3 pl-0 mx-5">
+          即日起至2025年5月31日，新老会员充值满500元赠送价值100元的精致洗车券一张，充值满1000元可获赠车内除菌消毒服务一次。
+        </view>
+        <view class="ml-13 text-xs text-gray-400 mx-4 mt-5 mb-3">发布时间: 2025-04-20</view>
+      </view>
+    </view>
+
+    <!-- 热门服务 -->
+    <view class="mt-6 mx-6 mb-6">
+      <view class="text-lg font-bold text-gray-900 ml-1 mb-6 mt-12">热门服务</view>
+
+      <view wx:for="{{hotServices}}" wx:key="id" class="bg-white rounded-2xl mb-6 shadow flex overflow-hidden" 
+        bindtap="onServiceCardClick" data-id="{{item.id}}">
+        <view class="{{item.bgColor || 'bg-blue-50'}} w-24 h-24 flex items-center justify-center flex-shrink-0">
+          <t-icon name="{{item.iconName}}" size="60rpx" class="{{item.iconColor || 'text-blue-500'}}" />
+        </view>
+        <view class="flex-1 p-5">
+          <view class="font-bold text-gray-900 text-lg mb-2">{{item.title}}</view>
+          <view class="text-gray-600 leading-relaxed mb-3">{{item.desc}}</view>
+          <view class="text-red-500 font-bold">¥{{item.price}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view> 
+ 

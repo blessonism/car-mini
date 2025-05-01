@@ -1,0 +1,217 @@
+/* wallet.wxss */
+.container {
+  background-color: #f8f9ff;
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+
+/* 钱包卡片 */
+.wallet-card {
+  margin: 30rpx;
+  padding: 40rpx 30rpx;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border-radius: 16rpx;
+  color: #fff;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.wallet-header {
+  margin-bottom: 40rpx;
+}
+
+.balance-title {
+  font-size: 28rpx;
+  opacity: 0.9;
+  margin-bottom: 16rpx;
+}
+
+.balance-amount {
+  font-size: 60rpx;
+  font-weight: bold;
+}
+
+.wallet-actions {
+  display: flex;
+  justify-content: space-around;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.2);
+  padding-top: 30rpx;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.action-icon {
+  width: 80rpx;
+  height: 80rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12rpx;
+}
+
+.action-text {
+  font-size: 26rpx;
+}
+
+/* 会员卡 */
+.membership-card {
+  margin: 30rpx;
+  padding: 30rpx;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-radius: 16rpx;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.member-level {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.member-name {
+  font-size: 28rpx;
+  opacity: 0.9;
+  margin-bottom: 16rpx;
+}
+
+.member-points {
+  font-size: 26rpx;
+  opacity: 0.8;
+}
+
+.membership-actions {
+  display: flex;
+  align-items: center;
+}
+
+/* 快捷入口 */
+.quick-access, .recent-transactions {
+  margin: 30rpx;
+  padding: 30rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.view-all {
+  font-size: 26rpx;
+  color: #3b82f6;
+  font-weight: normal;
+}
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20rpx;
+}
+
+.quick-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quick-icon {
+  width: 80rpx;
+  height: 80rpx;
+  margin-bottom: 12rpx;
+}
+
+.quick-text {
+  font-size: 26rpx;
+  color: #6b7280;
+}
+
+/* 最近交易 */
+.transaction-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.transaction-item:last-child {
+  border-bottom: none;
+}
+
+.transaction-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+}
+
+.transaction-icon.income {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.transaction-icon.expense {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.transaction-info {
+  flex: 1;
+}
+
+.transaction-title {
+  font-size: 28rpx;
+  color: #1f2937;
+  margin-bottom: 6rpx;
+}
+
+.transaction-time {
+  font-size: 24rpx;
+  color: #9ca3af;
+}
+
+.transaction-amount {
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+.transaction-amount.income {
+  color: #10b981;
+}
+
+.transaction-amount.expense {
+  color: #ef4444;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 0;
+}
+
+.empty-text {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #9ca3af;
+} 

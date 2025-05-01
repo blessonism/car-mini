@@ -1,0 +1,94 @@
+<!-- appointment-time.wxml -->
+<view class="container">
+  <!-- 顶部导航 -->
+  <t-navbar
+    title="预约时间"
+    left-arrow
+    bind:go-back="onBack"
+  />
+
+  <!-- 步骤指示器 -->
+  <view class="steps-wrapper">
+    <t-steps current="{{1}}" bind:change="onStepChange">
+      <t-step-item title="选择服务" />
+      <t-step-item title="选择时间" />
+      <t-step-item title="填写信息" />
+      <t-step-item title="支付确认" />
+    </t-steps>
+  </view>
+
+  <!-- 时间选择 -->
+  <view class="appointment-content">
+    <!-- 日期选择 -->
+    <view class="section-title">选择日期</view>
+    <scroll-view scroll-x enable-flex class="date-scroll">
+      <view 
+        class="date-item {{selectedDate === date.value ? 'active' : ''}}" 
+        wx:for="{{dateList}}" 
+        wx:key="value" 
+        wx:for-item="date"
+        bindtap="selectDate"
+        data-date="{{date.value}}"
+      >
+        <view class="date-day">{{date.day}}</view>
+        <view class="date-date">{{date.date}}</view>
+        <view class="date-text">{{date.text}}</view>
+      </view>
+    </scroll-view>
+
+    <!-- 时间段选择 -->
+    <view class="section-title">选择时间段</view>
+    <view class="time-grid">
+      <view 
+        class="time-item {{item.available ? (selectedTime === item.value ? 'active' : '') : 'disabled'}}" 
+        wx:for="{{timeSlots}}" 
+        wx:key="value"
+        bindtap="{{item.available ? 'selectTime' : ''}}"
+        data-time="{{item.value}}"
+      >
+        {{item.label}}
+      </view>
+    </view>
+
+    <!-- 选择门店 -->
+    <view class="section-title">选择门店</view>
+    <t-cell-group>
+      <t-cell
+        title="广州天河店"
+        description="广州市天河区天河路385号"
+        note="距离3.2km"
+        arrow
+        hover
+        t-class="store-cell"
+        bind:click="selectStore"
+        data-store="1"
+      >
+        <view slot="left-icon" class="store-icon-container">
+          <t-icon name="shop" size="48rpx" color="#3b82f6" />
+        </view>
+        <view slot="note" class="store-distance">距离3.2km</view>
+      </t-cell>
+
+      <t-cell
+        title="广州车陂店"
+        description="广州市天河区车陂路288号"
+        arrow
+        hover
+        t-class="store-cell"
+        bind:click="selectStore"
+        data-store="2"
+      >
+        <view slot="left-icon" class="store-icon-container">
+          <t-icon name="shop" size="48rpx" color="#3b82f6" />
+        </view>
+        <view slot="note" class="store-distance">距离5.8km</view>
+      </t-cell>
+    </t-cell-group>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-bar">
+    <t-button theme="light" size="large" class="btn-prev" bindtap="prevStep">上一步</t-button>
+    <t-button theme="primary" size="large" class="btn-next" bindtap="nextStep">下一步</t-button>
+  </view>
+</view> 

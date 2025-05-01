@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "我的钱包",
+  "usingComponents": {
+    "t-navbar": "../../miniprogram_npm/tdesign-miniprogram/navbar/navbar",
+    "t-icon": "../../miniprogram_npm/tdesign-miniprogram/icon/icon"
+  }
+} 

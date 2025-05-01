@@ -1,0 +1,149 @@
+<!-- store-order-detail.wxml -->
+<view class="container">
+  <!-- 顶部导航 -->
+  <t-navbar
+    title="门店订单详情"
+    left-arrow
+    bind:go-back="onBack"
+  />
+  
+  <!-- 订单状态卡片 -->
+  <view class="status-card">
+    <view class="status-icon {{orderInfo.status === 'completed' ? 'completed' : orderInfo.status === 'processing' ? 'processing' : 'pending'}}">
+      <t-icon name="{{orderInfo.status === 'completed' ? 'check-circle-filled' : orderInfo.status === 'processing' ? 'time-filled' : 'help-circle-filled'}}" size="64rpx" />
+    </view>
+    <view class="status-info">
+      <view class="status-title">{{orderInfo.statusText}}</view>
+      <view class="status-desc">{{orderInfo.statusDesc}}</view>
+    </view>
+  </view>
+  
+  <!-- 门店信息卡片 -->
+  <view class="info-card">
+    <view class="card-title">门店信息</view>
+    <view class="info-row">
+      <view class="info-label">门店名称</view>
+      <view class="info-value">{{orderInfo.storeName}}</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">门店电话</view>
+      <view class="info-value phone" bindtap="callStore">{{orderInfo.storePhone}}</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">门店地址</view>
+      <view class="info-value">{{orderInfo.storeAddress}}</view>
+    </view>
+  </view>
+  
+  <!-- 订单信息卡片 -->
+  <view class="info-card">
+    <view class="card-title">订单信息</view>
+    <view class="info-row">
+      <view class="info-label">订单编号</view>
+      <view class="info-value">{{orderInfo.orderNo}}</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">下单时间</view>
+      <view class="info-value">{{orderInfo.createTime}}</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">开始时间</view>
+      <view class="info-value">{{orderInfo.startTime || '-'}}</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">完成时间</view>
+      <view class="info-value">{{orderInfo.endTime || '-'}}</view>
+    </view>
+  </view>
+  
+  <!-- 客户信息卡片 -->
+  <view class="info-card">
+    <view class="card-title">
+      <text>客户信息</text>
+      <view class="contact-btn" bindtap="contactCustomer">联系客户</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">客户姓名</view>
+      <view class="info-value">{{orderInfo.customerName}}</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">联系电话</view>
+      <view class="info-value phone" bindtap="callCustomer">{{orderInfo.customerPhone}}</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">会员等级</view>
+      <view class="info-value">
+        <text class="member-tag level-{{orderInfo.memberLevel}}">{{orderInfo.memberLevelText}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 车辆信息卡片 -->
+  <view class="info-card">
+    <view class="card-title">车辆信息</view>
+    <view class="info-row">
+      <view class="info-label">车牌号码</view>
+      <view class="info-value">{{orderInfo.carInfo.plate}}</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">车辆品牌</view>
+      <view class="info-value">{{orderInfo.carInfo.brand}}</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">车辆型号</view>
+      <view class="info-value">{{orderInfo.carInfo.model}}</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">车身颜色</view>
+      <view class="info-value">{{orderInfo.carInfo.color}}</view>
+    </view>
+  </view>
+  
+  <!-- 服务信息卡片 -->
+  <view class="info-card">
+    <view class="card-title">服务项目</view>
+    <view class="service-item" wx:for="{{orderInfo.services}}" wx:key="id">
+      <view class="service-info">
+        <view class="service-name">{{item.name}}</view>
+        <view class="service-desc" wx:if="{{item.description}}">{{item.description}}</view>
+      </view>
+      <view class="service-price">¥{{item.price}}</view>
+    </view>
+    
+    <view class="price-summary">
+      <view class="summary-row">
+        <view class="summary-label">服务金额</view>
+        <view class="summary-value">¥{{orderInfo.amount}}</view>
+      </view>
+      <view class="summary-row" wx:if="{{orderInfo.discount > 0}}">
+        <view class="summary-label">优惠金额</view>
+        <view class="summary-value discount">-¥{{orderInfo.discount}}</view>
+      </view>
+      <view class="summary-row total">
+        <view class="summary-label">实付金额</view>
+        <view class="summary-value total">¥{{orderInfo.totalAmount}}</view>
+      </view>
+      <view class="summary-row">
+        <view class="summary-label">支付方式</view>
+        <view class="summary-value">{{orderInfo.paymentMethod}}</view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 订单备注 -->
+  <view class="info-card" wx:if="{{orderInfo.remark}}">
+    <view class="card-title">订单备注</view>
+    <view class="remark-content">{{orderInfo.remark}}</view>
+  </view>
+  
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <block wx:if="{{orderInfo.status === 'pending'}}">
+      <t-button class="action-btn" theme="danger" bindtap="rejectOrder">拒绝订单</t-button>
+      <t-button class="action-btn" theme="primary" bindtap="acceptOrder">接受订单</t-button>
+    </block>
+    <block wx:if="{{orderInfo.status === 'processing'}}">
+      <t-button class="action-btn" theme="primary" bindtap="completeOrder">完成服务</t-button>
+    </block>
+  </view>
+</view> 

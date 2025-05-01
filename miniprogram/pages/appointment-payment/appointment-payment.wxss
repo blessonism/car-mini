@@ -1,0 +1,345 @@
+/* pages/appointment-payment/appointment-payment.wxss */
+page {
+  background-color: #f6f6f6;
+  padding-bottom: 150rpx;
+}
+
+.container {
+  padding: 30rpx;
+}
+
+/* Steps Component */
+.steps-container {
+  background-color: #fff;
+  padding: 40rpx 30rpx;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+/* Common Card Styles */
+.info-card, .service-card, .payment-card, .coupon-card {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.card-header {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 20rpx;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 15rpx;
+}
+
+/* Appointment Info Card */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15rpx;
+}
+
+.info-label {
+  color: #666;
+  font-size: 28rpx;
+}
+
+.info-value {
+  color: #333;
+  font-size: 28rpx;
+}
+
+/* Service Card */
+.service-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.service-info {
+  flex: 1;
+}
+
+.service-name {
+  font-size: 30rpx;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.service-desc {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.service-price {
+  font-size: 32rpx;
+  color: #ff4141;
+  font-weight: 500;
+}
+
+/* Payment Method Card */
+.payment-method {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.payment-method:last-child {
+  border-bottom: none;
+}
+
+.payment-icon {
+  margin-right: 20rpx;
+}
+
+.payment-info {
+  flex: 1;
+}
+
+.payment-name {
+  font-size: 28rpx;
+  color: #333;
+  display: block;
+}
+
+.payment-balance {
+  font-size: 24rpx;
+  color: #999;
+  display: block;
+  margin-top: 6rpx;
+}
+
+.payment-select-icon {
+  padding: 0 10rpx;
+}
+
+.payment-method.selected {
+  background-color: #f7f9fd;
+}
+
+/* Coupon Card */
+.coupon-selector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10rpx 0;
+}
+
+.coupon-info {
+  flex: 1;
+}
+
+.coupon-placeholder {
+  color: #999;
+  font-size: 28rpx;
+}
+
+.coupon-name {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.coupon-amount {
+  font-size: 26rpx;
+  color: #ff4141;
+  margin-top: 6rpx;
+}
+
+.coupon-arrow {
+  color: #999;
+}
+
+/* Payment Summary */
+.payment-summary {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.discount-amount {
+  color: #ff4141;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1px solid #f0f0f0;
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.total-amount {
+  color: #ff4141;
+  font-size: 36rpx;
+}
+
+/* Bottom Bar */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120rpx;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30rpx;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  z-index: 100;
+}
+
+.price-container {
+  display: flex;
+  align-items: baseline;
+}
+
+.price-label {
+  font-size: 28rpx;
+  color: #333;
+  margin-right: 10rpx;
+}
+
+.price-value {
+  font-size: 36rpx;
+  color: #ff4141;
+  font-weight: 500;
+}
+
+.pay-button {
+  background-color: #ff4141;
+  color: #fff;
+  height: 80rpx;
+  line-height: 80rpx;
+  padding: 0 60rpx;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+/* Coupon Popup */
+.coupon-popup {
+  width: 100vw;
+  max-height: 70vh;
+  background-color: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  overflow: hidden;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+.coupon-list {
+  padding: 20rpx 30rpx;
+  max-height: 60vh;
+  overflow-y: scroll;
+}
+
+.coupon-item {
+  display: flex;
+  margin-bottom: 20rpx;
+  padding: 30rpx;
+  border-radius: 12rpx;
+  background: linear-gradient(to right, #ff9eaa, #ffffff);
+  position: relative;
+  overflow: hidden;
+}
+
+.coupon-item.selected {
+  box-shadow: 0 2px 10px rgba(255, 65, 65, 0.2);
+}
+
+.coupon-item.disabled {
+  opacity: 0.6;
+  background: linear-gradient(to right, #ccc, #f5f5f5);
+}
+
+.coupon-left {
+  width: 200rpx;
+  border-right: 1px dashed #fff;
+  padding-right: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.coupon-amount {
+  font-size: 48rpx;
+  color: #ff4141;
+  font-weight: bold;
+}
+
+.coupon-condition {
+  font-size: 24rpx;
+  color: #666;
+  margin-top: 10rpx;
+}
+
+.coupon-right {
+  flex: 1;
+  padding-left: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.coupon-name {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.coupon-date {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.coupon-status {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  color: #999;
+  font-size: 24rpx;
+}
+
+.coupon-select {
+  position: absolute;
+  bottom: 20rpx;
+  right: 20rpx;
+}
+
+.coupon-item.no-coupon {
+  background: #f5f5f5;
+  justify-content: center;
+  align-items: center;
+  padding: 20rpx;
+}
+
+.no-coupon-text {
+  font-size: 28rpx;
+  color: #666;
+  flex: 1;
+  text-align: center;
+} 

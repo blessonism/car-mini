@@ -1,0 +1,102 @@
+<!-- wallet.wxml -->
+<view class="container">
+  <!-- 顶部导航 -->
+  <t-navbar
+    title="我的钱包"
+    left-arrow
+    bind:go-back="onBack"
+  />
+  
+  <!-- 钱包卡片 -->
+  <view class="wallet-card">
+    <view class="wallet-header">
+      <view class="balance-title">账户余额</view>
+      <view class="balance-amount">¥{{accountInfo.balance}}</view>
+    </view>
+    <view class="wallet-actions">
+      <view class="action-item" bindtap="navigateToTopup">
+        <view class="action-icon">
+          <t-icon name="add-circle" size="48rpx" />
+        </view>
+        <view class="action-text">充值</view>
+      </view>
+      <view class="action-item" bindtap="navigateToWithdraw">
+        <view class="action-icon">
+          <t-icon name="download" size="48rpx" />
+        </view>
+        <view class="action-text">提现</view>
+      </view>
+      <view class="action-item" bindtap="navigateToTransaction">
+        <view class="action-icon">
+          <t-icon name="chart" size="48rpx" />
+        </view>
+        <view class="action-text">明细</view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 会员卡 -->
+  <view class="membership-card" bindtap="navigateToMembership">
+    <view class="membership-info">
+      <view class="member-level">{{accountInfo.memberLevel}}会员</view>
+      <view class="member-name">{{accountInfo.memberName}}</view>
+      <view class="member-points">积分：{{accountInfo.points}}</view>
+    </view>
+    <view class="membership-actions">
+      <view class="action-text">查看详情</view>
+      <t-icon name="chevron-right" size="40rpx" color="#fff" />
+    </view>
+  </view>
+  
+  <!-- 快捷入口 -->
+  <view class="quick-access">
+    <view class="section-title">快捷入口</view>
+    <view class="quick-grid">
+      <view class="quick-item" bindtap="navigateToGiftCard">
+        <image class="quick-icon" src="/assets/icons/gift-card.png" mode="aspectFit"></image>
+        <view class="quick-text">礼品卡</view>
+      </view>
+      <view class="quick-item" bindtap="navigateToCoupon">
+        <image class="quick-icon" src="/assets/icons/coupon.png" mode="aspectFit"></image>
+        <view class="quick-text">优惠券</view>
+      </view>
+      <view class="quick-item" bindtap="navigateToPoints">
+        <image class="quick-icon" src="/assets/icons/points.png" mode="aspectFit"></image>
+        <view class="quick-text">积分商城</view>
+      </view>
+      <view class="quick-item" bindtap="navigateToInvite">
+        <image class="quick-icon" src="/assets/icons/invite.png" mode="aspectFit"></image>
+        <view class="quick-text">邀请好友</view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 最近交易 -->
+  <view class="recent-transactions">
+    <view class="section-title">
+      <text>最近交易</text>
+      <view class="view-all" bindtap="navigateToTransaction">全部明细</view>
+    </view>
+    
+    <block wx:if="{{transactions.length > 0}}">
+      <view class="transaction-item" wx:for="{{transactions}}" wx:key="id">
+        <view class="transaction-icon {{item.type === 'income' ? 'income' : 'expense'}}">
+          <t-icon name="{{item.icon}}" size="48rpx" />
+        </view>
+        <view class="transaction-info">
+          <view class="transaction-title">{{item.title}}</view>
+          <view class="transaction-time">{{item.time}}</view>
+        </view>
+        <view class="transaction-amount {{item.type === 'income' ? 'income' : 'expense'}}">
+          {{item.type === 'income' ? '+' : '-'}}¥{{item.amount}}
+        </view>
+      </view>
+    </block>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:else>
+      <t-icon name="info-circle" size="80rpx" color="#cccccc" />
+      <view class="empty-text">暂无交易记录</view>
+    </view>
+  </view>
+</view> 

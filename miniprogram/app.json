@@ -1,13 +1,60 @@
 {
   "pages": [
+    "pages/home/home",
+    "pages/service/service",
+    "pages/order/order",
+    "pages/profile/profile",
+    "pages/appointment-service/appointment-service",
+    "pages/appointment-time/appointment-time",
+    "pages/appointment-info/appointment-info",
+    "pages/appointment-payment/appointment-payment",
+    "pages/order-detail/order-detail",
+    "pages/store-order-detail/store-order-detail",
+    "pages/gift-card/gift-card",
+    "pages/wallet/wallet",
+    "pages/membership-topup/membership-topup",
     "pages/index/index",
     "pages/logs/logs"
   ],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "Weixin",
+    "navigationBarTitleText": "智车养护",
     "navigationBarBackgroundColor": "#ffffff"
   },
+  "tabBar": {
+    "color": "#9ca3af",
+    "selectedColor": "#3b82f6",
+    "backgroundColor": "#ffffff",
+    "custom": true,
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "assets/icons/home.png",
+        "selectedIconPath": "assets/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/service/service",
+        "text": "服务",
+        "iconPath": "assets/icons/service.png",
+        "selectedIconPath": "assets/icons/service-active.png"
+      },
+      {
+        "pagePath": "pages/order/order",
+        "text": "订单",
+        "iconPath": "assets/icons/order.png",
+        "selectedIconPath": "assets/icons/order-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "assets/icons/profile.png",
+        "selectedIconPath": "assets/icons/profile-active.png"
+      }
+    ]
+  },
   "componentFramework": "glass-easel",
-  "lazyCodeLoading": "requiredComponents"
+  "lazyCodeLoading": "requiredComponents",
+  "usingComponents": {
+  }
 }

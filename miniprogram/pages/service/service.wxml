@@ -1,0 +1,77 @@
+<!-- service.wxml -->
+<view class="bg-custom-light min-h-screen">
+  <!-- Search bar -->
+  <view class="search-container">
+    <t-search
+      placeholder="搜索服务项目"
+      shape="round"
+      bind:change="onSearchChange"
+      bind:focus="onSearchFocus"
+      bind:blur="onSearchBlur"
+      focus="{{isFocused}}"
+      t-class="search-smaller {{isFocused ? 'search-focused' : ''}}"
+      t-class-input="search-input-smaller"
+    />
+  </view>
+
+  <!-- Service categories -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">服务分类</text>
+      <text class="see-all" bindtap="viewAllCategories">查看全部</text>
+    </view>
+    
+    <scroll-view scroll-x enable-flex class="category-scroll">
+      <view class="category-item" wx:for="{{categories}}" wx:key="id" bindtap="onCategorySelect" data-category="{{item}}">
+        <view class="category-icon">
+          <t-image src="{{item.icon}}" width="48rpx" height="48rpx" />
+        </view>
+        <text class="category-name">{{item.name}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- New user promotion - updated to match prototype -->
+  <view class="promotion-banner">
+    <view class="promotion-content">
+      <view class="promotion-title">新用户专享</view>
+      <view class="promotion-desc">首次消费满100元立减30元</view>
+      <view class="promotion-btn" bindtap="claimPromotion">立即领取</view>
+    </view>
+    <view class="user-icon-container">
+      <t-icon name="user" size="64rpx" class="user-icon" />
+    </view>
+    <!-- Decorative circles -->
+    <view class="circle circle-1"></view>
+    <view class="circle circle-2"></view>
+  </view>
+
+  <!-- Hot services -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title mt-6 mb-4">热门服务</text>
+      <text class="see-all" bindtap="viewAllServices">查看全部</text>
+    </view>
+    
+    <view class="service-grid">
+      <view class="service-card" wx:for="{{hotServices}}" wx:key="id" bindtap="onServiceSelect" data-service="{{item}}">
+        <view class="service-image {{item.bgColor}}">
+          <t-image src="{{item.icon}}" width="80rpx" height="80rpx" />
+        </view>
+        <view class="service-details">
+          <view class="service-title">{{item.title}}</view>
+          <view class="service-tag">{{item.tag}}</view>
+          <view class="service-meta">
+            <view class="service-time">
+              <t-icon name="time" size="28rpx" />
+              <text>{{item.duration}}分钟</text>
+            </view>
+            <view class="service-price">¥{{item.price}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- Custom Tab Bar will be rendered automatically --> 

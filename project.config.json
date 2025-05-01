@@ -3,6 +3,7 @@
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
   "setting": {
+    "urlCheck": false,
     "useCompilerPlugins": [
       "typescript"
     ],
@@ -23,10 +24,12 @@
         "miniprogramNpmDistDir": "./miniprogram/"
       }
     ],
-    "ignoreUploadUnusedFiles": true,
+    "ignoreUploadUnusedFiles": false,
     "compileHotReLoad": false,
     "skylineRenderEnable": true,
-    "es6": true
+    "es6": true,
+    "minifyWXML": false,
+    "minifyWXSS": false
   },
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},

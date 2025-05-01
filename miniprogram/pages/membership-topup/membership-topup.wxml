@@ -1,0 +1,85 @@
+<!-- membership-topup.wxml -->
+<view class="container">
+  <!-- 返回按钮 -->
+  <view class="back-button" bindtap="navigateBack">
+    <t-icon name="chevron-left" size="48rpx" />
+  </view>
+
+  <!-- 头部账户信息 -->
+  <view class="account-info">
+    <view class="label">当前余额</view>
+    <view class="balance">¥ {{accountInfo.balance}}</view>
+    <view class="member-level">{{accountInfo.level}}</view>
+  </view>
+
+  <!-- 充值金额选择 -->
+  <view class="section topup-section">
+    <view class="section-title">选择充值金额</view>
+    <view class="amount-list">
+      <view 
+        class="amount-item {{selectedAmountIndex === index ? 'selected' : ''}}" 
+        wx:for="{{topupAmounts}}" 
+        wx:key="id" 
+        bindtap="selectAmount" 
+        data-index="{{index}}"
+      >
+        <view class="amount-value">¥ {{item.value}}</view>
+        <view class="amount-desc">{{item.desc}}</view>
+        <view class="amount-gift" wx:if="{{item.gift}}">{{item.gift}}</view>
+      </view>
+    </view>
+    
+    <!-- 自定义金额输入框 -->
+    <view class="custom-amount" wx:if="{{selectedAmountIndex === 5}}">
+      <view class="input-prefix">¥</view>
+      <input 
+        type="digit" 
+        class="custom-amount-input" 
+        placeholder="请输入充值金额" 
+        value="{{customAmount}}" 
+        bindinput="inputCustomAmount" 
+        focus="{{selectedAmountIndex === 5}}"
+      />
+    </view>
+  </view>
+
+  <!-- 支付方式选择 -->
+  <view class="section payment-section">
+    <view class="section-title">选择支付方式</view>
+    <view class="payment-list">
+      <view 
+        class="payment-item {{item.selected ? 'selected' : ''}}" 
+        wx:for="{{paymentMethods}}" 
+        wx:key="id" 
+        bindtap="selectPayment" 
+        data-id="{{item.id}}"
+      >
+        <image class="payment-icon" src="{{item.icon}}" mode="aspectFit"></image>
+        <view class="payment-name">{{item.name}}</view>
+        <view class="payment-selected" wx:if="{{item.selected}}">
+          <icon type="success" size="16" color="#07c160"/>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 会员权益 -->
+  <view class="section benefits-section">
+    <view class="section-title">会员权益</view>
+    <view class="benefits-list">
+      <view class="benefit-item" wx:for="{{benefits}}" wx:key="*this">
+        <icon type="success" size="14" color="#07c160"/>
+        <text class="benefit-text">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="confirm-bar">
+    <view class="total-amount">
+      <text class="total-label">实付金额：</text>
+      <text class="total-value">¥ {{totalAmount}}</text>
+    </view>
+    <button class="confirm-btn" bindtap="submitTopup">确认充值</button>
+  </view>
+</view> 

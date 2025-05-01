@@ -1,10 +1,38 @@
 /**app.wxss**/
+@import "tailwind.wxss";
+
+/* Fix for TDesign icon font - 使用本地字体文件 */
+@font-face {
+  font-family: "t";
+  src: url("assets/fonts/t.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 备用图标类（当TDesign图标无法加载时使用） */
+.icon-backup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-sound-backup::before {
+  content: "🔊";
+}
+
+.icon-gift-backup::before {
+  content: "🎁";
+}
+
+/* 底部安全区域，避免内容被tabBar遮挡 */
+.page-container {
+  padding-bottom: calc(100rpx + env(safe-area-inset-bottom));
+}
+
 .container {
   height: 100%;
-  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 200rpx 0;
   box-sizing: border-box;
-} 
+}
