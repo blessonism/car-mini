@@ -1,8 +1,11 @@
 {
   "navigationBarTitleText": "订单详情",
   "usingComponents": {
-    "t-navbar": "../../miniprogram_npm/tdesign-miniprogram/navbar/navbar",
     "t-icon": "../../miniprogram_npm/tdesign-miniprogram/icon/icon",
-    "t-button": "../../miniprogram_npm/tdesign-miniprogram/button/button"
+    "t-button": "../../miniprogram_npm/tdesign-miniprogram/button/button",
+    "t-steps": "../../miniprogram_npm/tdesign-miniprogram/steps/steps",
+    "t-step-item": "../../miniprogram_npm/tdesign-miniprogram/step-item/step-item",
+    "t-cell": "../../miniprogram_npm/tdesign-miniprogram/cell/cell",
+    "t-cell-group": "../../miniprogram_npm/tdesign-miniprogram/cell-group/cell-group"
   }
 } 

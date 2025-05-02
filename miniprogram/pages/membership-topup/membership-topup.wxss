@@ -1,226 +1,200 @@
 /* membership-topup.wxss */
+page {
+  background-color: #f8f9ff;
+}
+
 .container {
-  padding: 30rpx;
-  background-color: #f5f5f5;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  padding: 30rpx 0;
+  padding-bottom: 160rpx;
+  box-sizing: border-box;
 }
 
-/* 账户信息样式 */
-.account-info {
-  background-color: #ffffff;
-  border-radius: 16rpx;
-  padding: 40rpx;
+/* 账户余额卡片 */
+.account-card {
+  margin: 30rpx 30rpx 40rpx;
+  padding: 40rpx 0;
+  background: linear-gradient(135deg, #5145e5, #793aec);
+  border-radius: 24rpx;
   text-align: center;
-  margin-bottom: 30rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  color: #fff;
+  box-shadow: 0 8rpx 16rpx rgba(99, 102, 241, 0.2);
 }
 
-.label {
-  font-size: 28rpx;
-  color: #666;
-  margin-bottom: 10rpx;
+.account-label {
+  font-size: 30rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.9;
 }
 
-.balance {
-  font-size: 60rpx;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10rpx;
+.account-balance {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
 }
 
-.member-level {
-  display: inline-block;
-  font-size: 24rpx;
-  color: #be9e61;
-  background-color: #f9f3e8;
-  padding: 6rpx 20rpx;
-  border-radius: 20rpx;
-}
-
-/* 通用部分样式 */
-.section {
-  background-color: #ffffff;
-  border-radius: 16rpx;
-  padding: 30rpx;
-  margin-bottom: 30rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
-}
-
-.section-title {
-  font-size: 32rpx;
+.currency {
+  font-size: 40rpx;
   font-weight: 500;
-  color: #333;
-  margin-bottom: 30rpx;
-  position: relative;
-  padding-left: 20rpx;
+  margin-right: 6rpx;
 }
 
-.section-title::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 6rpx;
-  height: 32rpx;
-  width: 8rpx;
-  background-color: #07c160;
-  border-radius: 4rpx;
+.amount {
+  font-size: 72rpx;
+  font-weight: 700;
+  font-family: "DIN Condensed", sans-serif;
 }
 
-/* 充值金额选择样式 */
-.amount-list {
+/* 会员提示横幅 */
+.member-banner {
+  margin: 0 30rpx 40rpx;
+  padding: 20rpx 30rpx;
+  background-color: #fff8e9;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  color: #d97706;
+  border: 1rpx solid rgba(217, 119, 6, 0.2);
+}
+
+.banner-icon {
+  margin-right: 12rpx;
+  margin-bottom: -8rpx;
+}
+
+.crown-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.banner-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #b45309;
+  font-weight: 500;
+}
+
+.banner-action {
+  font-size: 26rpx;
+  color: #d97706;
+  font-weight: 500;
+}
+
+/* 节标题（卡片外） */
+.section-header {
+  display: flex;
+  align-items: center;
+  margin: 40rpx 40rpx 30rpx;
+}
+
+.section-text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* 充值选项卡片 */
+.topup-options-card {
+  margin: 0 30rpx;
+  padding: 20rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.topup-options {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20rpx;
 }
 
-.amount-item {
-  background-color: #f9f9f9;
-  border-radius: 12rpx;
-  padding: 20rpx;
-  text-align: center;
-  border: 2rpx solid #eee;
-  transition: all 0.3s;
-}
-
-.amount-item.selected {
-  background-color: #e6f7ec;
-  border-color: #07c160;
-}
-
-.amount-value {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 8rpx;
-}
-
-.amount-desc {
-  font-size: 24rpx;
-  color: #999;
-  margin-bottom: 8rpx;
-}
-
-.amount-gift {
-  font-size: 22rpx;
-  color: #ff6b6b;
-}
-
-/* 自定义金额输入框样式 */
-.custom-amount {
-  margin-top: 30rpx;
+.option-item {
+  height: 140rpx;
+  background-color: #f9fafb;
+  border-radius: 16rpx;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  border: 2rpx solid #07c160;
-  border-radius: 12rpx;
-  padding: 10rpx 20rpx;
-  background-color: #e6f7ec;
+  border: 2rpx solid #f3f4f6;
+  transition: all 0.3s ease;
 }
 
-.input-prefix {
+.option-selected {
+  background-color: rgba(219, 234, 254, 0.6);
+  border-color: #3b82f6;
+}
+
+.option-amount {
   font-size: 36rpx;
-  font-weight: bold;
-  color: #333;
-  margin-right: 10rpx;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.option-gift {
+  font-size: 24rpx;
+  color: #596780;
+  font-weight: 300;
+}
+
+/* 自定义金额输入卡片 */
+.custom-amount-card {
+  margin: 0 30rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  padding: 20rpx 30rpx;
 }
 
 .custom-amount-input {
-  flex: 1;
   height: 80rpx;
-  font-size: 36rpx;
+  width: 100%;
+  font-size: 32rpx;
+  color: #1f2937;
 }
 
-/* 支付方式样式 */
-.payment-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20rpx;
-}
-
-.payment-item {
-  display: flex;
-  align-items: center;
-  padding: 20rpx;
-  background-color: #f9f9f9;
-  border-radius: 12rpx;
-  border: 2rpx solid #eee;
-  transition: all 0.3s;
-}
-
-.payment-item.selected {
-  background-color: #e6f7ec;
-  border-color: #07c160;
-}
-
-.payment-icon {
-  width: 60rpx;
-  height: 60rpx;
-  margin-right: 20rpx;
-}
-
-.payment-name {
-  flex: 1;
-  font-size: 30rpx;
-  color: #333;
-}
-
-.payment-selected {
-  margin-left: auto;
-}
-
-/* 会员权益样式 */
-.benefits-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16rpx;
-}
-
-.benefit-item {
-  display: flex;
-  align-items: center;
-  font-size: 28rpx;
-  color: #666;
-}
-
-.benefit-text {
-  margin-left: 16rpx;
-}
-
-/* 底部按钮样式 */
-.confirm-bar {
-  margin-top: auto;
-  background-color: #ffffff;
-  padding: 30rpx;
-  border-top: 1rpx solid #eee;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
+/* 底部支付栏 */
+.bottom-bar {
+  position: fixed;
   bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 30rpx;
+  background: white;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  align-items: center;
+  z-index: 10;
+  height: 96rpx;
 }
 
-.total-amount {
-  font-size: 30rpx;
-  color: #333;
+.price-area {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
 }
 
-.total-label {
-  color: #666;
+.price-label {
+  font-size: 28rpx;
+  color: #ff4141;
+  margin-right: 4rpx;
 }
 
-.total-value {
+.price-value {
+  font-size: 40rpx;
   font-weight: bold;
-  font-size: 36rpx;
+  color: #ff4141;
 }
 
-.confirm-btn {
-  background-color: #07c160;
-  color: #ffffff;
-  font-size: 30rpx;
-  padding: 0 60rpx;
-  height: 80rpx;
-  line-height: 80rpx;
-  border-radius: 40rpx;
-  margin: 0;
-} 
+.order-button {
+  width: 240rpx !important;
+  background-color: #3b82f6 !important;
+  border-color: transparent !important;
+  position: absolute !important;
+  right: 30rpx !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+.t-button--primary::after {
+  border-color: transparent !important;
+}

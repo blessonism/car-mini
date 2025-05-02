@@ -227,7 +227,11 @@ page {
 }
 
 .car-item.selected {
-  background-color: rgba(59, 130, 246, 0.1);
+  background-image: linear-gradient(
+    to right,
+    rgba(230, 244, 255, 0.5),
+    rgba(255, 255, 255, 0.8)
+  );
 }
 
 .divider {
@@ -359,6 +363,11 @@ page {
 
 .order-button {
   width: 240rpx !important;
+  background-color: #3b82f6 !important;
+  border-color: transparent !important;
+}
+.t-button--primary::after {
+  border-color: transparent !important;
 }
 
 .base-icon {

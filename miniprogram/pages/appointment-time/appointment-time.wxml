@@ -1,12 +1,5 @@
 <!-- appointment-time.wxml -->
 <view class="container">
-  <!-- 顶部导航 -->
-  <t-navbar
-    title="预约时间"
-    left-arrow
-    bind:go-back="onBack"
-  />
-
   <!-- 步骤指示器 -->
   <view class="steps-wrapper">
     <t-steps current="{{1}}" bind:change="onStepChange">

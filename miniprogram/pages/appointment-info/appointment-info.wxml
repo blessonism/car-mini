@@ -1,11 +1,5 @@
 <!-- appointment-info.wxml -->
 <view class="container">
-  <!-- 顶部导航 -->
-  <t-navbar
-    title="填写信息"
-    left-arrow
-    bind:go-back="onBack"
-  />
 
   <!-- 步骤指示器 -->
   <view class="steps-wrapper">

@@ -1,147 +1,174 @@
 <!-- pages/appointment-payment/appointment-payment.wxml -->
 <view class="container">
-  <!-- Steps component -->
-  <view class="steps-container">
-    <t-steps current="{{currentStep}}">
-      <t-step-item wx:for="{{steps}}" wx:key="index" title="{{item.title}}" status="{{item.status}}" />
-    </t-steps>
-  </view>
-  
-  <!-- Appointment Info Card -->
-  <view class="info-card">
-    <view class="card-header">预约信息</view>
-    <view class="info-row">
-      <text class="info-label">门店</text>
-      <text class="info-value">{{appointmentInfo.storeName}}</text>
-    </view>
-    <view class="info-row">
-      <text class="info-label">时间</text>
-      <text class="info-value">{{appointmentInfo.appointmentTime}}</text>
-    </view>
-    <view class="info-row">
-      <text class="info-label">车型</text>
-      <text class="info-value">{{appointmentInfo.carModel}}</text>
-    </view>
-  </view>
-  
-  <!-- Service Card -->
+  <!-- 服务信息卡片 -->
   <view class="service-card">
-    <view class="card-header">服务项目</view>
-    <view class="service-item">
-      <view class="service-info">
-        <view class="service-name">{{serviceInfo.name}}</view>
-        <view class="service-desc">{{serviceInfo.description}}</view>
+    <view class="service-info">
+      <view class="service-icon">
+        <t-icon name="car" size="48rpx" />
       </view>
-      <view class="service-price">¥{{serviceInfo.price}}</view>
-    </view>
-  </view>
-  
-  <!-- Payment Method Card -->
-  <view class="payment-card">
-    <view class="card-header">支付方式</view>
-    <view 
-      class="payment-method {{item.selected ? 'selected' : ''}}" 
-      wx:for="{{paymentMethods}}" 
-      wx:key="id" 
-      bindtap="selectPaymentMethod"
-      data-index="{{index}}"
-    >
-      <view class="payment-icon">
-        <t-icon name="{{item.icon}}" size="48rpx" />
-      </view>
-      <view class="payment-info">
-        <text class="payment-name">{{item.name}}</text>
-        <text class="payment-balance" wx:if="{{item.balance !== null}}">余额: ¥{{item.balance}}</text>
-      </view>
-      <view class="payment-select-icon">
-        <t-icon name="{{item.selected ? 'check-circle-filled' : 'circle'}}" color="{{item.selected ? '#0052d9' : '#ddd'}}" />
+      <view class="service-details">
+        <view class="service-name">标准洗车</view>
+        <view class="service-meta">
+          <view class="service-time">
+            <image src="../../assets/icons/clock.png" class="sm-icon" mode="aspectFit"></image>
+            <text>30分钟</text>
+          </view>
+          <view class="service-price">
+            <image src="../../assets/icons/price.png" class="base-icon" mode="aspectFit"></image>
+            <text>¥39.9</text>
+          </view>
+        </view>
       </view>
     </view>
   </view>
-  
-  <!-- Coupon Card -->
+
+  <!-- 预约信息 -->
+  <view class="section-header">
+    <text class="section-text">预约信息</text>
+  </view>
+  <view class="info-card">
+    <view class="appointment-item">
+      <view class="item-icon">
+        <image src="../../assets/icons/calendar.png" class="item-icon-image" mode="aspectFit"></image>
+      </view>
+      <view class="item-content">
+        <view class="item-title">预约时间</view>
+        <view class="item-value">{{date}} ({{day}}) {{time}}</view>
+      </view>
+    </view>
+    
+    <view class="divider"></view>
+    
+    <view class="appointment-item">
+      <view class="item-icon">
+        <image src="../../assets/icons/home-active.png" class="item-icon-image" mode="aspectFit"></image>
+      </view>
+      <view class="item-content">
+        <view class="item-title">门店信息</view>
+        <view class="item-value">车友养护中心 (城南店)</view>
+        <view class="item-desc">成都市高新区天府大道1234号</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 优惠券区域 -->
+  <view class="section-header">
+    <text class="section-text">优惠券</text>
+  </view>
   <view class="coupon-card" bindtap="showCouponSelector">
-    <view class="card-header">优惠券</view>
-    <view class="coupon-selector">
-      <view class="coupon-info" wx:if="{{selectedCouponIndex !== -1}}">
-        <view class="coupon-name">{{coupons[selectedCouponIndex].name}}</view>
-        <view class="coupon-amount">-¥{{coupons[selectedCouponIndex].amount}}</view>
+    <view class="coupon-content">
+      <view class="coupon-icon">
+        <image src="../../assets/icons/coupon-red.png" class="item-icon-image" mode="aspectFit"></image>
       </view>
-      <view class="coupon-info" wx:else>
-        <view class="coupon-placeholder">选择优惠券</view>
+      <view class="coupon-info">
+        <view class="coupon-title">优惠券</view>
+        <view class="coupon-desc">2张可用</view>
       </view>
-      <view class="coupon-arrow">
-        <t-icon name="chevron-right" />
+      <view class="coupon-value {{selectedCouponIndex !== -1 ? 'active' : ''}}">
+        {{selectedCouponIndex !== -1 ? '-¥5.0' : '未使用'}}
+      </view>
+      <view class="right-arrow">
+        <image src="../../assets/icons/arrow.png" class="arrow-icon" mode="aspectFit"></image>
       </view>
     </view>
   </view>
-  
-  <!-- Payment Summary -->
-  <view class="payment-summary">
-    <view class="summary-row">
-      <text>服务金额</text>
-      <text>¥{{paymentSummary.serviceAmount}}</text>
-    </view>
-    <view class="summary-row" wx:if="{{paymentSummary.discount > 0}}">
-      <text>优惠金额</text>
-      <text class="discount-amount">-¥{{paymentSummary.discount}}</text>
-    </view>
-    <view class="summary-total">
-      <text>实付金额</text>
-      <text class="total-amount">¥{{paymentSummary.totalAmount}}</text>
-    </view>
+
+  <!-- 支付方式 -->
+  <view class="section-header">
+    <text class="section-text">支付方式</text>
   </view>
-  
-  <!-- Bottom Bar -->
-  <view class="bottom-bar">
-    <view class="price-container">
-      <text class="price-label">实付金额:</text>
-      <text class="price-value">¥{{paymentSummary.totalAmount}}</text>
-    </view>
-    <view class="pay-button" bindtap="submitPayment">立即支付</view>
-  </view>
-  
-  <!-- Coupon Popup -->
-  <t-popup visible="{{showCouponPopup}}" bind:visible-change="closeCouponPopup" placement="bottom">
-    <view class="coupon-popup">
-      <view class="popup-header">
-        <text>选择优惠券</text>
-        <t-icon name="close" bindtap="closeCouponPopup" />
+  <view class="payment-outer-card">
+    <view class="payment-wrapper">
+      <!-- 微信支付 -->
+      <view class="payment-card {{selectedPayment === 'wechat' ? 'payment-selected' : ''}}" 
+            bindtap="selectPayment" data-payment="wechat">
+        <view class="payment-content">
+          <view class="payment-icon-box">
+            <image src="../../assets/icons/wechat.png" class="payment-icon" mode="aspectFit"></image>
+          </view>
+          <view class="payment-info">
+            <view class="payment-name">微信支付</view>
+            <view class="payment-desc">微信账号直接支付</view>
+          </view>
+        </view>
+        <view class="radio-outer {{selectedPayment === 'wechat' ? 'radio-outer-selected' : ''}}">
+          <view class="radio-inner {{selectedPayment === 'wechat' ? 'radio-inner-selected' : ''}}"></view>
+        </view>
       </view>
       
-      <view class="coupon-list">
-        <view 
-          class="coupon-item {{selectedCouponIndex === index ? 'selected' : ''}} {{item.disabled ? 'disabled' : ''}}" 
-          wx:for="{{coupons}}" 
-          wx:key="id"
-          bindtap="selectCoupon"
-          data-index="{{index}}"
-        >
-          <view class="coupon-left">
-            <view class="coupon-amount">¥{{item.amount}}</view>
-            <view class="coupon-condition">{{item.condition}}</view>
+      <!-- 余额支付 -->
+      <view class="payment-card {{selectedPayment === 'balance' ? 'payment-selected' : ''}}" 
+            bindtap="selectPayment" data-payment="balance">
+        <view class="payment-content">
+          <view class="payment-icon-box">
+            <image src="../../assets/icons/wallet-red.png" class="payment-icon" mode="aspectFit"></image>
           </view>
-          <view class="coupon-right">
-            <view class="coupon-name">{{item.name}}</view>
-            <view class="coupon-date">{{item.validity}}</view>
-            <view class="coupon-status" wx:if="{{item.disabled}}">不可用</view>
-          </view>
-          <view class="coupon-select" wx:if="{{!item.disabled}}">
-            <t-icon name="{{selectedCouponIndex === index ? 'check-circle-filled' : 'circle'}}" color="{{selectedCouponIndex === index ? '#0052d9' : '#ddd'}}" size="40rpx" />
+          <view class="payment-info">
+            <view class="payment-name">余额支付</view>
+            <view class="payment-desc">账户余额直接支付</view>
           </view>
         </view>
-        
-        <!-- No coupon option -->
-        <view 
-          class="coupon-item no-coupon {{selectedCouponIndex === -1 ? 'selected' : ''}}" 
-          bindtap="clearCoupon"
-        >
-          <view class="no-coupon-text">不使用优惠券</view>
-          <view class="coupon-select">
-            <t-icon name="{{selectedCouponIndex === -1 ? 'check-circle-filled' : 'circle'}}" color="{{selectedCouponIndex === -1 ? '#0052d9' : '#ddd'}}" size="40rpx" />
+        <view class="radio-outer {{selectedPayment === 'balance' ? 'radio-outer-selected' : ''}}">
+          <view class="radio-inner {{selectedPayment === 'balance' ? 'radio-inner-selected' : ''}}"></view>
+        </view>
+      </view>
+      
+      <!-- 会员卡 -->
+      <view class="payment-card {{selectedPayment === 'card' ? 'payment-selected' : ''}}" 
+            bindtap="selectPayment" data-payment="card">
+        <view class="payment-content">
+          <view class="payment-icon-box">
+            <image src="../../assets/icons/vip_card.png" class="payment-icon-lg" mode="aspectFit"></image>
           </view>
+          <view class="payment-info">
+            <view class="payment-name">会员卡</view>
+            <view class="payment-desc">会员卡余额支付</view>
+          </view>
+        </view>
+        <view class="radio-outer {{selectedPayment === 'card' ? 'radio-outer-selected' : ''}}">
+          <view class="radio-inner {{selectedPayment === 'card' ? 'radio-inner-selected' : ''}}"></view>
         </view>
       </view>
     </view>
-  </t-popup>
+  </view>
+
+  <!-- 价格明细 -->
+  <view class="section-header">
+    <text class="section-text">价格明细</text>
+  </view>
+  <view class="price-card">
+    <view class="price-item">
+      <view class="price-label">服务费用</view>
+      <view class="price-value">¥39.9</view>
+    </view>
+    
+    <view class="price-item">
+      <view class="price-label">优惠券</view>
+      <view class="price-discount">-¥5.0</view>
+    </view>
+    
+    <view class="price-item">
+      <view class="price-label">会员折扣</view>
+      <view class="price-discount">-¥1.9</view>
+    </view>
+    
+    <view class="divider"></view>
+    
+    <view class="price-item total">
+      <view class="price-label">订单总价</view>
+      <view class="price-total">¥33.0</view>
+    </view>
+  </view>
+
+  <!-- 底部支付栏 -->
+  <view class="bottom-bar">
+    <view class="price-area">
+      <view class="price-row">
+        <text class="price-label">¥</text>
+        <text class="price-value">33.0</text>
+      </view>
+      <text class="discount-hint">已优惠¥6.9</text>
+    </view>
+    <t-button theme="primary" size="large" class="pay-button" bindtap="submitPayment">立即支付</t-button>
+  </view>
 </view> 

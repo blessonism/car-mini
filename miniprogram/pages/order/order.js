@@ -137,7 +137,7 @@ Page({
   trackService(e) {
     const id = e.currentTarget.dataset.id;
     wx.navigateTo({
-      url: `/pages/service/service?id=${id}`,
+      url: `/pages/order-detail/order-detail?id=${id}`,
     });
   },
 

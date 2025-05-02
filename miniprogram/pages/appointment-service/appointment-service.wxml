@@ -52,7 +52,7 @@
     <view class="section-header">
       <image src="../../assets/icons/calendar.png" class="section-icon-lg" mode="aspectFit"></image>
       <text class="section-text">选择日期</text>
-    </view>
+          </view>
     <view class="calendar-card">
       <!-- 简化的日期选择：今天、明天、后天 -->
       <view class="simple-dates">
@@ -66,8 +66,8 @@
           bindtap="selectDate" data-date="{{simpleDates[1].date}}" data-available="true">
           <view class="date-day">明天</view>
           <view class="date-value">{{simpleDates[1].dayValue}}</view>
-        </view>
-        
+      </view>
+      
         <view class="date-option {{selectedDate === simpleDates[2].date ? 'selected' : ''}}" 
           bindtap="selectDate" data-date="{{simpleDates[2].date}}" data-available="true">
           <view class="date-day">后天</view>
@@ -103,12 +103,12 @@
         <view class="time-slot {{timeSlots[3].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[3].time ? 'selected' : ''}}"
           bindtap="selectTime" data-time="{{timeSlots[3].time}}" data-booked="{{timeSlots[3].isBooked}}">
           <view class="time-text">{{timeSlots[3].isBooked ? '已约满' : timeSlots[3].time}}</view>
-        </view>
-        
+      </view>
+      
         <view class="time-slot {{timeSlots[4].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[4].time ? 'selected' : ''}}"
           bindtap="selectTime" data-time="{{timeSlots[4].time}}" data-booked="{{timeSlots[4].isBooked}}">
           <view class="time-text">{{timeSlots[4].isBooked ? '已约满' : timeSlots[4].time}}</view>
-        </view>
+          </view>
         
         <view class="time-slot {{timeSlots[5].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[5].time ? 'selected' : ''}}"
           bindtap="selectTime" data-time="{{timeSlots[5].time}}" data-booked="{{timeSlots[5].isBooked}}">
@@ -118,21 +118,21 @@
         <view wx:if="{{timeSlots.length > 6}}" class="time-slot {{timeSlots[6].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[6].time ? 'selected' : ''}}"
           bindtap="selectTime" data-time="{{timeSlots[6].time}}" data-booked="{{timeSlots[6].isBooked}}">
           <view class="time-text">{{timeSlots[6].isBooked ? '已约满' : timeSlots[6].time}}</view>
-        </view>
-        
+      </view>
+      
         <view wx:if="{{timeSlots.length > 7}}" class="time-slot {{timeSlots[7].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[7].time ? 'selected' : ''}}"
           bindtap="selectTime" data-time="{{timeSlots[7].time}}" data-booked="{{timeSlots[7].isBooked}}">
           <view class="time-text">{{timeSlots[7].isBooked ? '已约满' : timeSlots[7].time}}</view>
-        </view>
+          </view>
         
         <view wx:if="{{timeSlots.length > 8}}" class="time-slot {{timeSlots[8].isBooked ? 'booked' : ''}} {{selectedTime === timeSlots[8].time ? 'selected' : ''}}"
           bindtap="selectTime" data-time="{{timeSlots[8].time}}" data-booked="{{timeSlots[8].isBooked}}">
           <view class="time-text">{{timeSlots[8].isBooked ? '已约满' : timeSlots[8].time}}</view>
         </view>
       </view>
+      </view>
     </view>
-  </view>
-
+    
   <!-- 车辆信息 -->
   <view class="section-header">
     <image src="../../assets/icons/car.png" class="section-icon" mode="aspectFit"></image>

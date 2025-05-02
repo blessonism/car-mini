@@ -4,204 +4,182 @@ Page({
    * 页面的初始数据
    */
   data: {
-    current: 2, // Current step in the appointment process
-    steps: [
-      { title: '选择服务', status: 'finish' },
-      { title: '预约时间', status: 'finish' },
-      { title: '填写信息', status: 'finish' },
-      { title: '支付订单', status: 'process' }
-    ],
-    currentStep: 3,
-    
-    appointmentInfo: {
-      storeName: '车店智能养护中心(总店)',
-      appointmentTime: '2023-07-20 14:30',
-      carModel: '奥迪 A6L 2020款'
-    },
-    
-    serviceInfo: {
-      name: '全车深度养护',
-      description: '包含全车清洗、内饰清洁、发动机舱清洗等服务',
-      price: 399.00
-    },
-    
+    // 预约信息
+    date: "2023-07-20",
+    day: "周四",
+    time: "14:30",
+
+    // 支付方式选择
+    selectedPayment: "wechat",
     paymentMethods: [
-      { id: 'wechat', name: '微信支付', icon: 'wechat', balance: null, selected: true },
-      { id: 'balance', name: '余额支付', icon: 'wallet', balance: 280.50, selected: false },
-      { id: 'card', name: '会员卡支付', icon: 'vip', balance: 500.00, selected: false }
+      {
+        id: "wechat",
+        name: "微信支付",
+        desc: "微信账号直接支付",
+        icon: "wechat.png",
+      },
+      {
+        id: "balance",
+        name: "余额支付",
+        desc: "账户余额直接支付",
+        icon: "wallet-red.png",
+        balance: 280.5,
+      },
+      {
+        id: "card",
+        name: "会员卡",
+        desc: "会员卡余额支付",
+        icon: "vip_card.png",
+        balance: 500,
+      },
     ],
-    
-    // Coupon data
-    showCouponPopup: false,
+
+    // 优惠券选择
     selectedCouponIndex: -1,
     coupons: [
-      { 
-        id: 1, 
-        name: '新用户专享券', 
-        amount: 50, 
-        condition: '满300可用', 
-        validity: '2023-07-01至2023-08-30',
+      {
+        id: 1,
+        name: "新用户专享券",
+        amount: 50,
+        condition: "满300可用",
+        validity: "2023-07-01至2023-08-30",
         minAmount: 300,
-        disabled: false
+        disabled: false,
       },
-      { 
-        id: 2, 
-        name: '全车养护优惠券', 
-        amount: 30, 
-        condition: '满200可用', 
-        validity: '2023-07-15至2023-07-30',
+      {
+        id: 2,
+        name: "全车养护优惠券",
+        amount: 30,
+        condition: "满200可用",
+        validity: "2023-07-15至2023-07-30",
         minAmount: 200,
-        disabled: false
+        disabled: false,
       },
-      { 
-        id: 3, 
-        name: '会员日专享券', 
-        amount: 100, 
-        condition: '满500可用', 
-        validity: '2023-07-20至2023-07-20',
+      {
+        id: 3,
+        name: "会员日专享券",
+        amount: 100,
+        condition: "满500可用",
+        validity: "2023-07-20至2023-07-20",
         minAmount: 500,
-        disabled: true
-      }
+        disabled: true,
+      },
     ],
-    
-    // Payment calculation
-    paymentSummary: {
-      serviceAmount: 399.00,
-      discount: 0,
-      totalAmount: 399.00
-    }
+
+    // 价格计算
+    servicePrice: 39.9,
+    couponDiscount: 5.0,
+    memberDiscount: 1.9,
+    totalPrice: 33.0,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    // Get appointment data from previous page or from API
-    // For demo, we use mock data
-    this.calculatePayment();
+    // 从上一页获取数据
+    if (options) {
+      const { date, day, time, price } = options;
+      if (date && day && time) {
+        this.setData({
+          date,
+          day,
+          time,
+        });
+      }
+
+      if (price) {
+        const servicePrice = parseFloat(price);
+        // 重新计算总价
+        this.calculateTotalPrice(servicePrice);
+      }
+    }
   },
 
   /**
    * 选择支付方式
    */
-  selectPaymentMethod: function(e) {
-    const index = e.currentTarget.dataset.index;
-    const paymentMethods = this.data.paymentMethods.map((item, i) => {
-      return {
-        ...item,
-        selected: i === index
-      };
-    });
-    
-    this.setData({ paymentMethods });
-  },
+  selectPayment: function (e) {
+    const payment = e.currentTarget.dataset.payment;
 
-  /**
-   * 打开优惠券选择弹窗
-   */
-  showCouponSelector: function() {
-    this.setData({ showCouponPopup: true });
-  },
-
-  /**
-   * 关闭优惠券选择弹窗
-   */
-  closeCouponPopup: function() {
-    this.setData({ showCouponPopup: false });
-  },
-
-  /**
-   * 选择优惠券
-   */
-  selectCoupon: function(e) {
-    const index = e.currentTarget.dataset.index;
-    const coupon = this.data.coupons[index];
-    
-    if (coupon.disabled) return;
-    
-    this.setData({ 
-      selectedCouponIndex: index,
-      showCouponPopup: false
-    });
-    
-    this.calculatePayment();
-  },
-
-  /**
-   * 清除优惠券选择
-   */
-  clearCoupon: function() {
-    this.setData({ 
-      selectedCouponIndex: -1,
-      showCouponPopup: false
-    });
-    
-    this.calculatePayment();
-  },
-
-  /**
-   * 计算支付
-   */
-  calculatePayment: function() {
-    const { serviceInfo, selectedCouponIndex, coupons } = this.data;
-    let discount = 0;
-    
-    // Apply coupon discount if selected
-    if (selectedCouponIndex !== -1) {
-      const selectedCoupon = coupons[selectedCouponIndex];
-      if (serviceInfo.price >= selectedCoupon.minAmount && !selectedCoupon.disabled) {
-        discount = selectedCoupon.amount;
+    // 余额检查
+    const paymentMethod = this.data.paymentMethods.find(
+      (m) => m.id === payment
+    );
+    if (paymentMethod && paymentMethod.balance !== undefined) {
+      // 检查余额是否足够
+      if (paymentMethod.balance < this.data.totalPrice) {
+        wx.showToast({
+          title: `${paymentMethod.name}余额不足`,
+          icon: "none",
+        });
+        return;
       }
     }
-    
-    const totalAmount = serviceInfo.price - discount;
-    
+
+    this.setData({ selectedPayment: payment });
+  },
+
+  /**
+   * 显示优惠券弹窗
+   */
+  showCouponSelector: function () {
+    wx.showToast({
+      title: "优惠券选择功能开发中",
+      icon: "none",
+    });
+
+    // 临时直接设置
     this.setData({
-      'paymentSummary.serviceAmount': serviceInfo.price,
-      'paymentSummary.discount': discount,
-      'paymentSummary.totalAmount': totalAmount
+      selectedCouponIndex: 0,
     });
   },
 
   /**
-   * 确认支付
+   * 计算最终价格
    */
-  submitPayment: function() {
-    const { paymentMethods, paymentSummary } = this.data;
-    const selectedMethod = paymentMethods.find(method => method.selected);
-    
-    // Check if selected payment method has sufficient balance
-    if (selectedMethod.balance !== null && selectedMethod.balance < paymentSummary.totalAmount) {
-      wx.showToast({
-        title: '余额不足',
-        icon: 'none'
-      });
-      return;
+  calculateTotalPrice: function (servicePrice) {
+    if (!servicePrice) {
+      servicePrice = this.data.servicePrice;
     }
-    
-    // Show loading
-    wx.showLoading({
-      title: '处理支付中...',
+
+    const couponDiscount = this.data.couponDiscount;
+    const memberDiscount = this.data.memberDiscount;
+    const totalPrice = (servicePrice - couponDiscount - memberDiscount).toFixed(
+      1
+    );
+
+    this.setData({
+      servicePrice,
+      totalPrice,
     });
-    
-    // Simulate payment processing
+  },
+
+  /**
+   * 提交支付
+   */
+  submitPayment: function () {
+    const selectedPayment = this.data.selectedPayment;
+
+    wx.showLoading({
+      title: "处理支付中",
+    });
+
+    // 模拟支付处理
     setTimeout(() => {
       wx.hideLoading();
-      
-      // For demo purposes, always succeed
+
       wx.showToast({
-        title: '支付成功',
-        icon: 'success',
-        duration: 2000
+        title: "支付成功",
+        icon: "success",
       });
-      
-      // Navigate to order detail or success page
+
+      // 支付成功后跳转到订单页
       setTimeout(() => {
-        wx.redirectTo({
-          url: '/pages/order/order?status=success',
+        wx.navigateTo({
+          url: "/pages/order/order",
         });
-      }, 2000);
-      
-    }, 1500);
-  }
-}) 
+      }, 1500);
+    }, 1000);
+  },
+});

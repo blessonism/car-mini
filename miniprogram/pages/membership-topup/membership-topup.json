@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "会员充值",
+  "usingComponents": {
+    "t-button": "../../miniprogram_npm/tdesign-miniprogram/button/button"
+  }
+} 

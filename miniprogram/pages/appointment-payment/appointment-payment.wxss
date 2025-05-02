@@ -1,97 +1,264 @@
 /* pages/appointment-payment/appointment-payment.wxss */
 page {
-  background-color: #f6f6f6;
-  padding-bottom: 150rpx;
+  background-color: #f8f9ff;
 }
 
 .container {
-  padding: 30rpx;
+  background-color: #f8f9ff !important;
+  min-height: 100vh;
+  padding-bottom: 160rpx;
 }
 
-/* Steps Component */
-.steps-container {
+/* 服务详情卡片 */
+.service-card {
   background-color: #fff;
-  padding: 40rpx 30rpx;
-  border-radius: 12rpx;
-  margin-bottom: 20rpx;
-}
-
-/* Common Card Styles */
-.info-card, .service-card, .payment-card, .coupon-card {
-  background-color: #fff;
-  border-radius: 12rpx;
-  padding: 30rpx;
-  margin-bottom: 20rpx;
-}
-
-.card-header {
-  font-size: 30rpx;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 20rpx;
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 15rpx;
-}
-
-/* Appointment Info Card */
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15rpx;
-}
-
-.info-label {
-  color: #666;
-  font-size: 28rpx;
-}
-
-.info-value {
-  color: #333;
-  font-size: 28rpx;
-}
-
-/* Service Card */
-.service-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  margin: 40rpx;
+  padding: 40rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
 }
 
 .service-info {
+  display: flex;
+  align-items: center;
+}
+
+.service-icon {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 12rpx;
+  background-color: #e6f2ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+}
+
+.service-icon t-icon {
+  color: #3b82f6;
+}
+
+.service-details {
   flex: 1;
 }
 
 .service-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+  color: #333;
+}
+
+.service-meta {
+  display: flex;
+  align-items: center;
+  color: #666;
+}
+
+.service-time,
+.service-price {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  margin-right: 30rpx;
+}
+
+/* 节标题（卡片外） */
+.section-header {
+  display: flex;
+  align-items: center;
+  margin: 40rpx 50rpx 35rpx 40rpx;
+}
+
+.section-text {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+/* 卡片通用样式 */
+.info-card,
+.coupon-card,
+.payment-card,
+.price-card {
+  background-color: rgba(255, 255, 255, 0.85);
+  margin: 0 40rpx 40rpx;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  border: 1rpx solid rgba(255, 255, 255, 0.5);
+}
+
+/* 预约信息项目 */
+.appointment-item {
+  display: flex;
+  padding: 30rpx;
+  align-items: center;
+}
+
+.item-icon {
+  width: 90rpx;
+  height: 90rpx;
+  background-color: rgba(59, 130, 246, 0.1);
+  display: flex;
+  border-radius: 24rpx;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+}
+
+.item-icon-image {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.item-content {
+  flex: 1;
+}
+
+.item-title {
   font-size: 30rpx;
+  font-weight: 500;
   color: #333;
   margin-bottom: 8rpx;
 }
 
-.service-desc {
+.item-value {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.item-desc {
   font-size: 26rpx;
   color: #999;
+  margin-top: 4rpx;
 }
 
-.service-price {
-  font-size: 32rpx;
-  color: #ff4141;
-  font-weight: 500;
+/* 优惠券卡片 */
+.coupon-card {
+  padding: 0;
 }
 
-/* Payment Method Card */
-.payment-method {
+.coupon-content {
   display: flex;
   align-items: center;
-  padding: 20rpx 0;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 30rpx;
 }
 
-.payment-method:last-child {
-  border-bottom: none;
+.coupon-icon {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 24rpx;
+  background-color: rgba(255, 65, 65, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+}
+
+.coupon-info {
+  flex: 1;
+}
+
+.coupon-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.coupon-desc {
+  font-size: 26rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.coupon-value {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #999;
+  margin-right: 24rpx;
+}
+
+.coupon-value.active {
+  color: #ff4141;
+}
+
+.right-arrow {
+  display: flex;
+  align-items: center;
+}
+
+.arrow-icon {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+/* 支付方式 */
+.payment-outer-card {
+  margin: 0 40rpx 40rpx;
+  background-color: rgb(255, 255, 255) !important;
+  border-radius: 16rpx;
+  box-shadow: 0 0 12rpx 4rpx rgba(0, 0, 0, 0.05);
+  padding: 24rpx;
+  overflow: hidden;
+}
+
+.payment-wrapper {
+  padding-top: 16rpx;
+  padding-bottom: 16rpx;
+}
+
+.payment-card {
+  margin-bottom: 26rpx;
+  margin-left: 16rpx;
+  margin-right: 16rpx;
+  background-color: #fff;
+  border-radius: 24rpx;
+  padding: 35rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  border: 1rpx solid rgba(241, 243, 246, 1);
+  transition: all 0.3s ease;
+}
+
+.payment-card:last-child {
+  margin-bottom: 0;
+}
+
+.payment-selected {
+  border: 2rpx solid rgba(59, 130, 246, 0.3);
+  background-color: #f0f7ff;
+}
+
+.payment-content {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.payment-icon-box {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 24rpx;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 32rpx;
+  box-shadow: 0 1rpx 4rpx 1rpx rgba(0, 0, 0, 0.05);
 }
 
 .payment-icon {
-  margin-right: 20rpx;
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.payment-icon-lg {
+  width: 40rpx;
+  height: 40rpx;
 }
 
 .payment-info {
@@ -99,247 +266,162 @@ page {
 }
 
 .payment-name {
-  font-size: 28rpx;
+  font-size: 32rpx;
+  font-weight: 800;
   color: #333;
-  display: block;
+  margin-bottom: 6rpx;
 }
 
-.payment-balance {
-  font-size: 24rpx;
-  color: #999;
-  display: block;
-  margin-top: 6rpx;
+.payment-desc {
+  font-size: 26rpx;
+  color: #596780;
 }
 
-.payment-select-icon {
-  padding: 0 10rpx;
+/* 单选圆点样式 */
+.radio-outer {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  border: 2rpx solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  background-color: #fff;
 }
 
-.payment-method.selected {
-  background-color: #f7f9fd;
+.radio-outer-selected {
+  border-color: #3b82f6;
 }
 
-/* Coupon Card */
-.coupon-selector {
+.radio-inner {
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background-color: #3b82f6;
+  transition: all 0.2s ease;
+}
+
+.radio-inner-selected {
+  width: 24rpx;
+  height: 24rpx;
+}
+
+/* 分隔线 */
+.divider {
+  height: 1rpx;
+  background-color: rgba(240, 240, 240, 0.6);
+  margin: 0 30rpx;
+}
+
+/* 价格明细 */
+.price-card {
+  padding: 30rpx;
+}
+
+.price-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 10rpx 0;
-}
-
-.coupon-info {
-  flex: 1;
-}
-
-.coupon-placeholder {
-  color: #999;
-  font-size: 28rpx;
-}
-
-.coupon-name {
-  font-size: 28rpx;
-  color: #333;
-}
-
-.coupon-amount {
-  font-size: 26rpx;
-  color: #ff4141;
-  margin-top: 6rpx;
-}
-
-.coupon-arrow {
-  color: #999;
-}
-
-/* Payment Summary */
-.payment-summary {
-  background-color: #fff;
-  border-radius: 12rpx;
-  padding: 30rpx;
   margin-bottom: 20rpx;
 }
 
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15rpx;
+.price-label {
   font-size: 28rpx;
   color: #666;
 }
 
-.discount-amount {
-  color: #ff4141;
-}
-
-.summary-total {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20rpx;
-  padding-top: 20rpx;
-  border-top: 1px solid #f0f0f0;
-  font-size: 30rpx;
+.price-value {
+  font-size: 28rpx;
   color: #333;
   font-weight: 500;
 }
 
-.total-amount {
-  color: #ff4141;
-  font-size: 36rpx;
+.price-discount {
+  font-size: 28rpx;
+  color: #ff4d4f;
+  font-weight: 500;
 }
 
-/* Bottom Bar */
+.price-item.total {
+  margin-top: 20rpx;
+  margin-bottom: 0;
+}
+
+.price-item.total .price-label {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.price-total {
+  font-size: 36rpx;
+  color: #ff4d4f;
+  font-weight: 600;
+}
+
+/* 底部栏 */
 .bottom-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 120rpx;
-  background-color: #fff;
   display: flex;
+  padding: 30rpx;
+  background: white;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
   align-items: center;
-  justify-content: space-between;
-  padding: 0 30rpx;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-  z-index: 100;
+  z-index: 10;
 }
 
-.price-container {
+.price-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.price-row {
   display: flex;
   align-items: baseline;
 }
 
-.price-label {
+.price-area .price-label {
   font-size: 28rpx;
-  color: #333;
-  margin-right: 10rpx;
+  color: #ff4d4f;
+  font-weight: bold;
+  margin-right: 4rpx;
 }
 
-.price-value {
-  font-size: 36rpx;
-  color: #ff4141;
-  font-weight: 500;
+.price-area .price-value {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #ff4d4f;
+}
+
+.discount-hint {
+  font-size: 24rpx;
+  color: #596780;
+  margin-top: 8rpx;
 }
 
 .pay-button {
-  background-color: #ff4141;
-  color: #fff;
-  height: 80rpx;
-  line-height: 80rpx;
-  padding: 0 60rpx;
-  border-radius: 40rpx;
-  font-size: 30rpx;
-  font-weight: 500;
+  width: 240rpx !important;
+  background-color: #3b82f6 !important;
+  border-color: transparent !important;
 }
 
-/* Coupon Popup */
-.coupon-popup {
-  width: 100vw;
-  max-height: 70vh;
-  background-color: #fff;
-  border-radius: 24rpx 24rpx 0 0;
-  overflow: hidden;
+.t-button--primary::after {
+  border-color: transparent !important;
 }
 
-.popup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 30rpx;
-  border-bottom: 1px solid #f0f0f0;
-  font-size: 32rpx;
-  font-weight: 500;
+/* 图标样式 */
+.base-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 8rpx;
 }
 
-.coupon-list {
-  padding: 20rpx 30rpx;
-  max-height: 60vh;
-  overflow-y: scroll;
+.sm-icon {
+  width: 28rpx;
+  height: 28rpx;
+  margin-right: 8rpx;
 }
-
-.coupon-item {
-  display: flex;
-  margin-bottom: 20rpx;
-  padding: 30rpx;
-  border-radius: 12rpx;
-  background: linear-gradient(to right, #ff9eaa, #ffffff);
-  position: relative;
-  overflow: hidden;
-}
-
-.coupon-item.selected {
-  box-shadow: 0 2px 10px rgba(255, 65, 65, 0.2);
-}
-
-.coupon-item.disabled {
-  opacity: 0.6;
-  background: linear-gradient(to right, #ccc, #f5f5f5);
-}
-
-.coupon-left {
-  width: 200rpx;
-  border-right: 1px dashed #fff;
-  padding-right: 20rpx;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.coupon-amount {
-  font-size: 48rpx;
-  color: #ff4141;
-  font-weight: bold;
-}
-
-.coupon-condition {
-  font-size: 24rpx;
-  color: #666;
-  margin-top: 10rpx;
-}
-
-.coupon-right {
-  flex: 1;
-  padding-left: 20rpx;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.coupon-name {
-  font-size: 28rpx;
-  color: #333;
-  margin-bottom: 10rpx;
-}
-
-.coupon-date {
-  font-size: 24rpx;
-  color: #999;
-}
-
-.coupon-status {
-  position: absolute;
-  top: 20rpx;
-  right: 20rpx;
-  color: #999;
-  font-size: 24rpx;
-}
-
-.coupon-select {
-  position: absolute;
-  bottom: 20rpx;
-  right: 20rpx;
-}
-
-.coupon-item.no-coupon {
-  background: #f5f5f5;
-  justify-content: center;
-  align-items: center;
-  padding: 20rpx;
-}
-
-.no-coupon-text {
-  font-size: 28rpx;
-  color: #666;
-  flex: 1;
-  text-align: center;
-} 
