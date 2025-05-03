@@ -68,11 +68,7 @@
     <view class="info-row">
       <view class="info-label">预约时间</view>
       <view class="info-value">{{orderInfo.appointmentTime}}</view>
-    </view>
-    <view class="info-row">
-      <view class="info-label">服务技师</view>
-      <view class="info-value">{{orderInfo.technician}}</view>
-    </view>
+    </view>   
     <view class="info-row" wx:if="{{orderInfo.remark}}">
       <view class="info-label">客户备注</view>
       <view class="info-value remark-text">{{orderInfo.remark}}</view>

@@ -7,17 +7,28 @@
 
   <!-- 用户信息区域 -->
   <view class="user-profile-container">
-    <view class="user-info-box rounded-lg shadow-md mx-6">
+    <view wx:if="{{isLoggedIn}}" class="user-info-box rounded-lg shadow-md mx-6">
+          <view class="avatar">
+            <image src="{{userInfo.avatarUrl || '/assets/icons/profile.png'}}"></image>
+          </view>
+          <view class="user-info">
+            <view class="username">{{userInfo.name || userInfo.nickName || '微信用户'}}</view>
+            <view class="phone">{{userInfo.phone || '未绑定手机号'}}</view>
+            <view class="member-tag">
+              <image class="crown-icon" src="/assets/icons/钻石.png"></image>
+                <text>{{userInfo.memberLevel || '普通会员'}}</text>                
+            </view>
+          </view>
+    </view>
+    <view wx:else class="user-info-box rounded-lg shadow-md mx-6">
           <view class="avatar">
             <image src="/assets/icons/profile.png"></image>
           </view>
           <view class="user-info">
-            <view class="username">{{userInfo.name}}</view>
-            <view class="phone">{{userInfo.phone}}</view>
-            <view class="member-tag">
-              <image class="crown-icon" src="/assets/icons/钻石.png"></image>
-                <text>{{userInfo.memberLevel}}</text>                
+            <view class="login-text" bindtap="handleWxLogin">
+              <text>点击登录</text>
             </view>
+            <view class="login-tips">登录后享受更多会员权益</view>
           </view>
     </view>
   </view>
@@ -36,7 +47,7 @@
       
       <view class="points-info">
         <view>
-          <view class="points-amount">¥{{userInfo.balance}}</view>
+          <view class="points-amount">¥{{isLoggedIn ? (userInfo.balance || '0.00') : '0.00'}}</view>
           <view class="points-label">当前余额</view>
         </view>
         <view class="points-actions">
@@ -83,19 +94,33 @@
   <view class="sections">
     <view class="section-title">我的车辆</view>
     
-    <view class="vehicles-list">
-      <view wx:for="{{vehicles}}" wx:key="index" class="card vehicle-card">
+    <view wx:if="{{vehicles.length > 0}}" class="vehicles-list">
+      <view wx:for="{{vehicles}}" wx:key="_id" class="card vehicle-card">
         <view class="vehicle-icon">
           <image src="/assets/icons/car.png"></image>
         </view>
         <view class="vehicle-info">
-          <view class="vehicle-model">{{item.model}}</view>
+          <view class="vehicle-model">{{item.brand ? item.brand + ' ' : ''}}{{item.model}}</view>
           <view class="vehicle-plate">{{item.plate}}</view>
         </view>
-        <view class="arrow" bindtap="showToast" data-toast="车辆详情功能开发中">
-          <image src="/assets/icons/arrow-right.png"></image>
+        <view class="vehicle-actions">
+          <view class="action-btn edit-btn" bindtap="editVehicle" data-index="{{index}}">
+            <image src="/assets/icons/edit.png"></image>
+          </view>
+          <view class="action-btn delete-btn" bindtap="deleteVehicle" data-index="{{index}}">
+            <image src="/assets/icons/delete.png"></image>
+          </view>
         </view>
       </view>
+    </view>
+    
+    <view wx:if="{{vehicles.length === 0 && isLoggedIn}}" class="empty-state">
+      <image src="/assets/icons/empty.png" class="empty-icon"></image>
+      <view class="empty-text">暂无车辆信息</view>
+    </view>
+    
+    <view wx:if="{{!isLoggedIn}}" class="empty-state">
+      <view class="empty-text">登录后添加您的车辆信息</view>
     </view>
     
     <view class="add-vehicle-btn" bindtap="showVehicleModal">
@@ -103,13 +128,18 @@
       <text>添加车辆</text>
     </view>
   </view>
+  
+  <!-- 底部登出按钮 -->
+  <view wx:if="{{isLoggedIn}}" class="logout-container">
+    <button class="logout-btn" bindtap="logout">退出登录</button>
+  </view>
 </view>
 
 <!-- 车辆添加弹窗 -->
 <view class="vehicle-modal {{isVehicleModalVisible ? 'visible' : ''}}" bindtap="closeVehicleModal">
   <view class="modal-content" catchtap="preventBubble">
     <view class="modal-header">
-      <text class="modal-title">添加车辆</text>
+      <text class="modal-title">{{isEditingVehicle ? '编辑车辆' : '添加车辆'}}</text>
       <view class="close-btn" bindtap="closeVehicleModal">
         <image src="/assets/icons/close.png"></image>
       </view>
@@ -122,21 +152,100 @@
           <picker mode="selector" range="{{provinces}}" value="{{provinceIndex}}" bindchange="bindProvinceChange">
             <view class="plate-province">{{provinces[provinceIndex]}}</view>
           </picker>
-          <input type="text" model:value="{{vehicleNumber}}" placeholder="输入车牌号" class="plate-number" />
+          <input type="text" bindinput="inputVehicleNumber" value="{{vehicleNumber}}" placeholder="输入车牌号" class="plate-number" />
         </view>
       </view>
       
       <view class="form-group">
+        <view class="form-label">品牌</view>
+        <input type="text" bindinput="inputVehicleBrand" value="{{vehicleBrand}}" placeholder="例如：奔驰、宝马" class="form-input" />
+      </view>
+      
+      <view class="form-group">
         <view class="form-label">车型</view>
-        <input type="text" model:value="{{vehicleModel}}" placeholder="例如：奔驰C260L" class="form-input" />
+        <input type="text" bindinput="inputVehicleModel" value="{{vehicleModel}}" placeholder="例如：C260L" class="form-input" />
       </view>
       
       <view class="form-group">
         <view class="form-label">车身颜色</view>
-        <input type="text" model:value="{{vehicleColor}}" placeholder="例如：黑色" class="form-input" />
+        <input type="text" bindinput="inputVehicleColor" value="{{vehicleColor}}" placeholder="例如：黑色" class="form-input" />
       </view>
       
       <button class="save-btn" bindtap="saveNewVehicle">保存</button>
+    </view>
+  </view>
+</view>
+
+<!-- 用户信息表单弹窗 -->
+<view class="vehicle-modal {{isUserInfoFormVisible ? 'visible' : ''}}" bindtap="closeUserInfoForm" catchtouchmove="preventTouchMove">
+  <view class="modal-content user-info-modal" catchtap="preventBubble">
+    <view class="modal-header">
+      <text class="modal-title">完善个人信息</text>
+      <view class="close-btn" bindtap="closeUserInfoForm">
+        <image src="/assets/icons/close.png"></image>
+      </view>
+    </view>
+    
+    <view class="modal-body">
+      <form bindsubmit="submitUserInfo">
+        <view class="form-group">
+          <view class="form-label required">手机号</view>
+          <input type="number" name="phone" bindinput="phoneInput" value="{{userInfoForm.phone}}" placeholder="请输入您的手机号" class="form-input" maxlength="11" />
+          <view wx:if="{{errors.phone}}" class="form-error">{{errors.phone}}</view>
+        </view>
+        
+        <view class="form-group">
+          <view class="form-label required">姓名/昵称</view>
+          <input type="text" name="name" bindinput="nameInput" value="{{userInfoForm.name}}" placeholder="请输入您的姓名或昵称" class="form-input" />
+          <view wx:if="{{errors.name}}" class="form-error">{{errors.name}}</view>
+        </view>
+        
+        <view class="form-group">
+          <view class="form-label required">性别</view>
+          <radio-group name="gender" bindchange="genderChange" class="gender-group">
+            <label class="gender-item">
+              <radio value="1" checked="{{userInfoForm.gender === '1'}}" />先生
+            </label>
+            <label class="gender-item">
+              <radio value="2" checked="{{userInfoForm.gender === '2'}}" />女士
+            </label>
+          </radio-group>
+        </view>
+        
+        <view class="form-divider">车辆信息（必填）</view>
+        
+        <view class="form-group">
+          <view class="form-label required">车牌号</view>
+          <view class="form-plate-input">
+            <picker mode="selector" range="{{provinces}}" value="{{provinceIndex}}" bindchange="bindProvinceChange">
+              <view class="plate-province">{{provinces[provinceIndex]}}</view>
+            </picker>
+            <input type="text" name="plateNumber" bindinput="plateNumberInput" value="{{userInfoForm.plateNumber}}" placeholder="输入车牌号" class="plate-number" />
+          </view>
+          <view wx:if="{{errors.plateNumber}}" class="form-error">{{errors.plateNumber}}</view>
+        </view>
+        
+        <view class="form-group vehicle-brand-model">
+          <view class="brand-section">
+            <view class="form-label required">车辆品牌</view>
+            <input type="text" name="brand" bindinput="brandInput" value="{{userInfoForm.brand}}" placeholder="例如：奔驰、宝马" class="form-input" />
+            <view wx:if="{{errors.brand}}" class="form-error">{{errors.brand}}</view>
+          </view>
+          
+          <view class="model-section">
+            <view class="form-label required">车型/型号</view>
+            <input type="text" name="model" bindinput="modelInput" value="{{userInfoForm.model}}" placeholder="例如：C260L、5系" class="form-input" />
+            <view wx:if="{{errors.model}}" class="form-error">{{errors.model}}</view>
+          </view>
+        </view>
+        
+        <view class="form-group">
+          <view class="form-label required">车身颜色</view>
+          <input type="text" name="color" bindinput="colorInput" value="{{userInfoForm.color}}" placeholder="例如：黑色、白色" class="form-input" />
+        </view>
+        
+        <button class="save-btn submit-btn" form-type="submit">保存信息</button>
+      </form>
     </view>
   </view>
 </view> 

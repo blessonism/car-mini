@@ -297,6 +297,10 @@ page {
 }
 
 /* 车辆卡片样式 */
+.vehicles-list {
+  margin-top: 20rpx;
+}
+
 .card {
   background: white;
   border-radius: 16rpx;
@@ -324,6 +328,7 @@ page {
   align-items: center;
   justify-content: center;
   margin-right: 28rpx;
+  flex-shrink: 0;
 }
 
 .vehicle-icon image {
@@ -333,17 +338,57 @@ page {
 
 .vehicle-info {
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .vehicle-model {
   font-weight: 600;
   margin-bottom: 4rpx;
   font-size: 32rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .vehicle-plate {
   font-size: 26rpx;
   color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vehicle-actions {
+  display: flex;
+  align-items: center;
+  margin-left: 20rpx;
+  flex-shrink: 0;
+}
+
+.action-btn {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10rpx;
+}
+
+.action-btn image {
+  width: 40rpx;
+  height: 40rpx;
+  opacity: 0.7;
+}
+
+.edit-btn image {
+  width: 36rpx;
+  height: 36rpx;
+}
+
+.delete-btn image {
+  width: 42rpx;
+  height: 42rpx;
 }
 
 .arrow image {
@@ -482,4 +527,166 @@ page {
 .mx-6 {
   margin-left: 24rpx;
   margin-right: 24rpx;
+}
+
+/* 登录按钮样式 */
+.login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #07c160;
+  color: white;
+  padding: 12rpx 24rpx;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  margin-bottom: 12rpx;
+  width: 260rpx;
+}
+
+/* 新的登录文本样式 */
+.login-text {
+  color: white;
+  font-size: 34rpx;
+  font-weight: 700;
+  margin-bottom: 12rpx;
+}
+
+.wechat-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 10rpx;
+}
+
+.login-tips {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 空状态样式 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+}
+
+.empty-icon {
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.6;
+}
+
+.empty-text {
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 手机号绑定弹窗样式 */
+.phone-modal {
+  max-width: 600rpx;
+}
+
+.phone-desc {
+  text-align: center;
+  margin-bottom: 40rpx;
+  font-size: 30rpx;
+  color: #333;
+}
+
+.phone-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #07c160;
+  color: white;
+  padding: 20rpx;
+  border-radius: 10rpx;
+  margin-bottom: 30rpx;
+  font-size: 32rpx;
+}
+
+.phone-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 10rpx;
+}
+
+.phone-tips {
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 退出登录按钮 */
+.logout-container {
+  padding: 40rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.logout-btn {
+  background-color: #f5f5f5;
+  color: #ff4d4f;
+  border: 1px solid #ddd;
+  width: 60%;
+  padding: 20rpx 0;
+  border-radius: 100rpx;
+  font-size: 28rpx;
+  font-weight: normal;
+}
+
+/* 用户信息表单样式 */
+.user-info-modal {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.form-divider {
+  font-size: 28rpx;
+  color: #6b7280;
+  margin: 30rpx 0 20rpx;
+  padding-bottom: 10rpx;
+  border-bottom: 1rpx solid #e5e7eb;
+}
+
+.form-label.required::after {
+  content: "*";
+  color: #e53e3e;
+  margin-left: 4rpx;
+}
+
+.form-error {
+  color: #e53e3e;
+  font-size: 24rpx;
+  margin-top: 6rpx;
+}
+
+.gender-group {
+  display: flex;
+  margin-top: 10rpx;
+}
+
+.gender-item {
+  margin-right: 40rpx;
+  display: flex;
+  align-items: center;
+}
+
+.submit-btn {
+  margin-top: 40rpx;
+}
+
+/* 完善信息弹窗 */
+.vehicle-brand-model {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.brand-section,
+.model-section {
+  flex: 1;
 }

@@ -150,7 +150,6 @@ Page({
           amount: 149.1,
           discount: 0,
           totalAmount: 149.1,
-          technician: "李师傅",
           paymentMethod: "微信支付",
           carInfo: {
             plate: "粤B12345",
