@@ -20,7 +20,6 @@
   --td-search-label-font-size: 14px !important;
 }
 
-
 .search-input-smaller {
   font-size: 26rpx !important;
 }
@@ -85,6 +84,18 @@
   flex-direction: column;
   align-items: center;
   margin-right: 70rpx;
+  position: relative;
+}
+
+.category-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -10rpx;
+  left: 25%;
+  width: 50%;
+  height: 6rpx;
+  background-color: #3370ff;
+  border-radius: 3rpx;
 }
 
 .category-icon {
@@ -102,6 +113,48 @@
 .category-name {
   font-size: 24rpx;
   color: #333;
+}
+
+.category-item.active .category-name {
+  color: #3370ff;
+  font-weight: 500;
+}
+
+/* 自定义标签页样式 */
+.custom-tabs {
+  margin-top: 20rpx;
+  --td-tab-item-color: #666;
+  --td-tab-item-active-color: #3370ff;
+  --td-tab-item-font-size: 28rpx;
+  --td-tab-track-width: 40rpx;
+  --td-tab-track-thickness: 6rpx;
+  --td-tab-track-radius: 3rpx;
+}
+
+/* Loading indicator */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200rpx;
+  margin-top: 40rpx;
+}
+
+.loading-text {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* Empty state */
+.empty-container {
+  margin-top: 60rpx;
+}
+
+/* 添加绿色背景色 */
+.bg-green {
+  background-color: #e6fff0;
 }
 
 /* Promotion Banner - 更新为原型图样式 */
@@ -184,14 +237,16 @@
 .service-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32rpx;  
+  gap: 32rpx;
 }
 
 .service-card {
   background-color: #fff;
   border-radius: 20rpx;
   overflow: hidden;
-  box-shadow: 0 4rpx 6rpx -2rpx rgba(0, 0, 0, 0.05), 0 2rpx 4rpx -2rpx rgba(0, 0, 0, 0.03);
+  box-shadow:
+    0 4rpx 6rpx -2rpx rgba(0, 0, 0, 0.05),
+    0 2rpx 4rpx -2rpx rgba(0, 0, 0, 0.03);
 }
 
 .service-image {
@@ -292,4 +347,4 @@
   z-index: 100;
   box-sizing: border-box;
   padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
-} 
+}

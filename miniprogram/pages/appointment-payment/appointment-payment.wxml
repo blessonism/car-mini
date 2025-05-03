@@ -15,7 +15,7 @@
           </view>
           <view class="service-price">
             <image src="../../assets/icons/price.png" class="base-icon" mode="aspectFit"></image>
-            <text>¥39.9</text>
+            <text>¥{{servicePrice}}</text>
           </view>
         </view>
       </view>
@@ -65,10 +65,10 @@
         <view class="coupon-desc">2张可用</view>
       </view>
       <view class="coupon-value {{selectedCouponIndex !== -1 ? 'active' : ''}}">
-        {{selectedCouponIndex !== -1 ? '-¥5.0' : '未使用'}}
+        {{selectedCouponIndex !== -1 ? '-¥' + couponDiscount : '未使用'}}
       </view>
       <view class="right-arrow">
-        <image src="../../assets/icons/arrow.png" class="arrow-icon" mode="aspectFit"></image>
+        <image src="../../assets/icons/arrow-right.png" class="arrow-icon" mode="aspectFit"></image>
       </view>
     </view>
   </view>
@@ -139,24 +139,24 @@
   <view class="price-card">
     <view class="price-item">
       <view class="price-label">服务费用</view>
-      <view class="price-value">¥39.9</view>
+      <view class="price-value">¥{{servicePrice}}</view>
     </view>
     
     <view class="price-item">
       <view class="price-label">优惠券</view>
-      <view class="price-discount">-¥5.0</view>
+      <view class="price-discount">-¥{{couponDiscount}}</view>
     </view>
     
     <view class="price-item">
       <view class="price-label">会员折扣</view>
-      <view class="price-discount">-¥1.9</view>
+      <view class="price-discount">-¥{{memberDiscount}}</view>
     </view>
     
     <view class="divider"></view>
     
     <view class="price-item total">
       <view class="price-label">订单总价</view>
-      <view class="price-total">¥33.0</view>
+      <view class="price-total">¥{{totalPrice}}</view>
     </view>
   </view>
 
@@ -165,9 +165,9 @@
     <view class="price-area">
       <view class="price-row">
         <text class="price-label">¥</text>
-        <text class="price-value">33.0</text>
+        <text class="price-value">{{totalPrice}}</text>
       </view>
-      <text class="discount-hint">已优惠¥6.9</text>
+      <text class="discount-hint">已优惠¥{{couponDiscount + memberDiscount}}</text>
     </view>
     <t-button theme="primary" size="large" class="pay-button" bindtap="submitPayment">立即支付</t-button>
   </view>

@@ -67,7 +67,7 @@
     </view>
     <view class="info-row">
       <view class="info-label">预约时间</view>
-      <view class="info-value">{{orderInfo.appointmentTime}}</view>
+      <view class="info-value">{{orderInfo.appointmentTime || '未设置预约时间'}}</view>
     </view>   
     <view class="info-row" wx:if="{{orderInfo.remark}}">
       <view class="info-label">客户备注</view>

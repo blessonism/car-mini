@@ -22,7 +22,7 @@
     </view>
     
     <scroll-view scroll-x enable-flex class="category-scroll">
-      <view class="category-item" wx:for="{{categories}}" wx:key="id" bindtap="onCategorySelect" data-category="{{item}}">
+      <view class="category-item {{activeTab === item.id ? 'active' : ''}}" wx:for="{{categories}}" wx:key="id" bindtap="onCategorySelect" data-category="{{item}}">
         <view class="category-icon">
           <t-image src="{{item.icon}}" width="48rpx" height="48rpx" />
         </view>
@@ -46,21 +46,31 @@
     <view class="circle circle-2"></view>
   </view>
 
-  <!-- Hot services -->
-  <view class="section">
-    <view class="section-header">
-      <text class="section-title mt-6 mb-4">热门服务</text>
-      <text class="see-all" bindtap="viewAllServices">查看全部</text>
-    </view>
-    
+  <!-- Tabs -->
+  <t-tabs value="{{activeTab}}" bind:change="onTabChange" t-class="custom-tabs">
+    <t-tab-panel label="全部" value="0" />
+    <t-tab-panel label="洗车服务" value="1" />
+    <t-tab-panel label="维修装饰" value="2" />
+    <t-tab-panel label="保养美容" value="3" />
+    <t-tab-panel label="轮胎服务" value="4" />
+  </t-tabs>
+
+  <!-- Loading indicator -->
+  <view class="loading-container" wx:if="{{isLoading}}">
+    <t-loading theme="circular" size="40rpx" />
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- Services Grid -->
+  <view class="section" wx:if="{{!isLoading}}">
     <view class="service-grid">
-      <view class="service-card" wx:for="{{hotServices}}" wx:key="id" bindtap="onServiceSelect" data-service="{{item}}">
-        <view class="service-image {{item.bgColor}}">
-          <t-image src="{{item.icon}}" width="80rpx" height="80rpx" />
+      <view class="service-card" wx:for="{{filteredServices}}" wx:key="id" bindtap="onServiceSelect" data-service="{{item}}">
+        <view class="service-image {{item.bgColor || 'bg-blue'}}">
+          <t-image src="{{item.image}}" width="80rpx" height="80rpx" />
         </view>
         <view class="service-details">
           <view class="service-title">{{item.title}}</view>
-          <view class="service-tag">{{item.tag}}</view>
+          <view class="service-tag">{{item.tag || '热门'}}</view>
           <view class="service-meta">
             <view class="service-time">
               <t-icon name="time" size="28rpx" />
@@ -71,6 +81,11 @@
         </view>
       </view>
     </view>
+  </view>
+
+  <!-- Empty state -->
+  <view class="empty-container" wx:if="{{!isLoading && filteredServices.length === 0}}">
+    <t-empty description="暂无服务" />
   </view>
 </view>
 

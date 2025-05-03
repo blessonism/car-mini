@@ -76,25 +76,33 @@ Page({
   loadUserVehicles() {
     wx.showLoading({ title: "加载车辆信息" });
 
-    // 调用云函数获取用户车辆
-    wx.cloud
-      .callFunction({
-        name: "getUserVehicles",
-      })
-      .then((res) => {
-        if (res.result && res.result.code === 0) {
-          this.setData({
-            vehicles: res.result.data.vehicles || [],
-          });
-        } else {
-          console.error("获取车辆信息失败:", res);
-        }
-        wx.hideLoading();
-      })
-      .catch((err) => {
-        console.error("获取车辆信息失败:", err);
-        wx.hideLoading();
-      });
+    // 返回Promise表示是否有车辆
+    return new Promise((resolve) => {
+      // 调用云函数获取用户车辆
+      wx.cloud
+        .callFunction({
+          name: "getUserVehicles",
+        })
+        .then((res) => {
+          if (res.result && res.result.code === 0) {
+            const vehicles = res.result.data.vehicles || [];
+            this.setData({
+              vehicles: vehicles,
+            });
+            wx.hideLoading();
+            resolve(vehicles.length > 0);
+          } else {
+            console.error("获取车辆信息失败:", res);
+            wx.hideLoading();
+            resolve(false);
+          }
+        })
+        .catch((err) => {
+          console.error("获取车辆信息失败:", err);
+          wx.hideLoading();
+          resolve(false);
+        });
+    });
   },
 
   checkLoginStatus() {
@@ -170,70 +178,78 @@ Page({
           !userInfo.name ||
           !(this.data.vehicles && this.data.vehicles.length > 0)
         ) {
-          // 保存部分用户信息，但不设置登录状态为成功
-          auth.savePartialUserInfo(userInfo);
-          this.setData({
-            userInfo,
-          });
+          // 检查是否需要加载车辆信息
+          const needToCheckVehicles =
+            this.data.vehicles && this.data.vehicles.length === 0;
 
-          wx.hideLoading();
-
-          // 直接显示信息完善表单
-          this.showUserInfoForm();
-
-          // 提示用户需要完善信息
-          wx.showModal({
-            title: "完善信息",
-            content: "请完善个人资料和车辆信息以完成登录",
-            showCancel: false,
-            confirmText: "我知道了",
-          });
-
-          return;
+          if (needToCheckVehicles) {
+            // 尝试加载车辆信息，看是否有记录
+            this.loadUserVehicles().then((hasVehicles) => {
+              if (!hasVehicles || !userInfo.phone || !userInfo.name) {
+                // 仍然需要完善信息
+                this.promptForUserInfo(userInfo);
+              } else {
+                // 信息已完整，直接登录成功
+                this.completeLogin(userInfo);
+              }
+            });
+          } else {
+            // 明确缺少基本信息，直接提示完善
+            this.promptForUserInfo(userInfo);
+          }
+        } else {
+          // 用户信息完整，登录成功
+          this.completeLogin(userInfo);
         }
-
-        // 用户信息完整，登录成功
-        auth.saveUserInfo(userInfo);
-        this.setData({
-          isLoggedIn: true,
-          userInfo,
-        });
-
-        // 加载用户车辆信息
-        this.loadUserVehicles();
-
-        wx.hideLoading();
-        wx.showToast({
-          title: "登录成功",
-          icon: "success",
-        });
       })
       .catch((err) => {
-        wx.hideLoading();
         console.error("登录失败", err);
-
-        // 更详细的错误日志
-        if (err.errMsg) {
-          console.error("错误信息:", err.errMsg);
-        }
-        if (err.stack) {
-          console.error("错误堆栈:", err.stack);
-        }
-
-        // 显示更有用的错误信息
-        let errorMsg = "登录失败";
-        if (err.message) {
-          errorMsg = err.message;
-        } else if (err.errMsg) {
-          errorMsg = err.errMsg;
-        }
-
-        wx.showModal({
-          title: "登录失败",
-          content: errorMsg,
-          showCancel: false,
+        wx.hideLoading();
+        wx.showToast({
+          title: "登录失败，请重试",
+          icon: "none",
         });
       });
+  },
+
+  // 提示用户完善信息
+  promptForUserInfo(userInfo) {
+    // 保存部分用户信息，但不设置登录状态为成功
+    auth.savePartialUserInfo(userInfo);
+    this.setData({
+      userInfo,
+    });
+
+    wx.hideLoading();
+
+    // 直接显示信息完善表单
+    this.showUserInfoForm();
+
+    // 提示用户需要完善信息
+    wx.showModal({
+      title: "完善信息",
+      content: "请完善个人资料和车辆信息以完成登录",
+      showCancel: false,
+      confirmText: "我知道了",
+    });
+  },
+
+  // 完成登录流程
+  completeLogin(userInfo) {
+    auth.saveUserInfo(userInfo);
+    this.setData({
+      isLoggedIn: true,
+      userInfo,
+    });
+
+    // 刷新用户车辆信息
+    this.loadUserVehicles();
+
+    wx.hideLoading();
+    wx.showToast({
+      title: "登录成功",
+      icon: "success",
+    });
   },
 
   // 显示用户信息表单

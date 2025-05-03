@@ -52,15 +52,15 @@
 
         <view class="order-content">
           <view class="car-info">
-            {{item.carModel}} · {{item.licensePlate}}
+            <text wx:if="{{item.carBrand}}">{{item.carBrand}} </text>{{item.carModel}} · {{item.licensePlate}}
           </view>
           <view class="price-info">
             ¥{{item.totalPrice}}
           </view>
         </view>
 
-        <view class="order-time">
-          预约时间: {{item.appointmentTime || '2023-07-15 14:30'}}
+        <view class="order-time">  
+          {{item.appointmentTime || '暂未安排'}}
         </view>
 
         <view class="order-footer">
