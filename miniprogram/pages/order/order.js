@@ -1,4 +1,15 @@
 // pages/order/order.js
+const auth = require("../../utils/auth"); // 引入auth模块
+
+// 存储相关的key常量
+const STORAGE_KEYS = {
+  ORDERS_DATA: "ordersData",
+  LAST_ORDERS_REFRESH: "lastOrdersRefresh",
+};
+
+// 数据刷新的最小间隔时间（毫秒）- 默认1小时
+const REFRESH_INTERVAL = 60 * 60 * 1000;
+
 Page({
   data: {
     activeTab: "all",
@@ -17,14 +28,162 @@ Page({
     orders: [],
     filteredOrders: [],
     isLoading: true,
+    isRefreshing: false,
+    lastTab: "all", // 记录上次选中的标签
   },
 
   onLoad: function (options) {
-    this.loadOrders();
+    // 首次加载时一定要获取数据
+    this.loadOrdersWithCache();
+  },
+
+  onShow: function () {
+    // 页面显示时，更新自定义tabBar的选中状态
+    if (typeof this.getTabBar === "function" && this.getTabBar()) {
+      this.getTabBar().setData({
+        selected: 2, // 订单页面索引
+      });
+    }
+
+    // 检查是否需要刷新数据（当前标签改变或数据过期时）
+    const currentTab = this.data.activeTab;
+    if (currentTab !== this.data.lastTab) {
+      this.loadOrdersWithCache(currentTab);
+      this.setData({ lastTab: currentTab });
+    } else if (this.shouldRefreshOrders()) {
+      this.loadOrdersWithCache(currentTab);
+    }
+  },
+
+  // 下拉刷新处理函数
+  onPullDownRefresh: function () {
+    if (this.data.isRefreshing) {
+      wx.stopPullDownRefresh();
+      return;
+    }
+
+    this.setData({ isRefreshing: true });
+
+    // 强制刷新当前标签的数据
+    const status = this.getStatusByTab(this.data.activeTab);
+    this.loadOrders(status, true)
+      .then(() => {
+        this.setData({ isRefreshing: false });
+        wx.stopPullDownRefresh();
+        wx.showToast({ title: "刷新成功", icon: "success" });
+      })
+      .catch((err) => {
+        this.setData({ isRefreshing: false });
+        wx.stopPullDownRefresh();
+        wx.showToast({ title: "刷新失败", icon: "none" });
+        console.error("刷新订单数据失败:", err);
+      });
+  },
+
+  // 检查是否需要刷新订单数据
+  shouldRefreshOrders: function () {
+    try {
+      const lastRefresh =
+        wx.getStorageSync(STORAGE_KEYS.LAST_ORDERS_REFRESH) || 0;
+      return Date.now() - lastRefresh > REFRESH_INTERVAL;
+    } catch (error) {
+      console.error("检查订单刷新状态出错", error);
+      return true; // 出错时默认需要刷新
+    }
+  },
+
+  // 更新订单刷新时间戳
+  updateOrdersRefreshTime: function () {
+    try {
+      wx.setStorageSync(STORAGE_KEYS.LAST_ORDERS_REFRESH, Date.now());
+    } catch (error) {
+      console.error("更新订单刷新时间戳出错", error);
+    }
+  },
+
+  // 从缓存获取订单数据
+  getStoredOrders: function () {
+    try {
+      return wx.getStorageSync(STORAGE_KEYS.ORDERS_DATA) || null;
+    } catch (error) {
+      console.error("获取订单缓存数据出错", error);
+      return null;
+    }
+  },
+
+  // 保存订单数据到缓存
+  saveOrdersToCache: function (orders, status = "all") {
+    try {
+      // 使用key-value方式存储，方便按状态获取
+      const cachedOrders = wx.getStorageSync(STORAGE_KEYS.ORDERS_DATA) || {};
+      cachedOrders[status] = {
+        data: orders,
+        timestamp: Date.now(),
+      };
+      wx.setStorageSync(STORAGE_KEYS.ORDERS_DATA, cachedOrders);
+      this.updateOrdersRefreshTime();
+    } catch (error) {
+      console.error("保存订单数据到缓存出错", error);
+    }
+  },
+
+  // 根据标签值获取对应的状态
+  getStatusByTab: function (tab) {
+    const statusMap = {
+      all: null,
+      waiting: "待支付",
+      in_service: "服务中",
+      waiting_arrival: "已支付",
+    };
+    return statusMap[tab] || null;
+  },
+
+  // 使用缓存加载订单
+  loadOrdersWithCache: function (tabStatus = "all") {
+    const status = this.getStatusByTab(tabStatus || this.data.activeTab);
+
+    // 尝试从缓存获取数据
+    const cachedOrders = this.getStoredOrders();
+    const statusKey = status || "all";
+
+    if (
+      cachedOrders &&
+      cachedOrders[statusKey] &&
+      !this.shouldRefreshOrders()
+    ) {
+      // 使用缓存数据
+      const orders = cachedOrders[statusKey].data;
+      this.setData({
+        orders: orders,
+        filteredOrders: orders,
+        isLoading: false,
+        activeTab: tabStatus || this.data.activeTab,
+      });
+      return Promise.resolve(orders);
+    } else {
+      // 缓存不存在或已过期，重新加载
+      return this.loadOrders(status, true);
+    }
   },
 
   // 加载订单列表
-  loadOrders: function (status) {
+  loadOrders: function (status, forceRefresh = false) {
+    // 如果不是强制刷新且不需要刷新，尝试使用缓存
+    if (!forceRefresh && !this.shouldRefreshOrders()) {
+      const cachedOrders = this.getStoredOrders();
+      const statusKey = status || "all";
+
+      if (cachedOrders && cachedOrders[statusKey]) {
+        const orders = cachedOrders[statusKey].data;
+        this.setData({
+          orders: orders,
+          filteredOrders: orders,
+          isLoading: false,
+        });
+        return Promise.resolve(orders);
+      }
+    }
+
     this.setData({ isLoading: true });
 
     const queryParams = {};
@@ -32,107 +191,117 @@ Page({
       queryParams.status = status;
     }
 
-    wx.cloud
-      .callFunction({
-        name: "getUserOrders",
-        data: queryParams,
-      })
-      .then((res) => {
-        if (res.result && res.result.success) {
-          // 处理订单数据，转换为UI所需格式
-          const orders = res.result.data.map((order) => {
-            // 格式化预约时间
-            let appointmentTime = "";
-            // 状态描述文本
-            let statusDesc = "";
+    return new Promise((resolve, reject) => {
+      wx.cloud
+        .callFunction({
+          name: "getUserOrders",
+          data: queryParams,
+        })
+        .then((res) => {
+          if (res.result && res.result.success) {
+            // 处理订单数据，转换为UI所需格式
+            const orders = res.result.data.map((order) => {
+              // 格式化预约时间
+              let appointmentTime = "";
+              // 状态描述文本
+              let statusDesc = "";
 
-            // 根据订单状态设置状态描述
-            switch (order.status) {
-              case "待支付":
-                statusDesc = "等待支付，请尽快完成";
-                break;
-              case "已支付":
-                statusDesc = "预约成功，等待门店服务";
-                break;
-              case "服务中":
-                statusDesc = "正在门店接受服务";
-                break;
-              case "已完成":
-                statusDesc = "服务已完成，感谢您的信任";
-                break;
-              case "已取消":
-                statusDesc = "订单已取消";
-                break;
-              default:
-                statusDesc = "订单状态未知";
-            }
-
-            // 1. 首先尝试从预约信息中获取预约时间
-            if (order.appointment && order.appointment.appointmentTime) {
-              appointmentTime = this.formatTime(
-                order.appointment.appointmentTime
-              );
-            }
-            // 2. 如果没有预约时间，但有创建时间，则使用创建时间加1小时作为预计服务时间
-            else if (order.createTime) {
-              const serviceTime = new Date(order.createTime);
-              serviceTime.setHours(serviceTime.getHours() + 1);
-              appointmentTime = this.formatTime(serviceTime) + " (预计)";
-            }
-            // 3. 根据订单状态提供合适的默认文本
-            else {
-              if (order.status === "待支付") {
-                appointmentTime = "支付后安排";
-              } else if (order.status === "已完成") {
-                appointmentTime = "已完成服务";
-              } else if (order.status === "已取消") {
-                appointmentTime = "订单已取消";
-              } else {
-                appointmentTime = "暂无预约时间";
+              // 根据订单状态设置状态描述
+              switch (order.status) {
+                case "待支付":
+                  statusDesc = "等待支付，请尽快完成";
+                  break;
+                case "已支付":
+                  statusDesc = "预约成功，等待门店服务";
+                  break;
+                case "服务中":
+                  statusDesc = "正在门店接受服务";
+                  break;
+                case "已完成":
+                  statusDesc = "服务已完成，感谢您的信任";
+                  break;
+                case "已取消":
+                  statusDesc = "订单已取消";
+                  break;
+                default:
+                  statusDesc = "订单状态未知";
               }
-            }
 
-            // 对于已完成的订单，使用状态描述替代预约时间
-            const displayTime = statusDesc;
+              // 1. 首先尝试从预约信息中获取预约时间
+              if (order.appointment && order.appointment.appointmentTime) {
+                appointmentTime = this.formatTime(
+                  order.appointment.appointmentTime
+                );
+              }
+              // 2. 如果没有预约时间，但有创建时间，则使用创建时间加1小时作为预计服务时间
+              else if (order.createTime) {
+                const serviceTime = new Date(order.createTime);
+                serviceTime.setHours(serviceTime.getHours() + 1);
+                appointmentTime = this.formatTime(serviceTime) + " (预计)";
+              }
+              // 3. 根据订单状态提供合适的默认文本
+              else {
+                if (order.status === "待支付") {
+                  appointmentTime = "支付后安排";
+                } else if (order.status === "已完成") {
+                  appointmentTime = "已完成服务";
+                } else if (order.status === "已取消") {
+                  appointmentTime = "订单已取消";
+                } else {
+                  appointmentTime = "暂无预约时间";
+                }
+              }
 
-            return {
-              id: order._id,
-              orderNo:
-                order.orderNo || this.formatOrderNoFromDate(order.createTime),
-              serviceName: this.getServiceNames(order.orderItems),
-              carModel: order.vehicle ? order.vehicle.model : "未知车型",
-              carBrand: order.vehicle ? order.vehicle.brand : "",
-              licensePlate: order.vehicle ? order.vehicle.plate : "未知车牌",
-              totalPrice: order.actualAmount,
-              status: order.status,
-              paymentStatus: order.paymentStatus,
-              createTime: this.formatTime(order.createTime),
-              appointmentTime: displayTime,
-              statusDesc: statusDesc,
-            };
-          });
+              // 对于已完成的订单，使用状态描述替代预约时间
+              const displayTime = statusDesc;
 
-          this.setData({
-            orders: orders,
-            filteredOrders: orders,
-            isLoading: false,
-          });
-        } else {
+              return {
+                id: order._id,
+                orderNo:
+                  order.orderNo || this.formatOrderNoFromDate(order.createTime),
+                serviceName: this.getServiceNames(order.orderItems),
+                carModel: order.vehicle ? order.vehicle.model : "未知车型",
+                carBrand: order.vehicle ? order.vehicle.brand : "",
+                licensePlate: order.vehicle ? order.vehicle.plate : "未知车牌",
+                totalPrice: order.actualAmount,
+                status: order.status,
+                paymentStatus: order.paymentStatus,
+                createTime: this.formatTime(order.createTime),
+                appointmentTime: displayTime,
+                statusDesc: statusDesc,
+              };
+            });
+
+            // 保存数据到本地状态
+            this.setData({
+              orders: orders,
+              filteredOrders: orders,
+              isLoading: false,
+            });
+
+            // 保存到缓存
+            this.saveOrdersToCache(orders, status || "all");
+
+            resolve(orders);
+          } else {
+            this.setData({ isLoading: false });
+            wx.showToast({
+              title: "获取订单列表失败",
+              icon: "none",
+            });
+            reject(new Error("获取订单列表失败"));
+          }
+        })
+        .catch((err) => {
+          console.error("获取订单列表失败:", err);
           this.setData({ isLoading: false });
           wx.showToast({
             title: "获取订单列表失败",
             icon: "none",
           });
-        }
-      })
-      .catch((err) => {
-        console.error("获取订单列表失败:", err);
-        this.setData({ isLoading: false });
-        wx.showToast({
-          title: "获取订单列表失败",
-          icon: "none",
+          reject(err);
         });
-      });
+    });
   },
 
   // 从订单项目中获取服务名称
@@ -178,18 +347,11 @@ Page({
     const status = e.currentTarget.dataset.value;
     this.setData({
       activeTab: status,
+      lastTab: status, // 更新最后选中的标签
     });
 
-    // 根据不同标签加载不同状态的订单
-    if (status === "all") {
-      this.loadOrders();
-    } else if (status === "waiting") {
-      this.loadOrders("待支付");
-    } else if (status === "in_service") {
-      this.loadOrders("服务中");
-    } else if (status === "waiting_arrival") {
-      this.loadOrders("已支付"); // 已支付但未到店的订单
-    }
+    // 使用缓存策略加载不同状态的订单
+    this.loadOrdersWithCache(status);
   },
 
   viewOrderDetail(e) {
@@ -266,8 +428,8 @@ Page({
             icon: "success",
           });
 
-          // 重新加载订单列表
-          this.loadOrders();
+          // 强制刷新数据
+          this.loadOrders(null, true);
         } else {
           wx.showToast({
             title: res.result.message || "操作失败",
@@ -279,7 +441,7 @@ Page({
         wx.hideLoading();
         console.error("更新订单状态失败:", err);
         wx.showToast({
-          title: "操作失败，请重试",
+          title: "操作失败",
           icon: "none",
         });
       });
@@ -293,33 +455,39 @@ Page({
       content: "确定要取消该预约吗？",
       success: (res) => {
         if (res.confirm) {
+          wx.showLoading({ title: "取消中..." });
+
           wx.cloud
             .callFunction({
               name: "updateAppointmentStatus",
               data: {
                 appointmentId: id,
-                status: "已取消",
+                status: "cancelled",
               },
             })
             .then((res) => {
+              wx.hideLoading();
+
               if (res.result && res.result.success) {
                 wx.showToast({
-                  title: "预约已取消",
+                  title: "取消成功",
                   icon: "success",
                 });
 
-                this.loadOrders();
+                // 强制刷新数据
+                this.loadOrders(null, true);
               } else {
                 wx.showToast({
-                  title: res.result.message || "取消预约失败",
+                  title: res.result.message || "取消失败",
                   icon: "none",
                 });
               }
             })
             .catch((err) => {
+              wx.hideLoading();
               console.error("取消预约失败:", err);
               wx.showToast({
-                title: "取消预约失败",
+                title: "取消失败",
                 icon: "none",
               });
             });
@@ -328,29 +496,20 @@ Page({
     });
   },
 
+  // 追踪服务
   trackService(e) {
     const id = e.currentTarget.dataset.id;
-    wx.navigateTo({
-      url: `/pages/order-detail/order-detail?id=${id}`,
+    wx.showToast({
+      title: "服务追踪功能开发中",
+      icon: "none",
     });
   },
 
+  // 重新预约
   reappointment(e) {
     const id = e.currentTarget.dataset.id;
     wx.navigateTo({
       url: `/pages/appointment-service/appointment-service?reappoint=true&id=${id}`,
     });
-  },
-
-  onShow: function () {
-    // 页面显示时重新加载数据
-    this.loadOrders();
-
-    // 页面显示时，更新自定义tabBar的选中状态
-    if (typeof this.getTabBar === "function" && this.getTabBar()) {
-      this.getTabBar().setData({
-        selected: 2,
-      });
-    }
   },
 });

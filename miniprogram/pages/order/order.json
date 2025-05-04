@@ -6,5 +6,8 @@
     "t-button": "tdesign-miniprogram/button/button",
     "t-empty": "tdesign-miniprogram/empty/empty",
     "t-navbar": "tdesign-miniprogram/navbar/navbar"
-  }
+  },
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#f7f8fa",
+  "backgroundTextStyle": "dark"
 } 

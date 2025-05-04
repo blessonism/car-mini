@@ -50,9 +50,8 @@
   <t-tabs value="{{activeTab}}" bind:change="onTabChange" t-class="custom-tabs">
     <t-tab-panel label="全部" value="0" />
     <t-tab-panel label="洗车服务" value="1" />
-    <t-tab-panel label="维修装饰" value="2" />
-    <t-tab-panel label="保养美容" value="3" />
-    <t-tab-panel label="轮胎服务" value="4" />
+    <t-tab-panel label="保养美容" value="2" />
+    <t-tab-panel label="轮胎服务" value="3" />
   </t-tabs>
 
   <!-- Loading indicator -->

@@ -114,8 +114,7 @@
       </view>
     </view>
     
-    <view wx:if="{{vehicles.length === 0 && isLoggedIn}}" class="empty-state">
-      <image src="/assets/icons/empty.png" class="empty-icon"></image>
+    <view wx:if="{{vehicles.length === 0 && isLoggedIn}}" class="empty-state">      
       <view class="empty-text">暂无车辆信息</view>
     </view>
     
@@ -140,8 +139,7 @@
   <view class="modal-content" catchtap="preventBubble">
     <view class="modal-header">
       <text class="modal-title">{{isEditingVehicle ? '编辑车辆' : '添加车辆'}}</text>
-      <view class="close-btn" bindtap="closeVehicleModal">
-        <image src="/assets/icons/close.png"></image>
+      <view class="close-btn" bindtap="closeVehicleModal">        
       </view>
     </view>
     
@@ -181,8 +179,7 @@
   <view class="modal-content user-info-modal" catchtap="preventBubble">
     <view class="modal-header">
       <text class="modal-title">完善个人信息</text>
-      <view class="close-btn" bindtap="closeUserInfoForm">
-        <image src="/assets/icons/close.png"></image>
+      <view class="close-btn" bindtap="closeUserInfoForm">        
       </view>
     </view>
     

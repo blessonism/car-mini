@@ -9,9 +9,8 @@ Page({
     categories: [
       { id: "0", name: "全部", icon: "/assets/icons/维修.png" },
       { id: "1", name: "洗车服务", icon: "/assets/icons/hard-washing.png" },
-      { id: "2", name: "维修装饰", icon: "/assets/icons/维修.png" },
-      { id: "3", name: "保养美容", icon: "/assets/icons/装修.png" },
-      { id: "4", name: "轮胎服务", icon: "/assets/icons/轮胎.png" },
+      { id: "2", name: "保养美容", icon: "/assets/icons/装修.png" },
+      { id: "3", name: "轮胎服务", icon: "/assets/icons/轮胎.png" },
     ],
     services: [],
     filteredServices: [],
@@ -231,9 +230,8 @@ Page({
   getCategoryIdByName: function (categoryName) {
     const categoryMap = {
       洗车服务: "1",
-      维修装饰: "2",
-      保养美容: "3",
-      轮胎服务: "4",
+      保养美容: "2",
+      轮胎服务: "3",
     };
     return categoryMap[categoryName] || "0";
   },
@@ -242,7 +240,6 @@ Page({
   getCategoryDefaultIcon: function (categoryName) {
     const iconMap = {
       洗车服务: "/assets/icons/car-washing.png",
-      维修装饰: "/assets/icons/维修.png",
       保养美容: "/assets/icons/装修.png",
       轮胎服务: "/assets/icons/轮胎.png",
     };
@@ -278,9 +275,8 @@ Page({
   getCategoryNameById: function (categoryId) {
     const categoryMap = {
       1: "洗车服务",
-      2: "维修装饰",
-      3: "保养美容",
-      4: "轮胎服务",
+      2: "保养美容",
+      3: "轮胎服务",
     };
     return categoryMap[categoryId] || "";
   },
