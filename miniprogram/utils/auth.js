@@ -5,7 +5,13 @@ const STORAGE_KEYS = {
   USER_INFO: "userInfo",
   LOGIN_STATE: "loginState",
   PARTIAL_USER_INFO: "partialUserInfo",
+  LAST_USER_REFRESH: "lastUserRefresh",
+  LAST_VEHICLE_REFRESH: "lastVehicleRefresh",
+  VEHICLES_INFO: "vehiclesInfo",
 };
+
+// 数据刷新的最小间隔时间（毫秒）- 默认24小时
+const REFRESH_INTERVAL = 24 * 60 * 60 * 1000;
 
 /**
  * 检查用户是否已登录
@@ -54,6 +60,8 @@ const saveUserInfo = (userInfo) => {
       wx.setStorageSync(STORAGE_KEYS.LOGIN_STATE, "loggedIn");
       // 清除可能存在的部分信息
       wx.removeStorageSync(STORAGE_KEYS.PARTIAL_USER_INFO);
+      // 更新刷新时间戳
+      updateUserRefreshTime();
     } else {
       console.warn("尝试保存不完整的用户信息，仅保存但不设置登录状态");
       savePartialUserInfo(userInfo);
@@ -89,15 +97,79 @@ const getPartialUserInfo = () => {
 };
 
 /**
- * 清除用户登录信息
+ * 获取本地缓存的车辆信息
+ * @returns {Array|null} 车辆信息数组或null
  */
-const clearUserInfo = () => {
+const getStoredVehicles = () => {
   try {
-    wx.removeStorageSync(STORAGE_KEYS.USER_INFO);
-    wx.removeStorageSync(STORAGE_KEYS.LOGIN_STATE);
-    wx.removeStorageSync(STORAGE_KEYS.PARTIAL_USER_INFO);
+    return wx.getStorageSync(STORAGE_KEYS.VEHICLES_INFO) || null;
   } catch (error) {
-    console.error("清除用户信息出错", error);
+    console.error("获取车辆信息出错", error);
+    return null;
+  }
+};
+
+/**
+ * 保存车辆信息到本地缓存
+ * @param {Array} vehicles 车辆信息数组
+ */
+const saveVehiclesInfo = (vehicles) => {
+  try {
+    wx.setStorageSync(STORAGE_KEYS.VEHICLES_INFO, vehicles);
+    updateVehicleRefreshTime();
+  } catch (error) {
+    console.error("保存车辆信息出错", error);
+  }
+};
+
+/**
+ * 更新用户信息刷新时间戳
+ */
+const updateUserRefreshTime = () => {
+  try {
+    wx.setStorageSync(STORAGE_KEYS.LAST_USER_REFRESH, Date.now());
+  } catch (error) {
+    console.error("更新用户刷新时间戳出错", error);
+  }
+};
+
+/**
+ * 更新车辆信息刷新时间戳
+ */
+const updateVehicleRefreshTime = () => {
+  try {
+    wx.setStorageSync(STORAGE_KEYS.LAST_VEHICLE_REFRESH, Date.now());
+  } catch (error) {
+    console.error("更新车辆刷新时间戳出错", error);
+  }
+};
+
+/**
+ * 检查是否需要刷新用户信息
+ * @returns {Boolean} 是否需要刷新
+ */
+const shouldRefreshUserInfo = () => {
+  try {
+    const lastRefresh = wx.getStorageSync(STORAGE_KEYS.LAST_USER_REFRESH) || 0;
+    return Date.now() - lastRefresh > REFRESH_INTERVAL;
+  } catch (error) {
+    console.error("检查用户刷新状态出错", error);
+    return true; // 出错时默认需要刷新
+  }
+};
+
+/**
+ * 检查是否需要刷新车辆信息
+ * @returns {Boolean} 是否需要刷新
+ */
+const shouldRefreshVehicles = () => {
+  try {
+    const lastRefresh =
+      wx.getStorageSync(STORAGE_KEYS.LAST_VEHICLE_REFRESH) || 0;
+    return Date.now() - lastRefresh > REFRESH_INTERVAL;
+  } catch (error) {
+    console.error("检查车辆刷新状态出错", error);
+    return true; // 出错时默认需要刷新
   }
 };
 
@@ -227,10 +299,19 @@ const logout = () => {
 
 /**
  * 刷新用户信息
+ * @param {Boolean} forceRefresh 是否强制刷新
  * @returns {Promise} Promise对象
  */
-const refreshUserInfo = async () => {
+const refreshUserInfo = async (forceRefresh = false) => {
   try {
+    // 如果不强制刷新，且不需要刷新，则返回缓存数据
+    if (!forceRefresh && !shouldRefreshUserInfo()) {
+      const cachedUserInfo = getStoredUserInfo();
+      if (cachedUserInfo) {
+        return cachedUserInfo;
+      }
+    }
+
     const result = await wx.cloud.callFunction({
       name: "getUserInfo",
     });
@@ -248,6 +329,22 @@ const refreshUserInfo = async () => {
   }
 };
 
+/**
+ * 清除用户登录信息
+ */
+const clearUserInfo = () => {
+  try {
+    wx.removeStorageSync(STORAGE_KEYS.USER_INFO);
+    wx.removeStorageSync(STORAGE_KEYS.LOGIN_STATE);
+    wx.removeStorageSync(STORAGE_KEYS.PARTIAL_USER_INFO);
+    wx.removeStorageSync(STORAGE_KEYS.VEHICLES_INFO);
+    wx.removeStorageSync(STORAGE_KEYS.LAST_USER_REFRESH);
+    wx.removeStorageSync(STORAGE_KEYS.LAST_VEHICLE_REFRESH);
+  } catch (error) {
+    console.error("清除用户信息出错", error);
+  }
+};
+
 module.exports = {
   checkLoginState,
   getStoredUserInfo,
@@ -261,4 +358,11 @@ module.exports = {
   getPhoneNumber,
   logout,
   refreshUserInfo,
+  getStoredVehicles,
+  saveVehiclesInfo,
+  updateUserRefreshTime,
+  updateVehicleRefreshTime,
+  shouldRefreshUserInfo,
+  shouldRefreshVehicles,
+  REFRESH_INTERVAL,
 };

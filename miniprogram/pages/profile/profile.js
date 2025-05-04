@@ -6,6 +6,7 @@ Page({
     userInfo: null,
     isLoggedIn: false,
     vehicles: [],
+    isRefreshing: false, // 刷新状态标志
     isVehicleModalVisible: false,
     provinces: ["京", "沪", "粤", "浙", "苏", "鲁", "豫", "渝", "川"],
     provinceIndex: 0,
@@ -56,10 +57,17 @@ Page({
     // 检查登录状态，可能已在其他页面完成登录
     this.checkLoginStatus();
 
-    // 刷新用户信息
+    // 如果已登录，但没有加载用户和车辆信息，则加载一次
     if (this.data.isLoggedIn) {
-      this.refreshUserInfo();
-      this.loadUserVehicles(); // 加载用户车辆信息
+      // 检查是否有已保存的用户信息
+      if (!this.data.userInfo) {
+        this.loadUserInfo();
+      }
+
+      // 检查是否有已保存的车辆信息
+      if (!this.data.vehicles || this.data.vehicles.length === 0) {
+        this.loadVehicleInfo();
+      }
     } else {
       // 检查是否有部分完成的用户信息，如果有，显示完善信息表单
       const partialUserInfo = auth.getPartialUserInfo();
@@ -72,8 +80,41 @@ Page({
     }
   },
 
+  // 加载用户基本信息（从缓存优先，必要时才从云端获取）
+  loadUserInfo: function () {
+    // 尝试从缓存加载
+    const cachedUserInfo = auth.getStoredUserInfo();
+    if (cachedUserInfo) {
+      this.setData({ userInfo: cachedUserInfo });
+    } else {
+      // 如果缓存不存在，则从云端加载
+      this.refreshUserInfo(true);
+    }
+  },
+
+  // 加载车辆信息（从缓存优先，必要时才从云端获取）
+  loadVehicleInfo: function () {
+    // 尝试从缓存加载
+    const cachedVehicles = auth.getStoredVehicles();
+    if (cachedVehicles) {
+      this.setData({ vehicles: cachedVehicles });
+    } else {
+      // 如果缓存不存在，则从云端加载
+      this.loadUserVehicles(true);
+    }
+  },
+
   // 加载用户的车辆信息
-  loadUserVehicles() {
+  loadUserVehicles(forceRefresh = false) {
+    // 如果不是强制刷新，且不需要刷新车辆信息，则使用缓存
+    if (!forceRefresh && !auth.shouldRefreshVehicles()) {
+      const vehicles = auth.getStoredVehicles();
+      if (vehicles && vehicles.length > 0) {
+        this.setData({ vehicles });
+        return Promise.resolve(vehicles.length > 0);
+      }
+    }
+
     wx.showLoading({ title: "加载车辆信息" });
 
     // 返回Promise表示是否有车辆
@@ -86,9 +127,14 @@ Page({
         .then((res) => {
           if (res.result && res.result.code === 0) {
             const vehicles = res.result.data.vehicles || [];
+            // 保存到本地状态
             this.setData({
               vehicles: vehicles,
             });
+
+            // 保存到缓存
+            auth.saveVehiclesInfo(vehicles);
+
             wx.hideLoading();
             resolve(vehicles.length > 0);
           } else {
@@ -107,43 +153,74 @@ Page({
 
   checkLoginStatus() {
     const isLoggedIn = auth.checkLoginState();
-    this.setData({ isLoggedIn });
 
-    if (isLoggedIn) {
-      // 获取存储的用户信息
-      const userInfo = auth.getStoredUserInfo();
-      this.setData({
-        userInfo,
-      });
-      // 单独加载车辆信息
-      this.loadUserVehicles();
-    } else {
-      // 如果没有登录，清除之前可能存在的用户数据
-      this.setData({
-        userInfo: null,
-        vehicles: [],
-      });
+    // 如果登录状态发生变化，才更新数据
+    if (isLoggedIn !== this.data.isLoggedIn) {
+      this.setData({ isLoggedIn });
 
-      // 检查是否有部分完成的登录信息
-      const partialUserInfo = auth.getPartialUserInfo();
-      if (partialUserInfo) {
+      if (isLoggedIn) {
+        // 获取存储的用户信息
+        this.loadUserInfo();
+        // 获取存储的车辆信息
+        this.loadVehicleInfo();
+      } else {
+        // 如果没有登录，清除之前可能存在的用户数据
         this.setData({
-          userInfo: partialUserInfo,
+          userInfo: null,
+          vehicles: [],
         });
+
+        // 检查是否有部分完成的登录信息
+        const partialUserInfo = auth.getPartialUserInfo();
+        if (partialUserInfo) {
+          this.setData({
+            userInfo: partialUserInfo,
+          });
+        }
       }
     }
   },
 
-  refreshUserInfo() {
+  // 下拉刷新处理函数
+  onPullDownRefresh: function () {
+    if (!this.data.isLoggedIn || this.data.isRefreshing) {
+      wx.stopPullDownRefresh();
+      return;
+    }
+
+    this.setData({ isRefreshing: true });
+
+    // 同时刷新用户信息和车辆信息
+    Promise.all([this.refreshUserInfo(true), this.loadUserVehicles(true)])
+      .then(() => {
+        this.setData({ isRefreshing: false });
+        wx.stopPullDownRefresh();
+        wx.showToast({ title: "刷新成功", icon: "success" });
+      })
+      .catch((err) => {
+        this.setData({ isRefreshing: false });
+        wx.stopPullDownRefresh();
+        wx.showToast({ title: "刷新失败", icon: "none" });
+        console.error("刷新数据失败:", err);
+      });
+  },
+
+  refreshUserInfo(forceRefresh = false) {
+    // 避免不必要的刷新
+    if (!forceRefresh && !auth.shouldRefreshUserInfo()) {
+      return Promise.resolve(this.data.userInfo);
+    }
+
     wx.showLoading({ title: "加载中" });
 
-    auth
-      .refreshUserInfo()
+    return auth
+      .refreshUserInfo(forceRefresh)
       .then((userInfo) => {
         this.setData({
           userInfo,
         });
         wx.hideLoading();
+        return userInfo;
       })
       .catch((err) => {
         console.error("刷新用户信息失败", err);
@@ -152,6 +229,7 @@ Page({
           title: "获取信息失败",
           icon: "none",
         });
+        throw err;
       });
   },
 
@@ -184,7 +262,7 @@ Page({
 
           if (needToCheckVehicles) {
             // 尝试加载车辆信息，看是否有记录
-            this.loadUserVehicles().then((hasVehicles) => {
+            this.loadUserVehicles(true).then((hasVehicles) => {
               if (!hasVehicles || !userInfo.phone || !userInfo.name) {
                 // 仍然需要完善信息
                 this.promptForUserInfo(userInfo);
@@ -242,8 +320,8 @@ Page({
       userInfo,
     });
 
-    // 刷新用户车辆信息
-    this.loadUserVehicles();
+    // 登录成功后，刷新一次车辆信息
+    this.loadUserVehicles(true);
 
     wx.hideLoading();
     wx.showToast({
@@ -498,32 +576,51 @@ Page({
 
   // 更新用户基本信息
   updateUserInfo(userInfo) {
-    return new Promise((resolve, reject) => {
-      wx.cloud
-        .callFunction({
-          name: "updateUserInfo",
-          data: {
-            userInfo,
-          },
-        })
-        .then((res) => {
-          if (res.result && res.result.code === 0) {
-            // 更新本地用户数据
-            const newUserInfo = {
-              ...this.data.userInfo,
-              ...userInfo,
-            };
+    wx.showLoading({ title: "更新信息中..." });
 
-            this.setData({ userInfo: newUserInfo });
-            auth.saveUserInfo(newUserInfo);
+    wx.cloud
+      .callFunction({
+        name: "updateUserInfo",
+        data: userInfo,
+      })
+      .then((res) => {
+        wx.hideLoading();
+        if (res.result && res.result.code === 0) {
+          // 更新成功，保存用户信息
+          const updatedUserInfo = {
+            ...this.data.userInfo,
+            ...userInfo,
+          };
 
-            resolve(newUserInfo);
-          } else {
-            reject(new Error(res.result.msg || "更新用户信息失败"));
-          }
-        })
-        .catch(reject);
-    });
+          // 更新本地状态和缓存
+          auth.saveUserInfo(updatedUserInfo);
+          this.setData({
+            userInfo: updatedUserInfo,
+            isLoggedIn: true,
+          });
+
+          wx.showToast({
+            title: "更新成功",
+            icon: "success",
+          });
+
+          // 关闭表单
+          this.closeUserInfoForm();
+        } else {
+          wx.showToast({
+            title: res.result.msg || "更新失败",
+            icon: "none",
+          });
+        }
+      })
+      .catch((err) => {
+        wx.hideLoading();
+        console.error("更新用户信息失败:", err);
+        wx.showToast({
+          title: "更新失败，请重试",
+          icon: "none",
+        });
+      });
   },
 
   // 退出登录
@@ -695,28 +792,54 @@ Page({
 
   // 添加用户车辆
   addUserVehicle(vehicle) {
-    return new Promise((resolve, reject) => {
-      wx.cloud
-        .callFunction({
-          name: "updateUserVehicles",
-          data: {
-            action: "add",
-            vehicle,
-          },
-        })
-        .then((res) => {
-          if (res.result && res.result.code === 0) {
-            // 更新本地数据
-            this.setData({
-              vehicles: res.result.data.vehicles || [],
-            });
-            resolve(res.result.data);
-          } else {
-            reject(new Error(res.result.msg || "添加车辆信息失败"));
-          }
-        })
-        .catch(reject);
-    });
+    wx.showLoading({ title: "添加车辆中..." });
+    wx.cloud
+      .callFunction({
+        name: "updateUserVehicles",
+        data: {
+          vehicle: vehicle,
+          action: "add",
+        },
+      })
+      .then((res) => {
+        wx.hideLoading();
+        if (res.result && res.result.code === 0) {
+          wx.showToast({
+            title: "添加车辆成功",
+            icon: "success",
+          });
+
+          // 更新本地车辆列表
+          const updatedVehicles = [...this.data.vehicles, res.result.data];
+          this.setData({
+            vehicles: updatedVehicles,
+            // 清空表单数据
+            vehicleNumber: "",
+            vehicleBrand: "",
+            vehicleModel: "",
+            vehicleColor: "",
+          });
+
+          // 保存到缓存
+          auth.saveVehiclesInfo(updatedVehicles);
+
+          // 关闭弹窗
+          this.closeVehicleModal();
+        } else {
+          wx.showToast({
+            title: res.result.msg || "添加失败",
+            icon: "none",
+          });
+        }
+      })
+      .catch((err) => {
+        wx.hideLoading();
+        console.error("添加车辆失败:", err);
+        wx.showToast({
+          title: "添加失败，请重试",
+          icon: "none",
+        });
+      });
   },
 
   // 编辑车辆
@@ -769,30 +892,36 @@ Page({
 
   // 从服务器删除车辆
   removeVehicle(vehicleId) {
-    wx.showLoading({ title: "删除中" });
+    wx.showLoading({ title: "删除中..." });
 
     wx.cloud
       .callFunction({
         name: "updateUserVehicles",
         data: {
-          action: "remove",
           vehicleId: vehicleId,
+          action: "remove",
         },
       })
       .then((res) => {
+        wx.hideLoading();
         if (res.result && res.result.code === 0) {
-          // 更新本地数据
+          // 从本地车辆列表中移除
+          const updatedVehicles = this.data.vehicles.filter(
+            (vehicle) => vehicle._id !== vehicleId
+          );
+
           this.setData({
-            vehicles: res.result.data.vehicles || [],
+            vehicles: updatedVehicles,
           });
 
-          wx.hideLoading();
+          // 保存到缓存
+          auth.saveVehiclesInfo(updatedVehicles);
+
           wx.showToast({
             title: "删除成功",
             icon: "success",
           });
         } else {
-          wx.hideLoading();
           wx.showToast({
             title: res.result.msg || "删除失败",
             icon: "none",
@@ -801,9 +930,9 @@ Page({
       })
       .catch((err) => {
         wx.hideLoading();
-        console.error("删除车辆失败", err);
+        console.error("删除车辆失败:", err);
         wx.showToast({
-          title: "删除失败",
+          title: "删除失败，请重试",
           icon: "none",
         });
       });
