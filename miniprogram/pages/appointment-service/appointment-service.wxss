@@ -1,0 +1,593 @@
+/* appointment-service.wxss */
+page {
+  background-color: #f8f9ff;
+}
+
+.container {
+  background-color: #f8f9ff !important;
+  min-height: 100vh;
+  padding-bottom: 160rpx;
+}
+
+/* 服务详情卡片 */
+.service-card {
+  background-color: #fff;
+  margin: 40rpx;
+  padding: 40rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.service-info {
+  display: flex;
+  align-items: center;
+}
+
+.service-icon {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 12rpx;
+  background-color: #e6f2ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+}
+
+.service-icon t-icon {
+  color: #3b82f6;
+}
+
+.service-details {
+  flex: 1;
+}
+
+.service-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+  color: #333;
+}
+
+.service-meta {
+  display: flex;
+  align-items: center;
+  color: #666;
+}
+
+.service-time,
+.service-price {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  margin-right: 30rpx;
+}
+
+.service-time t-icon,
+.service-price t-icon {
+  margin-right: 8rpx;
+}
+
+/* 节标题（卡片外） */
+.section-header {
+  display: flex;
+  align-items: center;
+  margin: 40rpx 50rpx 35rpx 40rpx;
+}
+
+.section-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 24rpx;
+}
+
+.section-icon-lg {
+  width: 48rpx;
+  height: 48rpx;
+  margin-right: 16rpx;
+}
+
+.section-text {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+/* 各部分通用样式 */
+.section {
+  background-color: #fff;
+  margin: 0 30rpx 30rpx;
+  padding: 30rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 30rpx;
+  color: #333;
+}
+
+/* 双标题布局 */
+.double-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.car-selection-label {
+  font-size: 30rpx;
+  color: #333;
+}
+
+.add-car-link {
+  color: #3b82f6;
+  font-size: 28rpx;
+}
+
+/* 服务选择 */
+.service-options {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 30rpx;
+}
+
+.service-option {
+  width: 48%;
+  background-color: #fff;
+  border-radius: 28rpx;
+  padding: 30rpx;
+  margin-left: 15rpx;
+  margin-right: 15rpx;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.service-option.selected {
+  border: 4rpx solid #3b82f6;
+}
+
+.option-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20rpx;
+}
+
+.option-name {
+  font-size: 32rpx;
+  font-weight: 500;
+  margin-bottom: 10rpx;
+  color: #333;
+}
+
+.option-desc {
+  font-size: 26rpx;
+  color: #666;
+}
+
+/* 车辆选择区域 */
+.car-select-area {
+  margin-top: 10rpx;
+}
+
+.car-items {
+  margin-bottom: 30rpx;
+}
+
+/* 车辆信息区域 */
+.car-section {
+  background-color: rgba(255, 255, 255, 0.85);
+  margin: 0 40rpx 40rpx;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  border: 1rpx solid rgba(255, 255, 255, 0.5);
+}
+
+.car-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid rgba(240, 240, 240, 0.6);
+}
+
+.car-selection-label {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.add-car-link {
+  color: #3b82f6;
+  font-size: 28rpx;
+  transition: all 0.3s ease;
+}
+
+.add-car-link:active {
+  opacity: 0.7;
+}
+
+.car-list {
+  padding: 0;
+}
+
+.car-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.car-item.selected {
+  background-image: linear-gradient(
+    to right,
+    rgba(230, 244, 255, 0.5),
+    rgba(255, 255, 255, 0.8)
+  );
+}
+
+.divider {
+  height: 1rpx;
+  background-color: rgba(240, 240, 240, 0.6);
+  margin: 0 30rpx;
+}
+
+.radio-circle {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  border: 2rpx solid #ccc;
+  margin-right: 40rpx;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.radio-selected {
+  border-color: #3b82f6;
+  box-shadow: 0 0 10rpx rgba(59, 130, 246, 0.2);
+}
+
+.radio-selected:after {
+  content: "";
+  position: absolute;
+  width: 24rpx;
+  height: 24rpx;
+  background-color: #3b82f6;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: scale-in 0.2s ease-out;
+}
+
+@keyframes scale-in {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.car-info {
+  flex: 1;
+}
+
+.car-model {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.car-plate {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.edit-icon {
+  color: #3b82f6;
+  padding: 10rpx;
+  transition: all 0.3s ease;
+}
+
+.edit-icon:active {
+  transform: scale(0.95);
+}
+
+/* 备注区域 */
+.remark-section {
+  background-color: rgba(255, 255, 255, 0.85);
+  margin: 0 40rpx 40rpx;
+  padding: 30rpx;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1rpx solid rgba(255, 255, 255, 0.5);
+}
+
+.remark-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.remark-textarea {
+  background-color: rgba(245, 245, 245, 0.5) !important;
+  border-radius: 16rpx !important;
+  padding: 20rpx !important;
+  min-height: 160rpx;
+  backdrop-filter: blur(5px);
+}
+
+/* 底部栏 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  padding: 30rpx;
+  background: white;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  align-items: center;
+  z-index: 10;
+}
+
+.price-area {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+}
+
+.price-label {
+  font-size: 28rpx;
+  color: #ff4141;
+  margin-right: 4rpx;
+}
+
+.price-value {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #ff4141;
+}
+
+.order-button {
+  width: 240rpx !important;
+  background-color: #3b82f6 !important;
+  border-color: transparent !important;
+}
+.t-button--primary::after {
+  border-color: transparent !important;
+}
+
+.base-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 8rpx;
+}
+
+.sm-icon {
+  width: 28rpx;
+  height: 28rpx;
+  margin-right: 8rpx;
+}
+
+.option-image {
+  width: 64rpx;
+  height: 64rpx;
+}
+
+.edit-image {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+/* 日期选择区域 */
+.date-section,
+.time-section {
+  margin-bottom: 40rpx;
+}
+
+.calendar-card,
+.time-slots-card {
+  background-color: rgba(255, 255, 255, 0.85);
+  margin: 0 40rpx;
+  padding: 30rpx;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1rpx solid rgba(255, 255, 255, 0.5);
+}
+
+.month-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 30rpx;
+  text-align: left;
+}
+
+.weekdays {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.weekday {
+  width: 14.28%;
+  text-align: center;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.days-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.day-cell {
+  width: 14.28%;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20rpx;
+  position: relative;
+}
+
+.day-number {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  color: #333;
+  border-radius: 50%;
+}
+
+.day-cell.selected .day-number {
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+.day-cell.today .day-number {
+  color: #3b82f6;
+  font-weight: 500;
+}
+
+.day-cell.disabled .day-number {
+  color: #ccc;
+}
+
+/* 日期选择区域 - 简化版 */
+.simple-dates {
+  display: flex;
+  justify-content: space-between;
+}
+
+.date-option {
+  width: 30%;
+  height: 120rpx;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1rpx solid rgba(230, 230, 230, 0.8);
+  border-radius: 16rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.03);
+  backdrop-filter: blur(5px);
+}
+
+.date-option.selected {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+  box-shadow: 0 6rpx 12rpx rgba(59, 130, 246, 0.15);
+  transform: translateY(-2rpx);
+}
+
+.date-day {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.date-value {
+  font-size: 26rpx;
+  color: #666;
+}
+
+/* 时间段选择区域 */
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+}
+
+.time-slot {
+  height: 80rpx;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1rpx solid rgba(230, 230, 230, 0.8);
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.03);
+  backdrop-filter: blur(5px);
+}
+
+.time-slot.selected {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+  box-shadow: 0 6rpx 12rpx rgba(59, 130, 246, 0.15);
+  transform: translateY(-2rpx);
+}
+
+.time-slot.booked {
+  background-color: rgba(240, 240, 240, 0.7);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.time-text {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.time-slot.booked .time-text {
+  color: #999;
+}
+
+/* 动画效果 */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10rpx rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+.date-option.selected,
+.time-slot.selected {
+  animation: pulse 1.5s infinite;
+}
+
+/* Add these new styles for the no car tip display */
+.no-car-tip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30rpx;
+  color: #999;
+  text-align: center;
+}
+
+.add-first-car {
+  margin-top: 20rpx;
+  color: #0052d9;
+  font-size: 28rpx;
+  background: #f0f5ff;
+  padding: 10rpx 30rpx;
+  border-radius: 30rpx;
+}
