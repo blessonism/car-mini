@@ -578,49 +578,51 @@ Page({
   updateUserInfo(userInfo) {
     wx.showLoading({ title: "更新信息中..." });
 
-    wx.cloud
-      .callFunction({
-        name: "updateUserInfo",
-        data: userInfo,
-      })
-      .then((res) => {
-        wx.hideLoading();
-        if (res.result && res.result.code === 0) {
-          // 更新成功，保存用户信息
-          const updatedUserInfo = {
-            ...this.data.userInfo,
-            ...userInfo,
-          };
+    // Return the promise chain
+    return new Promise((resolve, reject) => {
+      // Wrap in a new Promise
+      wx.cloud
+        .callFunction({
+          name: "updateUserInfo",
+          data: userInfo,
+        })
+        .then((res) => {
+          wx.hideLoading();
+          if (res.result && res.result.code === 0) {
+            // Cloud function succeeded
+            const updatedUserInfo = {
+              ...this.data.userInfo, // Use existing data as base
+              ...userInfo, // Apply updates
+            };
 
-          // 更新本地状态和缓存
-          auth.saveUserInfo(updatedUserInfo);
-          this.setData({
-            userInfo: updatedUserInfo,
-            isLoggedIn: true,
-          });
+            // Update local state and cache
+            auth.saveUserInfo(updatedUserInfo); // Save complete info
+            this.setData({
+              userInfo: updatedUserInfo,
+              isLoggedIn: true, // Ensure loggedIn state is set
+            });
 
-          wx.showToast({
-            title: "更新成功",
-            icon: "success",
-          });
+            // Don't show toast here, let submitUserInfo handle final success message
+            // wx.showToast({ title: "更新成功", icon: "success" });
 
-          // 关闭表单
-          this.closeUserInfoForm();
-        } else {
-          wx.showToast({
-            title: res.result.msg || "更新失败",
-            icon: "none",
-          });
-        }
-      })
-      .catch((err) => {
-        wx.hideLoading();
-        console.error("更新用户信息失败:", err);
-        wx.showToast({
-          title: "更新失败，请重试",
-          icon: "none",
+            this.closeUserInfoForm(); // Close form on success
+            resolve(updatedUserInfo); // Resolve the promise with updated info
+          } else {
+            // Cloud function returned an error code
+            const errorMsg = res.result ? res.result.msg : "更新失败";
+            console.error("更新用户信息云函数返回失败:", errorMsg, res);
+            wx.showToast({ title: errorMsg, icon: "none" });
+            reject(new Error(errorMsg)); // Reject the promise
+          }
+        })
+        .catch((err) => {
+          // Network or other callFunction error
+          wx.hideLoading();
+          console.error("调用更新用户信息云函数失败:", err);
+          wx.showToast({ title: "更新失败，请重试", icon: "none" });
+          reject(err); // Reject the promise
         });
-      });
+    });
   },
 
   // 退出登录

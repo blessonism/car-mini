@@ -32,14 +32,13 @@ exports.main = async (event, context) => {
         _openid: openid,
         createTime: db.serverDate(),
         updateTime: db.serverDate(),
-        // 合并微信用户信息
-        nickName: userInfo ? userInfo.nickName : "",
+        // 使用微信昵称作为初始 name，移除 nickName
+        name: userInfo ? userInfo.nickName : "微信用户", // Default name if no userInfo
         avatarUrl: userInfo ? userInfo.avatarUrl : "",
-        gender: userInfo ? userInfo.gender : 0,
+        gender: userInfo ? userInfo.gender : 0, // 0:未知, 1:男, 2:女
         // 默认其他用户信息
         phone: "",
-        name: "",
-        // 会员相关信息
+        // memberLevel 和 balance 应该是数字类型更合适，但保持与原代码一致
         memberLevel: "普通会员",
         balance: "0.00",
       };
@@ -59,24 +58,17 @@ exports.main = async (event, context) => {
       const user = userResult.data[0];
       const { userInfo } = event;
 
+      // 只更新性别和登录时间，不再更新 nickName, name 或头像
+      const updateData = {
+        updateTime: db.serverDate(),
+      };
       if (userInfo) {
-        // 更新微信用户信息
-        await userCollection.doc(user._id).update({
-          data: {
-            updateTime: db.serverDate(),
-            nickName: userInfo.nickName,
-            avatarUrl: userInfo.avatarUrl,
-            gender: userInfo.gender,
-          },
-        });
-      } else {
-        // 仅更新登录时间
-        await userCollection.doc(user._id).update({
-          data: {
-            updateTime: db.serverDate(),
-          },
-        });
+        updateData.gender = userInfo.gender;
       }
+
+      await userCollection.doc(user._id).update({
+        data: updateData,
+      });
 
       // 查询最新的用户信息
       const updatedUserData = await userCollection.doc(user._id).get();

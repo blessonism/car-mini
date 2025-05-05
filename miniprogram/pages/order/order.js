@@ -498,11 +498,21 @@ Page({
 
   // 追踪服务
   trackService(e) {
-    const id = e.currentTarget.dataset.id;
-    wx.showToast({
-      title: "服务追踪功能开发中",
-      icon: "none",
-    });
+    const orderId = e.currentTarget.dataset.id;
+    console.log("Track Service Clicked! Order ID:", orderId); // 保留日志用于调试
+    if (orderId) {
+      // 正确的跳转逻辑
+      wx.navigateTo({
+        url: `/pages/order-detail/order-detail?id=${orderId}`,
+      });
+    } else {
+      // 处理无法获取 ID 的情况
+      console.error("无法获取订单ID，无法追踪服务");
+      wx.showToast({
+        title: "无法获取订单信息",
+        icon: "none",
+      });
+    }
   },
 
   // 重新预约
